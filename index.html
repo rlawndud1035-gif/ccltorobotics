@@ -1,14 +1,58 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hello World</title>
-  <link href='/style.css' rel='stylesheet'>
+  <title>ImmersiaVR - The Future of VR</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Hello, world!</h1>
-  <button onclick="console.log('hello');">Press me</button>
-  <script defer type="text/javascript" src="/main.js"></script>
+  <!-- Fixed Background Interaction -->
+  <neural-vortex></neural-vortex>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="max-w-2xl outline-style animate-seq">
+      <h1 class="geist-h1">Step Into the Future of VR</h1>
+      <p class="geist-h2">
+        ImmersiaVR delivers breathtaking realism, seamless interaction, and endless possibilities for gaming, education, and beyond.
+      </p>
+      <a href="#features" class="outline-btn">Get Started</a>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="content-section">
+    <div class="max-w-2xl text-center">
+      <h2 class="geist-h1">Revolutionary Features</h2>
+      <p class="geist-h2">Explore what makes ImmersiaVR the leader in spatial computing.</p>
+    </div>
+    
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>8K Resolution</h3>
+        <p>Crystal clear visuals with zero screen-door effect.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Neural Tracking</h3>
+        <p>Ultra-low latency eye and hand tracking for natural input.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Spatial Audio</h3>
+        <p>360-degree soundscapes that respond to your environment.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- More Content to enable scrolling -->
+  <section class="content-section">
+    <div class="max-w-2xl text-center">
+      <h2 class="geist-h1">Endless Possibilities</h2>
+      <p class="geist-h2">From deep-sea exploration to galactic battles, the only limit is your imagination.</p>
+      <a href="#" class="outline-btn">Pre-order Now</a>
+    </div>
+  </section>
+
+  <script src="main.js"></script>
 </body>
 </html>
