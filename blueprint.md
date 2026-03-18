@@ -22,6 +22,12 @@ A web-based project for CCL Robotics, now integrated with a GitHub repository fo
 - **Lightbox Feature:** Implemented a site-wide image lightbox that allows users to click and expand any image for a full-screen view.
 - **Video Integration:** Added a "Simplified Navigation Flow" section with `videos/prototype_1.mov` set to autoplay and loop.
 - **UI Refinement:** Reduced spacing between section titles and content grids for a tighter, more cohesive landing page layout.
+- **Responsive Fixes:**
+    - Corrected `min-h-screen` typo to `min-height`.
+    - Removed `white-space: nowrap` from headings to allow text wrapping on mobile.
+    - Adjusted `clamp()` font sizes and added media query overrides for better mobile readability.
+    - Refined section and card padding for smaller viewports.
+    - Ensured grids scale gracefully down to mobile widths.
 
 ## Future Plans
 - Any further updates to the code will be automatically pushed to the GitHub repository as requested.
