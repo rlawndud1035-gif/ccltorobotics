@@ -6,7 +6,7 @@ A web-based project for CCL Robotics, now integrated with a GitHub repository fo
 ## Project Outline
 - **Entry Point:** `index.html`
 - **Styling:** `style.css` (Vanilla CSS, Geist font, modern grid layouts)
-- **Logic:** `main.js` (JavaScript, custom web components)
+- **Logic:** `main.js` (JavaScript, custom web components, interactive lightbox)
 - **Environment:** Firebase Studio / Code OSS
 - **Assets:** `images/` and `videos/` folders for hosting project-specific visual content.
 - **Version Control:** Connected to [https://github.com/rlawndud1035-gif/ccltorobotics](https://github.com/rlawndud1035-gif/ccltorobotics)
@@ -16,8 +16,9 @@ A web-based project for CCL Robotics, now integrated with a GitHub repository fo
 - **Initial Push:** All existing code has been pushed to the `main` branch.
 - **Git Ignore:** Added `.gitignore` to prevent tracking of unnecessary logs and configurations.
 - **Scan Section:** Added a subtle "Scan and enjoy!" section below the Hero section featuring `images/code.png`.
-- **Gallery Section:** Added a "Captured Moments" gallery section at the bottom of the landing page to showcase project images.
-- **Image Integration:** Successfully integrated `images/1.avif` into the gallery with responsive styling and hover effects.
+- **Gallery Section:** Added a "Captured Moments" gallery section at the bottom of the landing page.
+- **Image Integration:** Replaced `images/1.avif` with `images/2.png` in the gallery.
+- **Lightbox Feature:** Implemented a site-wide image lightbox that allows users to click and expand any image for a full-screen view.
 - **Video Integration:** Added a "Simplified Navigation Flow" section with `videos/prototype_1.mov` set to autoplay and loop.
 - **UI Refinement:** Reduced spacing between section titles and content grids for a tighter, more cohesive landing page layout.
 

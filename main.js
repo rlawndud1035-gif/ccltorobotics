@@ -201,3 +201,29 @@ class InteractiveNeuralVortex extends HTMLElement {
 }
 
 customElements.define('neural-vortex', InteractiveNeuralVortex);
+
+// Image Lightbox Implementation
+document.addEventListener('DOMContentLoaded', () => {
+  const images = document.querySelectorAll('img');
+  
+  // Create Lightbox Elements
+  const lightbox = document.createElement('div');
+  lightbox.id = 'lightbox';
+  const lightboxImg = document.createElement('img');
+  lightbox.appendChild(lightboxImg);
+  document.body.appendChild(lightbox);
+
+  images.forEach(image => {
+    image.style.cursor = 'zoom-in';
+    image.addEventListener('click', (e) => {
+      lightbox.classList.add('active');
+      lightboxImg.src = image.src;
+      document.body.style.overflow = 'hidden'; // Prevent scrolling
+    });
+  });
+
+  lightbox.addEventListener('click', () => {
+    lightbox.classList.remove('active');
+    document.body.style.overflow = 'auto'; // Re-enable scrolling
+  });
+});
