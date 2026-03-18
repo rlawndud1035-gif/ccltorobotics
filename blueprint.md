@@ -15,6 +15,7 @@ A web-based project for CCL Robotics, now integrated with a GitHub repository fo
 - **Connected to GitHub:** Successfully linked the local repository to the remote origin.
 - **Initial Push:** All existing code has been pushed to the `main` branch.
 - **Git Ignore:** Added `.gitignore` to prevent tracking of unnecessary logs and configurations.
+- **Hero Update:** Changed the hero section title to "From CCL to Robotics".
 - **Scan Section:** Added a subtle "Scan and enjoy!" section below the Hero section featuring `images/code.png`.
 - **Gallery Section:** Added a "Captured Moments" gallery section at the bottom of the landing page.
 - **Image Integration:** Replaced `images/1.avif` with `images/2.png` in the gallery.
