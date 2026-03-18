@@ -17,7 +17,8 @@ A web-based project for CCL Robotics, now integrated with a GitHub repository fo
 - **Git Ignore:** Added `.gitignore` to prevent tracking of unnecessary logs and configurations.
 - **Gallery Section:** Added a "Captured Moments" gallery section at the bottom of the landing page to showcase project images.
 - **Image Integration:** Successfully integrated `images/1.avif` into the gallery with responsive styling and hover effects.
-- **Video Integration:** Added a "Development Prototypes" section with `videos/prototype_1.mov` set to autoplay and loop.
+- **Video Integration:** Added a "Simplified Navigation Flow" section with `videos/prototype_1.mov` set to autoplay and loop.
+- **UI Refinement:** Reduced spacing between section titles and content grids for a tighter, more cohesive landing page layout.
 
 ## Future Plans
 - Any further updates to the code will be automatically pushed to the GitHub repository as requested.
