@@ -8,7 +8,7 @@ A web-based project for CCL Robotics, now integrated with a GitHub repository fo
 - **Styling:** `style.css` (Vanilla CSS, Geist font, modern grid layouts)
 - **Logic:** `main.js` (JavaScript, custom web components)
 - **Environment:** Firebase Studio / Code OSS
-- **Assets:** `images/` folder for hosting project-specific visual content.
+- **Assets:** `images/` and `videos/` folders for hosting project-specific visual content.
 - **Version Control:** Connected to [https://github.com/rlawndud1035-gif/ccltorobotics](https://github.com/rlawndud1035-gif/ccltorobotics)
 
 ## Current Status & Tasks
