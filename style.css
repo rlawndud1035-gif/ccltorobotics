@@ -123,6 +123,45 @@ section {
   background: rgba(255, 255, 255, 0.08);
 }
 
+/* Scan Section */
+.scan-section {
+  min-height: auto;
+  padding: 3rem 2rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.scan-container {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  max-width: 40rem;
+  width: 100%;
+}
+
+.scan-image-wrapper {
+  width: 100px;
+  height: 100px;
+  flex-shrink: 0;
+  padding: 0.5rem;
+  background: #fff;
+  border-radius: 0.75rem;
+}
+
+.scan-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.scan-title {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: -0.01em;
+}
+
 /* Gallery Section */
 .max-w-4xl {
   max-width: 64rem;
