@@ -1,36 +1,114 @@
-/* Robotics Independent Styles */
+/* Robotics Page Design - Consistency with Main Landing */
+
+.detail-view {
+  background: #000 !important; /* Ensure deep black background */
+}
+
+.detail-content {
+  max-width: 100% !important;
+  padding: 0 !important;
+}
+
+/* Individual Sections within the detail view */
+.robotics-hero,
+.robotics-details,
+.robotics-cta {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+}
+
+.robotics-hero {
+  background: radial-gradient(circle at 50% 50%, rgba(122, 40, 255, 0.1) 0%, transparent 70%);
+}
 
 .robotics-showcase {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 3rem;
-  margin-top: 4rem;
-  padding: 0 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2.5rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .detail-item {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 3rem;
+  padding: 4rem 3rem;
   border-radius: 2rem;
-  transition: all 0.4s ease;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .detail-item:hover {
-  background: rgba(122, 40, 255, 0.05);
+  background: rgba(255, 255, 255, 0.05);
   border-color: var(--accent-color);
-  transform: translateY(-5px);
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(122, 40, 255, 0.1);
+}
+
+.detail-tag {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent-color);
+  font-weight: 600;
 }
 
 .detail-item h3 {
-  font-size: 1.5rem;
-  font-weight: 400;
-  margin-bottom: 1rem;
+  font-size: 1.8rem;
+  font-weight: 300;
   color: #fff;
+  letter-spacing: -0.01em;
 }
 
 .detail-item p {
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: rgba(255, 255, 255, 0.5);
   line-height: 1.6;
+  font-weight: 300;
+}
+
+/* Animations consistent with main site */
+.animate-up {
+  animation: slideUpFade 1s both;
+}
+
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .robotics-hero,
+  .robotics-details,
+  .robotics-cta {
+    padding: 4rem 1.5rem;
+    min-height: auto;
+  }
+  
+  .detail-item {
+    padding: 3rem 2rem;
+  }
 }
