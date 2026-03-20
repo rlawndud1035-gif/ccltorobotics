@@ -294,10 +294,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, { passive: true });
 
-  // Robotics Card Expansion Implementation
+  // Modular Robotics Content Loading
   const roboticsCard = document.querySelector('#robotics-card');
   const roboticsDetail = document.querySelector('#robotics-detail');
-  const backBtn = document.querySelector('.back-btn');
+  let isContentLoaded = false;
+
+  const loadRoboticsContent = async () => {
+    if (isContentLoaded) return;
+    try {
+      const response = await fetch('robotics.html');
+      const html = await response.text();
+      roboticsDetail.innerHTML = html;
+      isContentLoaded = true;
+      
+      // Bind back button after content is loaded
+      const backBtn = roboticsDetail.querySelector('.back-btn');
+      if (backBtn) {
+        backBtn.addEventListener('click', () => history.back());
+      }
+    } catch (err) {
+      console.error('Failed to load robotics content:', err);
+    }
+  };
+
+  // Pre-fetch content for zero-latency transition
+  loadRoboticsContent();
 
   const openRobotics = () => {
     if (isDetailViewActive) return;
@@ -305,7 +326,6 @@ document.addEventListener('DOMContentLoaded', () => {
     isDetailViewActive = true;
     const rect = roboticsCard.getBoundingClientRect();
     
-    // Set initial fixed position for animation
     roboticsCard.style.top = `${rect.top}px`;
     roboticsCard.style.left = `${rect.left}px`;
     roboticsCard.style.width = `${rect.width}px`;
@@ -313,7 +333,6 @@ document.addEventListener('DOMContentLoaded', () => {
     roboticsCard.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
     roboticsCard.classList.add('expanding');
 
-    // Trigger expansion to full screen
     requestAnimationFrame(() => {
       roboticsCard.style.top = '0';
       roboticsCard.style.left = '0';
@@ -322,11 +341,10 @@ document.addEventListener('DOMContentLoaded', () => {
       roboticsCard.style.backgroundColor = '#000';
     });
 
-    // Show detail view content with a staggered delay
     setTimeout(() => {
       roboticsDetail.classList.add('active');
       history.pushState({ view: 'robotics' }, 'Robotics');
-    }, 400); // Start showing content before expansion finishes for a fluid feel
+    }, 400);
   };
 
   const closeRobotics = () => {
@@ -334,7 +352,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     roboticsDetail.classList.remove('active');
     
-    // Slight delay before shrinking to let content fade out
     setTimeout(() => {
       const gridItem = document.querySelector('.expertise-grid').children[0];
       const rect = gridItem.getBoundingClientRect();
@@ -347,16 +364,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
       setTimeout(() => {
         roboticsCard.classList.remove('expanding');
-        roboticsCard.style = ''; // Reset inline styles
+        roboticsCard.style = '';
         isDetailViewActive = false;
       }, 800);
     }, 100);
   };
 
   roboticsCard.addEventListener('click', openRobotics);
-  backBtn.addEventListener('click', () => history.back());
 
-  // Handle Browser Back Button
   window.addEventListener('popstate', (e) => {
     if (isDetailViewActive) {
       closeRobotics();
