@@ -310,6 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
     roboticsCard.style.left = `${rect.left}px`;
     roboticsCard.style.width = `${rect.width}px`;
     roboticsCard.style.height = `${rect.height}px`;
+    roboticsCard.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
     roboticsCard.classList.add('expanding');
 
     // Trigger expansion to full screen
@@ -318,14 +319,14 @@ document.addEventListener('DOMContentLoaded', () => {
       roboticsCard.style.left = '0';
       roboticsCard.style.width = '100vw';
       roboticsCard.style.height = '100vh';
-      roboticsCard.style.background = '#000';
+      roboticsCard.style.backgroundColor = '#000';
     });
 
-    // Show detail view content
+    // Show detail view content with a staggered delay
     setTimeout(() => {
       roboticsDetail.classList.add('active');
       history.pushState({ view: 'robotics' }, 'Robotics');
-    }, 600);
+    }, 400); // Start showing content before expansion finishes for a fluid feel
   };
 
   const closeRobotics = () => {
@@ -333,22 +334,23 @@ document.addEventListener('DOMContentLoaded', () => {
     
     roboticsDetail.classList.remove('active');
     
-    // Shrink card back to original grid position
-    // We need to re-calculate original grid position relative to viewport
-    const gridItem = document.querySelector('.expertise-grid').children[0];
-    const rect = gridItem.getBoundingClientRect();
-
-    roboticsCard.style.top = `${rect.top}px`;
-    roboticsCard.style.left = `${rect.left}px`;
-    roboticsCard.style.width = `${rect.width}px`;
-    roboticsCard.style.height = `${rect.height}px`;
-    roboticsCard.style.background = 'rgba(255, 255, 255, 0.02)';
-
+    // Slight delay before shrinking to let content fade out
     setTimeout(() => {
-      roboticsCard.classList.remove('expanding');
-      roboticsCard.style = ''; // Reset inline styles
-      isDetailViewActive = false;
-    }, 800);
+      const gridItem = document.querySelector('.expertise-grid').children[0];
+      const rect = gridItem.getBoundingClientRect();
+
+      roboticsCard.style.top = `${rect.top}px`;
+      roboticsCard.style.left = `${rect.left}px`;
+      roboticsCard.style.width = `${rect.width}px`;
+      roboticsCard.style.height = `${rect.height}px`;
+      roboticsCard.style.backgroundColor = 'rgba(255, 255, 255, 0.02)';
+
+      setTimeout(() => {
+        roboticsCard.classList.remove('expanding');
+        roboticsCard.style = ''; // Reset inline styles
+        isDetailViewActive = false;
+      }, 800);
+    }, 100);
   };
 
   roboticsCard.addEventListener('click', openRobotics);
