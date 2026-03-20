@@ -234,6 +234,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 800); // Wait for native smooth scroll to finish
   };
 
+  // Keyboard Support
+  window.addEventListener('keydown', (e) => {
+    if (isScrolling) return;
+    
+    if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+      e.preventDefault();
+      scrollToSection(currentSectionIndex + 1);
+    } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+      e.preventDefault();
+      scrollToSection(currentSectionIndex - 1);
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      scrollToSection(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      scrollToSection(sections.length - 1);
+    }
+  });
+
   // Wheel Event for Desktop
   window.addEventListener('wheel', (e) => {
     e.preventDefault();
