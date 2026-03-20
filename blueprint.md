@@ -10,6 +10,7 @@ A web-based project for CCL Robotics, now integrated with a GitHub repository fo
 - **Environment:** Firebase Studio / Code OSS
 - **Assets:** 
     - `images/`: hosting project-specific visual content.
+    - `images/robotics/`: dedicated folder for robotics page visual assets.
     - `videos/`: hosting video demonstrations and prototypes.
     - `fonts/`: hosting local custom font files for self-hosted typography.
 - **Version Control:** Connected to [https://github.com/rlawndud1035-gif/ccltorobotics](https://github.com/rlawndud1035-gif/ccltorobotics)
