@@ -22,8 +22,35 @@
     text-align: center;
   }
 
+  /* Refined Entry Interactions */
+  .geist-h1.animate-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .geist-h2.animate-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  /* Trigger animations when parent detail-view is active */
+  .detail-view.active .geist-h1.animate-up {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.5s;
+  }
+
+  .detail-view.active .geist-h2.animate-up {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.65s;
+  }
+
   /* Flow Sections */
-  .process-section,
+...
+
   .robotics-cta {
     padding: 120px 2rem;
     display: flex;
