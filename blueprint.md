@@ -21,6 +21,7 @@ A web-based project for CCL Robotics, now integrated with a GitHub repository fo
 - **Image Integration:** Replaced `images/1.avif` with `images/2.png` in the gallery.
 - **Lightbox Feature:** Implemented a site-wide image lightbox that allows users to click and expand any image for a full-screen view.
 - **Video Integration:** Added a "Simplified Navigation Flow" section with `videos/prototype_1.mov` set to autoplay and loop.
+- **Expertise Cards:** Added a row of 4 specialized service cards ("UX/UI for robotics", "UX/UI for Vision AI", "Visual Design", "3D Design") after the Scan section.
 - **UI Refinement:** Reduced spacing between section titles and content grids for a tighter, more cohesive landing page layout.
 - **Responsive Fixes:** Corrected typos, allowed heading wrapping, and optimized font sizes for mobile.
 - **One Scroll Experience:**
