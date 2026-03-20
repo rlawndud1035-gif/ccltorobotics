@@ -25,27 +25,31 @@
   /* Refined Entry Interactions */
   .geist-h1.animate-up {
     opacity: 0;
-    transform: translateY(30px);
-    transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+    transform: translateY(40px) scale(0.98);
+    filter: blur(10px);
+    transition: all 1.4s cubic-bezier(0.23, 1, 0.32, 1);
   }
 
   .geist-h2.animate-up {
     opacity: 0;
     transform: translateY(30px);
-    transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+    filter: blur(5px);
+    transition: all 1.4s cubic-bezier(0.23, 1, 0.32, 1);
   }
 
   /* Trigger animations when parent detail-view is active */
   .detail-view.active .geist-h1.animate-up {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
+    filter: blur(0);
     transition-delay: 0.5s;
   }
 
   .detail-view.active .geist-h2.animate-up {
     opacity: 1;
     transform: translateY(0);
-    transition-delay: 0.65s;
+    filter: blur(0);
+    transition-delay: 0.7s;
   }
 
   /* Flow Sections */
