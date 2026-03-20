@@ -32,11 +32,17 @@
 .process-flow {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 4rem 2rem;
+  gap: 3rem 2rem;
   width: 100%;
   max-width: 1200px;
-  margin: 4rem auto 0;
+  margin: 2.5rem auto 0; /* Reduced margin from 4rem */
   position: relative;
+}
+
+.process-section {
+  padding: 4rem 2rem; /* Reduced padding from 6rem */
+  min-height: auto; /* Allow height to fit content naturally */
+  justify-content: flex-start; /* Align to top instead of center */
 }
 
 .process-card {
