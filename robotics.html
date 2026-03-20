@@ -1,20 +1,157 @@
+<style>
+  /* Localized styles for the Robotics page */
+  .detail-view {
+    background: #000 !important;
+  }
+
+  .detail-content {
+    max-width: 100% !important;
+    padding: 0 !important;
+    background: #000;
+  }
+
+  /* Hero Section - Full Height Impact */
+  .robotics-hero {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 2rem;
+    background: radial-gradient(circle at 50% 50%, rgba(122, 40, 255, 0.1) 0%, transparent 70%);
+    text-align: center;
+  }
+
+  /* Flow Sections */
+  .process-section,
+  .robotics-cta {
+    padding: 120px 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  .process-flow {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    width: 100%;
+    max-width: 1100px;
+    margin-top: 3rem;
+    position: relative;
+  }
+
+  .process-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 2.5rem 2rem;
+    border-radius: 1.5rem;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .process-card:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: var(--accent-color);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .process-number {
+    font-size: 2rem;
+    font-weight: 200;
+    color: var(--accent-color);
+    margin-bottom: 1rem;
+    opacity: 0.8;
+  }
+
+  .process-content h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.75rem;
+    color: #fff;
+    font-weight: 400;
+  }
+
+  .process-content p {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.6;
+  }
+
+  /* Connecting Arrows */
+  .process-card::after {
+    content: '→';
+    position: absolute;
+    right: -1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.1);
+    pointer-events: none;
+  }
+
+  .process-card:nth-child(3n)::after,
+  .process-card:last-child::after {
+    display: none;
+  }
+
+  /* Navigation */
+  .back-btn {
+    position: fixed;
+    top: 3rem;
+    left: 3rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    padding: 0.8rem 1.8rem;
+    border-radius: 3rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(20px);
+    z-index: 10001;
+  }
+
+  .back-btn:hover {
+    background: rgba(122, 40, 255, 0.2);
+    border-color: var(--accent-color);
+  }
+
+  @media (max-width: 1024px) {
+    .process-flow { grid-template-columns: repeat(2, 1fr); }
+    .process-card:nth-child(3n)::after { display: block; }
+    .process-card:nth-child(2n)::after { display: none; }
+  }
+
+  @media (max-width: 768px) {
+    .process-flow { grid-template-columns: 1fr; }
+    .process-card::after {
+      content: '↓';
+      right: auto;
+      left: 50%;
+      bottom: -1.25rem;
+      top: auto;
+      transform: translateX(-50%);
+    }
+    .back-btn { top: 1.5rem; left: 1.5rem; }
+  }
+</style>
+
 <div class="detail-content">
   <button class="back-btn">← Back to Overview</button>
 
-  <!-- Hero Section for Robotics -->
   <section class="robotics-hero">
     <div class="max-w-4xl">
       <h1 class="geist-h1 animate-up">EMS Dashboard</h1>
-      <p class="geist-h2 animate-up delay-1">Defining the next generation of human-robot interaction through tactile haptics and spatial awareness.</p>
+      <p class="geist-h2 animate-up delay-1">Precision monitoring and control systems for mission-critical robotic operations.</p>
     </div>
   </section>
 
-  <!-- Business Process Section -->
   <section class="process-section">
-...
-
+    <div class="max-w-4xl text-center">
       <h2 class="geist-h1 animate-up">Work Process</h2>
-      <p class="geist-h2 animate-up delay-1">A streamlined approach from conceptualization to deployment.</p>
+      <p class="geist-h2 animate-up delay-1">Our standardized workflow for industrial scale deployment.</p>
     </div>
 
     <div class="process-flow">
@@ -22,58 +159,52 @@
         <div class="process-number">01</div>
         <div class="process-content">
           <h3>Discovery</h3>
-          <p>Initial analysis of requirements and robot hardware constraints.</p>
+          <p>Initial analysis of requirements and hardware constraints.</p>
         </div>
       </div>
-
       <div class="process-card animate-up delay-3">
         <div class="process-number">02</div>
         <div class="process-content">
           <h3>UX Design</h3>
-          <p>Architecting seamless interaction flows between human and machine.</p>
+          <p>Architecting interaction flows between human and machine.</p>
         </div>
       </div>
-
       <div class="process-card animate-up delay-4">
         <div class="process-number">03</div>
         <div class="process-content">
           <h3>AI Integration</h3>
-          <p>Developing custom Vision AI models tailored for specific tasks.</p>
+          <p>Developing custom Vision AI models for the task.</p>
         </div>
       </div>
-
       <div class="process-card animate-up delay-1">
         <div class="process-number">04</div>
         <div class="process-content">
           <h3>Prototyping</h3>
-          <p>Rapid iterative prototyping with real hardware feedback loops.</p>
+          <p>Rapid iterative prototyping with hardware feedback.</p>
         </div>
       </div>
-
       <div class="process-card animate-up delay-2">
         <div class="process-number">05</div>
         <div class="process-content">
           <h3>Optimization</h3>
-          <p>Fine-tuning latency and precision for industrial performance.</p>
+          <p>Fine-tuning latency and precision for industrial speed.</p>
         </div>
       </div>
-
       <div class="process-card animate-up delay-3">
         <div class="process-number">06</div>
         <div class="process-content">
           <h3>Deployment</h3>
-          <p>Full-scale integration and continuous monitoring systems.</p>
+          <p>Full-scale integration and active monitoring systems.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Final CTA / Footer for Robotics -->
   <section class="robotics-cta">
     <div class="max-w-2xl outline-style">
       <h2 class="geist-h1">Ready to build?</h2>
-      <p class="geist-h2">Join us in shaping the future of industrial and domestic robotics.</p>
-      <a href="mailto:contact@cclrobotics.com" class="outline-btn">Contact Our Team</a>
-    </div>
+      <p class="geist-h2">Join us in shaping the future of robotics interaction.</p>
+      <a href="mailto:contact@cclrobotics.com" class="outline-btn">Contact Team</a>
+2    </div>
   </section>
 </div>
