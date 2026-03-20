@@ -12,6 +12,7 @@
 /* Individual Sections within the detail view */
 .robotics-hero,
 .robotics-details,
+.process-section,
 .robotics-cta {
   min-height: 100vh;
   display: flex;
@@ -78,6 +79,71 @@
   font-weight: 300;
 }
 
+/* Process Flow Styles */
+.process-flow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4rem 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 4rem auto 0;
+  position: relative;
+}
+
+.process-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 3rem 2rem;
+  border-radius: 1.5rem;
+  text-align: left;
+  transition: all 0.4s ease;
+}
+
+.process-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.process-number {
+  font-size: 3.5rem;
+  font-weight: 100;
+  color: rgba(122, 40, 255, 0.3);
+  margin-bottom: 1rem;
+  font-family: serif; /* Stylized number */
+}
+
+.process-content h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.75rem;
+  color: #fff;
+  font-weight: 400;
+}
+
+.process-content p {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.5;
+}
+
+/* Connecting Arrows (CSS version) */
+.process-card::after {
+  content: '→';
+  position: absolute;
+  right: -1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  color: rgba(122, 40, 255, 0.4);
+  pointer-events: none;
+}
+
+/* Remove arrow from the last item in each row or the very last item */
+.process-card:nth-child(3n)::after,
+.process-card:last-child::after {
+  display: none;
+}
+
 /* Animations consistent with main site */
 .animate-up {
   animation: slideUpFade 1s both;
@@ -100,12 +166,45 @@
 }
 
 /* Responsive adjustments */
+@media (max-width: 1024px) {
+  .process-flow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .process-card:nth-child(3n)::after {
+    display: block;
+  }
+  
+  .process-card:nth-child(2n)::after {
+    display: none;
+  }
+}
+
 @media (max-width: 768px) {
   .robotics-hero,
   .robotics-details,
+  .process-section,
   .robotics-cta {
     padding: 4rem 1.5rem;
     min-height: auto;
+  }
+  
+  .process-flow {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .process-card::after {
+    content: '↓';
+    right: auto;
+    left: 50%;
+    bottom: -1.5rem;
+    top: auto;
+    transform: translateX(-50%);
+  }
+  
+  .process-card:last-child::after {
+    display: none;
   }
   
   .detail-item {
