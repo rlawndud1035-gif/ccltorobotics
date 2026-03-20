@@ -10,7 +10,7 @@
     background: #000;
   }
 
-  /* Hero Section - Full Height Impact */
+  /* Hero Section */
   .robotics-hero {
     height: 100vh;
     display: flex;
@@ -30,7 +30,7 @@
     inset: 0;
     pointer-events: none;
     z-index: -1;
-    perspective: 1500px; /* Perspective increased for more natural depth */
+    perspective: 1500px;
   }
 
   .widget {
@@ -47,40 +47,21 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
-    opacity: 0.6; /* Slightly lower opacity for more background integration */
+    opacity: 0.6;
     filter: drop-shadow(0 15px 40px rgba(0,0,0,0.6));
   }
 
-  /* Widget Specific Animations - Extremely Smooth & Fluid */
   @keyframes widgetLife {
-    0% { 
-      opacity: 0; 
-      transform: translateZ(-800px) translateY(120px); 
-      filter: blur(25px); 
-    }
-    30% { 
-      opacity: 1; 
-      transform: translateZ(-150px) translateY(20px); 
-      filter: blur(0); 
-    }
-    75% { 
-      opacity: 1; 
-      transform: translateZ(50px) translateY(-20px); 
-      filter: blur(0); 
-    }
-    100% { 
-      opacity: 0; 
-      transform: translateZ(300px) translateY(-80px); 
-      filter: blur(15px); 
-    }
+    0% { opacity: 0; transform: translateZ(-800px) translateY(120px); filter: blur(25px); }
+    30% { opacity: 1; transform: translateZ(-150px) translateY(20px); filter: blur(0); }
+    75% { opacity: 1; transform: translateZ(50px) translateY(-20px); filter: blur(0); }
+    100% { opacity: 0; transform: translateZ(300px) translateY(-80px); filter: blur(15px); }
   }
 
-  /* Trigger animations with a very smooth bezier curve */
   .detail-view.active .widget {
     animation: widgetLife 7s cubic-bezier(0.33, 1, 0.68, 1) forwards;
   }
 
-  /* Individual Widget Positioning - Distributed wider across viewport */
   .w1 { top: 10%; left: 10%; width: 240px; height: 180px; animation-delay: 0.3s !important; }
   .w2 { top: 15%; right: 10%; width: 300px; height: 220px; animation-delay: 0.8s !important; }
   .w3 { bottom: 15%; left: 12%; width: 260px; height: 260px; animation-delay: 0.5s !important; }
@@ -92,17 +73,13 @@
   .w9 { bottom: 5%; left: 45%; width: 240px; height: 200px; animation-delay: 1.5s !important; }
   .w10 { top: 35%; right: 25%; width: 210px; height: 280px; animation-delay: 0.4s !important; }
 
-  /* Refined Entry Interactions - EMS Dashboard Title */
+  /* EMS Dashboard Title Interaction */
   .geist-h1.animate-up {
     opacity: 0;
     transform: translateY(50px) scale(0.96);
     filter: blur(15px);
     letter-spacing: -0.05em;
-    transition: 
-      opacity 1.6s cubic-bezier(0.215, 0.61, 0.355, 1),
-      transform 1.6s cubic-bezier(0.215, 0.61, 0.355, 1),
-      filter 1.6s cubic-bezier(0.215, 0.61, 0.355, 1),
-      letter-spacing 1.8s cubic-bezier(0.215, 0.61, 0.355, 1);
+    transition: opacity 1.6s cubic-bezier(0.215, 0.61, 0.355, 1), transform 1.6s cubic-bezier(0.215, 0.61, 0.355, 1), filter 1.6s cubic-bezier(0.215, 0.61, 0.355, 1), letter-spacing 1.8s cubic-bezier(0.215, 0.61, 0.355, 1);
   }
 
   .geist-h2.animate-up {
@@ -112,25 +89,13 @@
     transition: all 1.6s cubic-bezier(0.215, 0.61, 0.355, 1);
   }
 
-  /* Trigger animations when parent detail-view is active */
-  .detail-view.active .geist-h1.animate-up {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0);
-    letter-spacing: -0.02em;
-    transition-delay: 0.4s;
-  }
+  .detail-view.active .geist-h1.animate-up { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); letter-spacing: -0.02em; transition-delay: 0.4s; }
+  .detail-view.active .geist-h2.animate-up { opacity: 1; transform: translateY(0); filter: blur(0); transition-delay: 0.6s; }
 
-  .detail-view.active .geist-h2.animate-up {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-    transition-delay: 0.6s;
-  }
-
-  /* Flow Sections */
+  /* Process Flow */
   .process-section,
-  .robotics-cta {
+  .robotics-cta,
+  .services-section {
     padding: 120px 2rem;
     display: flex;
     flex-direction: column;
@@ -139,69 +104,161 @@
     background: rgba(0, 0, 0, 0.6);
   }
 
-  .process-flow {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
+  /* Vertical Tabs (Services) Styling */
+  .services-container {
     width: 100%;
-    max-width: 1100px;
-    margin-top: 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  @media (min-width: 1024px) {
+    .services-grid {
+      grid-template-columns: repeat(12, 1fr);
+      gap: 4rem;
+    }
+    .services-content { grid-column: span 5; order: 1; }
+    .services-gallery { grid-column: span 7; order: 2; }
+  }
+
+  .services-header { margin-bottom: 3rem; text-align: left; }
+  .services-tag {
+    font-size: 10px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    display: block;
+    margin-top: 0.5rem;
+  }
+
+  .tabs-list { display: flex; flex-direction: column; }
+
+  .tab-btn {
+    background: none;
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 2rem 0;
+    text-align: left;
+    display: flex;
+    gap: 1.5rem;
+    cursor: pointer;
     position: relative;
+    transition: all 0.5s ease;
+    color: rgba(255, 255, 255, 0.4);
   }
 
-  .process-card {
-    position: relative;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 2.5rem 2rem;
-    border-radius: 1.5rem;
-    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  }
+  .tab-btn:first-child { border-top: none; }
+  .tab-btn.active { color: #fff; }
 
-  .process-card:hover {
-    background: rgba(255, 255, 255, 0.04);
-    border-color: var(--accent-color);
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-  }
-
-  .process-number {
-    font-size: 2rem;
-    font-weight: 200;
-    color: var(--accent-color);
-    margin-bottom: 1rem;
-    opacity: 0.8;
-  }
-
-  .process-content h3 {
-    font-size: 1.3rem;
-    margin-bottom: 0.75rem;
-    color: #fff;
-    font-weight: 400;
-  }
-
-  .process-content p {
-    font-size: 0.95rem;
-    color: rgba(255, 255, 255, 0.5);
-    line-height: 1.6;
-  }
-
-  /* Connecting Arrows */
-  .process-card::after {
-    content: '→';
+  .tab-progress-bg {
     position: absolute;
-    right: -1.25rem;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 1.5rem;
-    color: rgba(255, 255, 255, 0.1);
-    pointer-events: none;
+    left: -24px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: rgba(255, 255, 255, 0.1);
   }
 
-  .process-card:nth-child(3n)::after,
-  .process-card:last-child::after {
-    display: none;
+  .tab-progress-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    height: 0%;
+    transform-origin: top;
   }
+
+  .tab-btn.active .tab-progress-fill {
+    animation: progressFill 5s linear forwards;
+  }
+
+  @keyframes progressFill {
+    from { height: 0%; }
+    to { height: 100%; }
+  }
+
+  .tab-id { font-size: 10px; opacity: 0.5; margin-top: 0.25rem; font-family: monospace; }
+  .tab-info { flex: 1; }
+  .tab-title { font-size: 2rem; display: block; margin-bottom: 0.5rem; font-weight: 300; transition: color 0.5s; }
+  .tab-description {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.5);
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    opacity: 0;
+  }
+
+  .tab-btn.active .tab-description {
+    max-height: 100px;
+    opacity: 1;
+    padding-bottom: 1rem;
+  }
+
+  /* Gallery Styling */
+  .gallery-wrapper {
+    position: relative;
+    border-radius: 2rem;
+    overflow: hidden;
+    aspect-ratio: 16 / 11;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .gallery-images {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .gallery-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transform: translateY(100%);
+    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .gallery-img.active { opacity: 1; transform: translateY(0); z-index: 1; }
+  .gallery-img.exit { opacity: 0; transform: translateY(-100%); z-index: 0; }
+
+  .gallery-nav {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    display: flex;
+    gap: 1rem;
+    z-index: 10;
+  }
+
+  .nav-btn {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+  }
+
+  .nav-btn:hover { background: #fff; color: #000; }
 
   /* Navigation */
   .back-btn {
@@ -219,28 +276,13 @@
     z-index: 10001;
   }
 
-  .back-btn:hover {
-    background: rgba(122, 40, 255, 0.2);
-    border-color: var(--accent-color);
-  }
-
-  @media (max-width: 1024px) {
-    .process-flow { grid-template-columns: repeat(2, 1fr); }
-    .process-card:nth-child(3n)::after { display: block; }
-    .process-card:nth-child(2n)::after { display: none; }
-  }
+  .back-btn:hover { background: rgba(122, 40, 255, 0.2); border-color: var(--accent-color); }
 
   @media (max-width: 768px) {
-    .process-flow { grid-template-columns: 1fr; }
-    .process-card::after {
-      content: '↓';
-      right: auto;
-      left: 50%;
-      bottom: -1.25rem;
-      top: auto;
-      transform: translateX(-50%);
-    }
-    .back-btn { top: 1.5rem; left: 1.5rem; }
+    .services-section { padding: 60px 1.5rem; }
+    .tab-btn { padding: 1.5rem 0; }
+    .tab-title { font-size: 1.5rem; }
+    .gallery-wrapper { aspect-ratio: 4 / 3; }
   }
 </style>
 
@@ -248,7 +290,6 @@
   <button class="back-btn">← Back to Overview</button>
 
   <section class="robotics-hero">
-    <!-- Background Widgets with real images -->
     <div class="hero-widgets">
       <div class="widget w1"><img src="images/robotics/widget1.png" alt="Widget 1"></div>
       <div class="widget w2"><img src="images/robotics/widget2.png" alt="Widget 2"></div>
@@ -261,7 +302,6 @@
       <div class="widget w9"><img src="images/robotics/widget9.png" alt="Widget 9"></div>
       <div class="widget w10"><img src="images/robotics/widget10.png" alt="Widget 10"></div>
     </div>
-
     <div class="max-w-4xl">
       <h1 class="geist-h1 animate-up">EMS Dashboard</h1>
       <p class="geist-h2 animate-up delay-1">Precision monitoring and control systems for mission-critical robotic operations.</p>
@@ -273,48 +313,66 @@
       <h2 class="geist-h1 animate-up">Work Process</h2>
       <p class="geist-h2 animate-up delay-1">Our standardized workflow for industrial scale deployment.</p>
     </div>
-
     <div class="process-flow">
-      <div class="process-card animate-up delay-2">
-        <div class="process-number">01</div>
-        <div class="process-content">
-          <h3>Discovery</h3>
-          <p>Initial analysis of requirements and hardware constraints.</p>
+      <!-- Process Cards (Existing) -->
+      <div class="process-card animate-up delay-2"><div class="process-number">01</div><div class="process-content"><h3>Discovery</h3><p>Initial analysis of requirements.</p></div></div>
+      <div class="process-card animate-up delay-3"><div class="process-number">02</div><div class="process-content"><h3>UX Design</h3><p>Architecting interaction flows.</p></div></div>
+      <div class="process-card animate-up delay-4"><div class="process-number">03</div><div class="process-content"><h3>AI Integration</h3><p>Developing custom Vision AI models.</p></div></div>
+      <div class="process-card animate-up delay-1"><div class="process-number">04</div><div class="process-content"><h3>Prototyping</h3><p>Rapid iterative prototyping.</p></div></div>
+      <div class="process-card animate-up delay-2"><div class="process-number">05</div><div class="process-content"><h3>Optimization</h3><p>Fine-tuning latency and precision.</p></div></div>
+      <div class="process-card animate-up delay-3"><div class="process-number">06</div><div class="process-content"><h3>Deployment</h3><p>Full-scale integration.</p></div></div>
+    </div>
+  </section>
+
+  <!-- New Services Vertical Tabs Section -->
+  <section class="services-section">
+    <div class="services-container">
+      <div class="services-grid">
+        <div class="services-content">
+          <div class="services-header">
+            <h2 class="geist-h1">How I can help you</h2>
+            <span class="services-tag">(SERVICES)</span>
+          </div>
+          <div class="tabs-list">
+            <button class="tab-btn active" data-index="0">
+              <div class="tab-progress-bg"><div class="tab-progress-fill"></div></div>
+              <span class="tab-id">/01</span>
+              <div class="tab-info">
+                <span class="tab-title">Web Design</span>
+                <p class="tab-description">Creating beautiful, functional, and user-centric digital experiences.</p>
+              </div>
+            </button>
+            <button class="tab-btn" data-index="1">
+              <div class="tab-progress-bg"><div class="tab-progress-fill"></div></div>
+              <span class="tab-id">/02</span>
+              <div class="tab-info">
+                <span class="tab-title">Framer Development</span>
+                <p class="tab-description">Building high-performance, animated websites with Framer.</p>
+              </div>
+            </button>
+            <button class="tab-btn" data-index="2">
+              <div class="tab-progress-bg"><div class="tab-progress-fill"></div></div>
+              <span class="tab-id">/03</span>
+              <div class="tab-info">
+                <span class="tab-title">Branding</span>
+                <p class="tab-description">Defining your brand's visual identity and voice for a lasting impression.</p>
+              </div>
+            </button>
+          </div>
         </div>
-      </div>
-      <div class="process-card animate-up delay-3">
-        <div class="process-number">02</div>
-        <div class="process-content">
-          <h3>UX Design</h3>
-          <p>Architecting interaction flows between human and machine.</p>
-        </div>
-      </div>
-      <div class="process-card animate-up delay-4">
-        <div class="process-number">03</div>
-        <div class="process-content">
-          <h3>AI Integration</h3>
-          <p>Developing custom Vision AI models for the task.</p>
-        </div>
-      </div>
-      <div class="process-card animate-up delay-1">
-        <div class="process-number">04</div>
-        <div class="process-content">
-          <h3>Prototyping</h3>
-          <p>Rapid iterative prototyping with hardware feedback.</p>
-        </div>
-      </div>
-      <div class="process-card animate-up delay-2">
-        <div class="process-number">05</div>
-        <div class="process-content">
-          <h3>Optimization</h3>
-          <p>Fine-tuning latency and precision for industrial speed.</p>
-        </div>
-      </div>
-      <div class="process-card animate-up delay-3">
-        <div class="process-number">06</div>
-        <div class="process-content">
-          <h3>Deployment</h3>
-          <p>Full-scale integration and active monitoring systems.</p>
+
+        <div class="services-gallery">
+          <div class="gallery-wrapper" id="gallery-trigger">
+            <div class="gallery-images">
+              <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1200" class="gallery-img active" data-index="0">
+              <img src="https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=1200" class="gallery-img" data-index="1">
+              <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200" class="gallery-img" data-index="2">
+            </div>
+            <div class="gallery-nav">
+              <button class="nav-btn" id="prev-service">←</button>
+              <button class="nav-btn" id="next-service">→</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -328,3 +386,72 @@
     </div>
   </section>
 </div>
+
+<script>
+  (function() {
+    const tabs = document.querySelectorAll('.tab-btn');
+    const images = document.querySelectorAll('.gallery-img');
+    const nextBtn = document.getElementById('next-service');
+    const prevBtn = document.getElementById('prev-service');
+    const galleryWrapper = document.getElementById('gallery-trigger');
+    
+    let currentIndex = 0;
+    let autoPlayInterval;
+    const DURATION = 5000;
+
+    function updateTabs(index) {
+      tabs.forEach((tab, i) => {
+        tab.classList.toggle('active', i === index);
+      });
+      images.forEach((img, i) => {
+        img.classList.remove('active', 'exit');
+        if (i === index) {
+          img.classList.add('active');
+        } else if (i === currentIndex) {
+          img.classList.add('exit');
+        }
+      });
+      currentIndex = index;
+    }
+
+    function nextSlide() {
+      let next = (currentIndex + 1) % tabs.length;
+      updateTabs(next);
+    }
+
+    function prevSlide() {
+      let prev = (currentIndex - 1 + tabs.length) % tabs.length;
+      updateTabs(prev);
+    }
+
+    function startAutoPlay() {
+      clearInterval(autoPlayInterval);
+      autoPlayInterval = setInterval(nextSlide, DURATION);
+    }
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => {
+        updateTabs(i);
+        startAutoPlay();
+      });
+    });
+
+    nextBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      nextSlide();
+      startAutoPlay();
+    });
+
+    prevBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      prevSlide();
+      startAutoPlay();
+    });
+
+    galleryWrapper.addEventListener('mouseenter', () => clearInterval(autoPlayInterval));
+    galleryWrapper.addEventListener('mouseleave', startAutoPlay);
+
+    // Initial Start
+    startAutoPlay();
+  })();
+</script>
