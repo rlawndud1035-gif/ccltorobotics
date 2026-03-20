@@ -19,6 +19,7 @@
     overflow-y: auto;
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
+    position: relative;
   }
 
   .detail-content section {
@@ -33,6 +34,8 @@
     position: relative;
     box-sizing: border-box;
     overflow: hidden;
+    background: transparent;
+    z-index: 1;
   }
 
   /* --- Hero Section --- */
@@ -40,6 +43,7 @@
     padding: 0 2rem;
     background: radial-gradient(circle at 50% 50%, rgba(122, 40, 255, 0.1) 0%, transparent 70%);
     text-align: center;
+    z-index: 2;
   }
 
   .hero-widgets {
@@ -110,7 +114,6 @@
   /* --- Work Process Section --- */
   .process-section {
     padding: 0 2rem;
-    background: #000;
   }
 
   .process-flow {
@@ -191,7 +194,7 @@
 
   /* --- Project Goals INTERACTIVE Section --- */
   .goals-section {
-    background: #000;
+    background: transparent;
     padding: 0 !important;
     perspective: 1000px;
   }
@@ -371,6 +374,11 @@
 
 <div class="detail-content" id="robotics-scroll-container">
   <button class="back-btn" onclick="history.back()">← Back to Overview</button>
+
+  <!-- Interactive Grid Warp Background (Starts from Work Process Section) -->
+  <div style="position: absolute; top: 100vh; left: 0; width: 100%; height: 300vh; z-index: 0; pointer-events: none; overflow: hidden;">
+    <iso-level-warp color="122, 40, 255" density="45" speed="0.8"></iso-level-warp>
+  </div>
 
   <!-- Hero Section -->
   <section class="robotics-hero">

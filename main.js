@@ -1,3 +1,165 @@
+class IsoLevelWarp extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.mouse = { x: -1000, y: -1000, targetX: -1000, targetY: -1000 };
+    this.time = 0;
+    this.animationFrameId = null;
+  }
+
+  connectedCallback() {
+    this.color = this.getAttribute('color') || "122, 40, 255";
+    this.speed = parseFloat(this.getAttribute('speed')) || 1;
+    this.density = parseInt(this.getAttribute('density')) || 40;
+    
+    this.shadowRoot.innerHTML = `
+      <style>
+        :host {
+          display: block;
+          position: absolute;
+          inset: 0;
+          z-index: -1;
+          overflow: hidden;
+          background: transparent;
+          pointer-events: none;
+        }
+        canvas {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+        .vignette {
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(circle at center, transparent 0%, #000 100%);
+          opacity: 0.5;
+          pointer-events: none;
+        }
+      </style>
+      <canvas></canvas>
+      <div class="vignette"></div>
+    `;
+    
+    this.canvas = this.shadowRoot.querySelector('canvas');
+    this.ctx = this.canvas.getContext('2d');
+    
+    this.resize();
+    this._resizeHandler = () => this.resize();
+    window.addEventListener('resize', this._resizeHandler);
+    
+    this._pointerMoveHandler = (e) => this.handleMouseMove(e);
+    window.addEventListener('pointermove', this._pointerMoveHandler);
+    
+    this.draw();
+  }
+
+  disconnectedCallback() {
+    cancelAnimationFrame(this.animationFrameId);
+    window.removeEventListener('resize', this._resizeHandler);
+    window.removeEventListener('pointermove', this._pointerMoveHandler);
+  }
+
+  resize() {
+    const dpr = window.devicePixelRatio || 1;
+    this.width = this.offsetWidth || window.innerWidth;
+    this.height = this.offsetHeight || window.innerHeight;
+    this.canvas.width = this.width * dpr;
+    this.canvas.height = this.height * dpr;
+    this.ctx.scale(dpr, dpr);
+  }
+
+  handleMouseMove(e) {
+    const rect = this.getBoundingClientRect();
+    this.mouse.targetX = e.clientX - rect.left;
+    this.mouse.targetY = e.clientY - rect.top;
+  }
+
+  smoothMix(a, b, t) {
+    return a + (b - a) * t;
+  }
+
+  draw() {
+    const ctx = this.ctx;
+    const width = this.width;
+    const height = this.height;
+    
+    ctx.clearRect(0, 0, width, height);
+    
+    this.mouse.x = this.smoothMix(this.mouse.x, this.mouse.targetX, 0.05);
+    this.mouse.y = this.smoothMix(this.mouse.y, this.mouse.targetY, 0.05);
+
+    this.time += 0.005 * this.speed;
+
+    const gridGap = this.density;
+    const rows = Math.ceil(height / gridGap) + 4;
+    const cols = Math.ceil(width / gridGap) + 4;
+
+    const gradient = ctx.createLinearGradient(0, 0, width, height);
+    gradient.addColorStop(0, `rgba(${this.color}, 0)`);
+    gradient.addColorStop(0.5, `rgba(${this.color}, 0.25)`);
+    gradient.addColorStop(1, `rgba(${this.color}, 0)`);
+
+    ctx.strokeStyle = gradient;
+    ctx.lineWidth = 1;
+
+    // Horizontal lines
+    for (let y = 0; y <= rows; y++) {
+      ctx.beginPath();
+      for (let x = 0; x <= cols; x++) {
+        const baseX = (x * gridGap) - (gridGap * 2);
+        const baseY = (y * gridGap) - (gridGap * 2);
+
+        const wave = Math.sin(x * 0.2 + this.time) * Math.cos(y * 0.2 + this.time) * 15;
+        
+        const dx = baseX - this.mouse.x;
+        const dy = baseY - this.mouse.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const maxDist = 350;
+        
+        const force = Math.max(0, (maxDist - dist) / maxDist);
+        const interactionY = -(force * force) * 70;
+
+        const finalX = baseX;
+        const finalY = baseY + wave + interactionY;
+
+        if (x === 0) ctx.moveTo(finalX, finalY);
+        else ctx.lineTo(finalX, finalY);
+      }
+      ctx.stroke();
+    }
+    
+    // Vertical lines
+    for (let x = 0; x <= cols; x++) {
+      ctx.beginPath();
+      for (let y = 0; y <= rows; y++) {
+        const baseX = (x * gridGap) - (gridGap * 2);
+        const baseY = (y * gridGap) - (gridGap * 2);
+
+        const wave = Math.sin(x * 0.2 + this.time) * Math.cos(y * 0.2 + this.time) * 15;
+        
+        const dx = baseX - this.mouse.x;
+        const dy = baseY - this.mouse.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const maxDist = 350;
+        
+        const force = Math.max(0, (maxDist - dist) / maxDist);
+        const interactionY = -(force * force) * 70;
+
+        const finalX = baseX;
+        const finalY = baseY + wave + interactionY;
+
+        if (y === 0) ctx.moveTo(finalX, finalY);
+        else ctx.lineTo(finalX, finalY);
+      }
+      ctx.stroke();
+    }
+
+    this.animationFrameId = requestAnimationFrame(() => this.draw());
+  }
+}
+
+customElements.define('iso-level-warp', IsoLevelWarp);
+
 class InteractiveNeuralVortex extends HTMLElement {
   constructor() {
     super();
