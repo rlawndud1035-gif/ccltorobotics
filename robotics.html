@@ -51,34 +51,22 @@
     filter: drop-shadow(0 15px 40px rgba(0,0,0,0.6));
   }
 
-  /* 1. Entry Animation: Come from distance and stay */
   @keyframes widgetEntry {
-    0% { 
-      opacity: 0; 
-      transform: translateZ(-800px) translateY(120px); 
-      filter: blur(25px); 
-    }
-    100% { 
-      opacity: 1; 
-      transform: translateZ(0) translateY(0); 
-      filter: blur(0); 
-    }
+    0% { opacity: 0; transform: translateZ(-800px) translateY(120px); filter: blur(25px); }
+    100% { opacity: 1; transform: translateZ(0) translateY(0); filter: blur(0); }
   }
 
-  /* 2. Floating Animation: Infinite gentle bobbing */
   @keyframes widgetFloat {
     0%, 100% { transform: translateZ(0) translateY(0); }
     50% { transform: translateZ(20px) translateY(-15px); }
   }
 
-  /* Combine: Entry once, then Float infinitely */
   .detail-view.active .widget {
     animation: 
       widgetEntry 3s cubic-bezier(0.23, 1, 0.32, 1) forwards,
-      widgetFloat 6s ease-in-out 3s infinite; /* Starts after Entry finishes */
+      widgetFloat 6s ease-in-out 3s infinite;
   }
 
-  /* Individual Widget Positioning */
   .w1 { top: 10%; left: 10%; width: 240px; height: 180px; animation-delay: 0.3s, 3.3s !important; }
   .w2 { top: 15%; right: 10%; width: 300px; height: 220px; animation-delay: 0.8s, 3.8s !important; }
   .w3 { bottom: 15%; left: 12%; width: 260px; height: 260px; animation-delay: 0.5s, 3.5s !important; }
@@ -109,11 +97,124 @@
   .detail-view.active .geist-h1.animate-up { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); letter-spacing: -0.02em; transition-delay: 0.4s; }
   .detail-view.active .geist-h2.animate-up { opacity: 1; transform: translateY(0); filter: blur(0); transition-delay: 0.6s; }
 
-  /* Process Flow */
-  .process-section,
-  .robotics-cta,
+  /* --- Cinematic Work Process Section --- */
+  .process-section {
+    padding: 160px 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #000;
+    position: relative;
+  }
+
+  .process-flow {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+    width: 100%;
+    max-width: 1200px;
+    margin-top: 6rem;
+    position: relative;
+  }
+
+  /* Connector line for desktop */
+  @media (min-width: 1024px) {
+    .process-flow::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 5%;
+      right: 5%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(122, 40, 255, 0.2), transparent);
+      z-index: 0;
+    }
+  }
+
+  .process-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 4rem 2.5rem;
+    border-radius: 2.5rem;
+    text-align: left;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    z-index: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 320px;
+  }
+
+  .process-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top right, rgba(122, 40, 255, 0.1), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+
+  .process-card:hover {
+    transform: translateY(-15px) scale(1.02);
+    border-color: rgba(122, 40, 255, 0.4);
+    background: rgba(255, 255, 255, 0.03);
+    box-shadow: 
+      0 30px 60px rgba(0, 0, 0, 0.8),
+      0 0 40px rgba(122, 40, 255, 0.1);
+  }
+
+  .process-card:hover::before {
+    opacity: 1;
+  }
+
+  .process-number {
+    position: absolute;
+    top: 2rem;
+    left: 2.5rem;
+    font-size: 5rem;
+    font-weight: 900;
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.05);
+    transition: all 0.6s ease;
+    font-family: 'Geist', sans-serif;
+  }
+
+  .process-card:hover .process-number {
+    -webkit-text-stroke: 1px rgba(122, 40, 255, 0.3);
+    transform: scale(1.1) translateX(10px);
+  }
+
+  .process-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .process-content h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: #fff;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+  }
+
+  .process-content p {
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.4);
+    line-height: 1.6;
+    font-weight: 300;
+    transition: color 0.6s ease;
+  }
+
+  .process-card:hover .process-content p {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  /* --- Services Vertical Tabs Section --- */
   .services-section {
-    padding: 120px 2rem;
+    padding: 160px 2rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -121,7 +222,6 @@
     background: rgba(0, 0, 0, 0.6);
   }
 
-  /* Vertical Tabs (Services) Styling */
   .services-container {
     width: 100%;
     max-width: 1200px;
@@ -295,11 +395,28 @@
 
   .back-btn:hover { background: rgba(122, 40, 255, 0.2); border-color: var(--accent-color); }
 
+  @media (max-width: 1024px) {
+    .process-flow { grid-template-columns: repeat(2, 1fr); }
+  }
+
   @media (max-width: 768px) {
+    .process-section { padding: 80px 1.5rem; }
+    .process-flow { grid-template-columns: 1fr; margin-top: 3rem; gap: 2rem; }
+    .process-card { min-height: auto; padding: 3rem 2rem; }
     .services-section { padding: 60px 1.5rem; }
     .tab-btn { padding: 1.5rem 0; }
     .tab-title { font-size: 1.5rem; }
     .gallery-wrapper { aspect-ratio: 4 / 3; }
+    .back-btn { top: 1.5rem; left: 1.5rem; }
+  }
+
+  .robotics-cta {
+    padding: 120px 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.6);
   }
 </style>
 
@@ -330,18 +447,53 @@
       <h2 class="geist-h1 animate-up">Work Process</h2>
       <p class="geist-h2 animate-up delay-1">Our standardized workflow for industrial scale deployment.</p>
     </div>
+    
     <div class="process-flow">
-      <!-- Process Cards (Existing) -->
-      <div class="process-card animate-up delay-2"><div class="process-number">01</div><div class="process-content"><h3>Discovery</h3><p>Initial analysis of requirements.</p></div></div>
-      <div class="process-card animate-up delay-3"><div class="process-number">02</div><div class="process-content"><h3>UX Design</h3><p>Architecting interaction flows.</p></div></div>
-      <div class="process-card animate-up delay-4"><div class="process-number">03</div><div class="process-content"><h3>AI Integration</h3><p>Developing custom Vision AI models.</p></div></div>
-      <div class="process-card animate-up delay-1"><div class="process-number">04</div><div class="process-content"><h3>Prototyping</h3><p>Rapid iterative prototyping.</p></div></div>
-      <div class="process-card animate-up delay-2"><div class="process-number">05</div><div class="process-content"><h3>Optimization</h3><p>Fine-tuning latency and precision.</p></div></div>
-      <div class="process-card animate-up delay-3"><div class="process-number">06</div><div class="process-content"><h3>Deployment</h3><p>Full-scale integration.</p></div></div>
+      <div class="process-card animate-up delay-2">
+        <div class="process-number">01</div>
+        <div class="process-content">
+          <h3>Discovery</h3>
+          <p>Initial analysis of requirements, hardware constraints, and operational goals.</p>
+        </div>
+      </div>
+      <div class="process-card animate-up delay-3">
+        <div class="process-number">02</div>
+        <div class="process-content">
+          <h3>UX Design</h3>
+          <p>Architecting seamless interaction flows between human operators and machine intelligence.</p>
+        </div>
+      </div>
+      <div class="process-card animate-up delay-4">
+        <div class="process-number">03</div>
+        <div class="process-content">
+          <h3>AI Integration</h3>
+          <p>Developing custom Vision AI models tailored for specific industrial environmental perception.</p>
+        </div>
+      </div>
+      <div class="process-card animate-up delay-1">
+        <div class="process-number">04</div>
+        <div class="process-content">
+          <h3>Prototyping</h3>
+          <p>Rapid iterative prototyping with real hardware feedback loops and safety validation.</p>
+        </div>
+      </div>
+      <div class="process-card animate-up delay-2">
+        <div class="process-number">05</div>
+        <div class="process-content">
+          <h3>Optimization</h3>
+          <p>Fine-tuning latency, throughput, and precision for high-performance industrial standards.</p>
+        </div>
+      </div>
+      <div class="process-card animate-up delay-3">
+        <div class="process-number">06</div>
+        <div class="process-content">
+          <h3>Deployment</h3>
+          <p>Full-scale systems integration with continuous monitoring and adaptive updates.</p>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- New Services Vertical Tabs Section -->
   <section class="services-section">
     <div class="services-container">
       <div class="services-grid">
@@ -468,7 +620,6 @@
     galleryWrapper.addEventListener('mouseenter', () => clearInterval(autoPlayInterval));
     galleryWrapper.addEventListener('mouseleave', startAutoPlay);
 
-    // Initial Start
     startAutoPlay();
   })();
 </script>
