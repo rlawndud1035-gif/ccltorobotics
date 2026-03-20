@@ -1,5 +1,5 @@
 <style>
-  /* Localized styles for the Robotics page */
+  /* Localized styles for the Robotics page with One-Page Scroll */
   .detail-view {
     background: #000 !important;
   }
@@ -8,19 +8,31 @@
     max-width: 100% !important;
     padding: 0 !important;
     background: #000;
+    height: 100vh;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+  }
+
+  /* Section snapping */
+  .detail-content section {
+    height: 100vh;
+    width: 100%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    box-sizing: border-box;
   }
 
   /* Hero Section */
   .robotics-hero {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     padding: 0 2rem;
     background: radial-gradient(circle at 50% 50%, rgba(122, 40, 255, 0.1) 0%, transparent 70%);
     text-align: center;
-    position: relative;
     overflow: hidden;
   }
 
@@ -78,7 +90,7 @@
   .w9 { bottom: 5%; left: 45%; width: 240px; height: 200px; animation-delay: 1.5s, 4.5s !important; }
   .w10 { top: 35%; right: 25%; width: 210px; height: 280px; animation-delay: 0.4s, 3.4s !important; }
 
-  /* EMS Dashboard Title Interaction */
+  /* Title Animations */
   .geist-h1.animate-up {
     opacity: 0;
     transform: translateY(50px) scale(0.96);
@@ -97,9 +109,9 @@
   .detail-view.active .geist-h1.animate-up { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); letter-spacing: -0.02em; transition-delay: 0.4s; }
   .detail-view.active .geist-h2.animate-up { opacity: 1; transform: translateY(0); filter: blur(0); transition-delay: 0.6s; }
 
-  /* --- Cinematic Work Process Section --- */
+  /* Work Process Section */
   .process-section {
-    padding: 160px 2rem;
+    padding: 0 2rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -114,11 +126,10 @@
     gap: 4rem 3rem;
     width: 100%;
     max-width: 1200px;
-    margin-top: 6rem;
+    margin-top: 4rem;
     position: relative;
   }
 
-  /* Connector line for desktop (Flow arrows) */
   @media (min-width: 1024px) {
     .process-card:not(:nth-child(3n))::after {
       content: '→';
@@ -131,7 +142,6 @@
       font-family: serif;
       pointer-events: none;
     }
-    /* Horizontal lines connecting rows */
     .process-card:nth-child(n+4)::before {
       content: '';
       position: absolute;
@@ -147,7 +157,7 @@
     position: relative;
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 4rem 2.5rem;
+    padding: 3rem 2.5rem;
     border-radius: 2.5rem;
     text-align: left;
     transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
@@ -155,7 +165,7 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    min-height: 320px;
+    min-height: 220px;
   }
 
   .process-card:hover {
@@ -167,14 +177,13 @@
 
   .process-number {
     position: absolute;
-    top: 2.5rem;
+    top: 2rem;
     left: 2.5rem;
-    font-size: 5rem;
+    font-size: 4rem;
     font-weight: 900;
     line-height: 1;
     color: rgba(255, 255, 255, 0.03);
     transition: all 0.6s ease;
-    font-family: 'Geist', sans-serif;
   }
 
   .process-card:hover .process-number {
@@ -182,201 +191,24 @@
     transform: scale(1.1);
   }
 
-  /* Specific number style for clarity */
-  .process-card .step-label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: rgba(122, 40, 255, 0.8);
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    margin-bottom: 1rem;
-    display: block;
-  }
-
-  .process-content {
-    position: relative;
-    z-index: 2;
-  }
-
   .process-content h3 {
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
+    font-size: 1.6rem;
+    margin-bottom: 0.8rem;
     color: #fff;
     font-weight: 300;
-    letter-spacing: -0.02em;
   }
 
   .process-content p {
-    font-size: 1.05rem;
+    font-size: 0.95rem;
     color: rgba(255, 255, 255, 0.4);
     line-height: 1.6;
-    font-weight: 300;
   }
 
-  /* --- Services Vertical Tabs Section --- */
-  .services-section {
-    padding: 160px 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  /* CTA Section */
+  .robotics-cta {
+    background: #000;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
-    background: rgba(0, 0, 0, 0.6);
   }
-
-  .services-container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .services-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 3rem;
-    align-items: start;
-  }
-
-  @media (min-width: 1024px) {
-    .services-grid {
-      grid-template-columns: repeat(12, 1fr);
-      gap: 4rem;
-    }
-    .services-content { grid-column: span 5; order: 1; }
-    .services-gallery { grid-column: span 7; order: 2; }
-  }
-
-  .services-header { margin-bottom: 3rem; text-align: left; }
-  .services-tag {
-    font-size: 10px;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.4);
-    text-transform: uppercase;
-    letter-spacing: 0.3em;
-    display: block;
-    margin-top: 0.5rem;
-  }
-
-  .tabs-list { display: flex; flex-direction: column; }
-
-  .tab-btn {
-    background: none;
-    border: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 2rem 0;
-    text-align: left;
-    display: flex;
-    gap: 1.5rem;
-    cursor: pointer;
-    position: relative;
-    transition: all 0.5s ease;
-    color: rgba(255, 255, 255, 0.4);
-  }
-
-  .tab-btn:first-child { border-top: none; }
-  .tab-btn.active { color: #fff; }
-
-  .tab-progress-bg {
-    position: absolute;
-    left: -24px;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: rgba(255, 255, 255, 0.1);
-  }
-
-  .tab-progress-fill {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background: #fff;
-    height: 0%;
-    transform-origin: top;
-  }
-
-  .tab-btn.active .tab-progress-fill {
-    animation: progressFill 5s linear forwards;
-  }
-
-  @keyframes progressFill {
-    from { height: 0%; }
-    to { height: 100%; }
-  }
-
-  .tab-id { font-size: 10px; opacity: 0.5; margin-top: 0.25rem; font-family: monospace; }
-  .tab-info { flex: 1; }
-  .tab-title { font-size: 2rem; display: block; margin-bottom: 0.5rem; font-weight: 300; transition: color 0.5s; }
-  .tab-description {
-    font-size: 1rem;
-    color: rgba(255, 255, 255, 0.5);
-    max-height: 0;
-    overflow: hidden;
-    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-    opacity: 0;
-  }
-
-  .tab-btn.active .tab-description {
-    max-height: 100px;
-    opacity: 1;
-    padding-bottom: 1rem;
-  }
-
-  /* Gallery Styling */
-  .gallery-wrapper {
-    position: relative;
-    border-radius: 2rem;
-    overflow: hidden;
-    aspect-ratio: 16 / 11;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .gallery-images {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-  }
-
-  .gallery-img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0;
-    transform: translateY(100%);
-    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  .gallery-img.active { opacity: 1; transform: translateY(0); z-index: 1; }
-  .gallery-img.exit { opacity: 0; transform: translateY(-100%); z-index: 0; }
-
-  .gallery-nav {
-    position: absolute;
-    bottom: 2rem;
-    right: 2rem;
-    display: flex;
-    gap: 1rem;
-    z-index: 10;
-  }
-
-  .nav-btn {
-    width: 3.5rem;
-    height: 3.5rem;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #fff;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s;
-  }
-
-  .nav-btn:hover { background: #fff; color: #000; }
 
   /* Navigation */
   .back-btn {
@@ -396,46 +228,32 @@
 
   .back-btn:hover { background: rgba(122, 40, 255, 0.2); border-color: var(--accent-color); }
 
-  @media (max-width: 1024px) {
-    .process-flow { grid-template-columns: repeat(2, 1fr); }
-  }
-
+  /* Mobile Fixes */
   @media (max-width: 768px) {
-    .process-section { padding: 80px 1.5rem; }
-    .process-flow { grid-template-columns: 1fr; margin-top: 3rem; gap: 2rem; }
-    .process-card { min-height: auto; padding: 3rem 2rem; }
-    .services-section { padding: 60px 1.5rem; }
-    .tab-btn { padding: 1.5rem 0; }
-    .tab-title { font-size: 1.5rem; }
-    .gallery-wrapper { aspect-ratio: 4 / 3; }
-    .back-btn { top: 1.5rem; left: 1.5rem; }
-  }
-
-  .robotics-cta {
-    padding: 120px 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    background: rgba(0, 0, 0, 0.6);
+    .detail-content { scroll-snap-type: none; }
+    .detail-content section { height: auto; min-height: 100vh; padding: 6rem 1.5rem; }
+    .process-flow { grid-template-columns: 1fr; gap: 2rem; margin-top: 2rem; }
+    .process-card { min-height: auto; }
+    .geist-h1 { font-size: 2.5rem !important; }
+    .geist-h2 { font-size: 1.2rem !important; }
   }
 </style>
 
-<div class="detail-content">
-  <button class="back-btn">← Back to Overview</button>
+<div class="detail-content" id="robotics-scroll-container">
+  <button class="back-btn" onclick="history.back()">← Back to Overview</button>
 
   <section class="robotics-hero">
     <div class="hero-widgets">
-      <div class="widget w1"><img src="images/robotics/widget1.png" alt="Widget 1"></div>
-      <div class="widget w2"><img src="images/robotics/widget2.png" alt="Widget 2"></div>
-      <div class="widget w3"><img src="images/robotics/widget3.png" alt="Widget 3"></div>
-      <div class="widget w4"><img src="images/robotics/widget4.png" alt="Widget 4"></div>
-      <div class="widget w5"><img src="images/robotics/widget5.png" alt="Widget 5"></div>
-      <div class="widget w6"><img src="images/robotics/widget6.png" alt="Widget 6"></div>
-      <div class="widget w7"><img src="images/robotics/widget7.png" alt="Widget 7"></div>
-      <div class="widget w8"><img src="images/robotics/widget8.png" alt="Widget 8"></div>
-      <div class="widget w9"><img src="images/robotics/widget9.png" alt="Widget 9"></div>
-      <div class="widget w10"><img src="images/robotics/widget10.png" alt="Widget 10"></div>
+      <div class="widget w1"><img src="images/robotics/widget1.png" alt=""></div>
+      <div class="widget w2"><img src="images/robotics/widget2.png" alt=""></div>
+      <div class="widget w3"><img src="images/robotics/widget3.png" alt=""></div>
+      <div class="widget w4"><img src="images/robotics/widget4.png" alt=""></div>
+      <div class="widget w5"><img src="images/robotics/widget5.png" alt=""></div>
+      <div class="widget w6"><img src="images/robotics/widget6.png" alt=""></div>
+      <div class="widget w7"><img src="images/robotics/widget7.png" alt=""></div>
+      <div class="widget w8"><img src="images/robotics/widget8.png" alt=""></div>
+      <div class="widget w9"><img src="images/robotics/widget9.png" alt=""></div>
+      <div class="widget w10"><img src="images/robotics/widget10.png" alt=""></div>
     </div>
     <div class="max-w-4xl">
       <h1 class="geist-h1 animate-up">EMS Dashboard</h1>
@@ -445,61 +263,95 @@
 
   <section class="process-section">
     <div class="max-w-4xl text-center">
-      <h2 class="geist-h1 animate-up">Work Process</h2>
-      <p class="geist-h2 animate-up delay-1">Our standardized workflow for industrial scale deployment.</p>
+      <h2 class="geist-h1">Work Process</h2>
+      <p class="geist-h2">Our standardized workflow for industrial scale deployment.</p>
     </div>
     
     <div class="process-flow">
-      <div class="process-card animate-up delay-2">
+      <div class="process-card">
         <div class="process-number">01</div>
         <div class="process-content">
           <h3>Discovery</h3>
           <p>Initial analysis of requirements, hardware constraints, and operational goals.</p>
         </div>
       </div>
-      <div class="process-card animate-up delay-3">
+      <div class="process-card">
         <div class="process-number">02</div>
         <div class="process-content">
           <h3>UX Design</h3>
-          <p>Architecting seamless interaction flows between human operators and machine intelligence.</p>
+          <p>Architecting seamless interaction flows between human and machine intelligence.</p>
         </div>
       </div>
-      <div class="process-card animate-up delay-4">
+      <div class="process-card">
         <div class="process-number">03</div>
         <div class="process-content">
           <h3>AI Integration</h3>
-          <p>Developing custom Vision AI models tailored for specific industrial environmental perception.</p>
+          <p>Developing custom Vision AI models for industrial environmental perception.</p>
         </div>
       </div>
-      <div class="process-card animate-up delay-1">
+      <div class="process-card">
         <div class="process-number">04</div>
         <div class="process-content">
           <h3>Prototyping</h3>
-          <p>Rapid iterative prototyping with real hardware feedback loops and safety validation.</p>
+          <p>Rapid iterative prototyping with real hardware feedback loops.</p>
         </div>
       </div>
-      <div class="process-card animate-up delay-2">
+      <div class="process-card">
         <div class="process-number">05</div>
         <div class="process-content">
           <h3>Optimization</h3>
           <p>Fine-tuning latency, throughput, and precision for high-performance industrial standards.</p>
         </div>
       </div>
-      <div class="process-card animate-up delay-3">
+      <div class="process-card">
         <div class="process-number">06</div>
         <div class="process-content">
           <h3>Deployment</h3>
-          <p>Full-scale systems integration with continuous monitoring and adaptive updates.</p>
+          <p>Full-scale systems integration with continuous monitoring.</p>
         </div>
       </div>
     </div>
   </section>
 
   <section class="robotics-cta">
-    <div class="max-w-2xl outline-style">
+    <div class="max-w-2xl text-center">
       <h2 class="geist-h1">Ready to build?</h2>
-      <p class="geist-h2">Join us in shaping the future of robotics interaction.</p>
-      <a href="mailto:contact@cclrobotics.com" class="outline-btn">Contact Team</a>
+      <p class="geist-h2" style="margin-bottom: 3rem;">Join us in shaping the future of robotics interaction.</p>
+      <a href="mailto:contact@cclrobotics.com" class="outline-btn" style="padding: 1.2rem 3.5rem; border: 1px solid #fff; color: #fff; text-decoration: none; border-radius: 4rem; transition: 0.3s;">Contact Team</a>
     </div>
   </section>
 </div>
+
+<script>
+  (function() {
+    const container = document.getElementById('robotics-scroll-container');
+    const sections = container.querySelectorAll('section');
+    let isScrolling = false;
+
+    window.addEventListener('keydown', (e) => {
+      if (isScrolling || window.innerWidth <= 768) return;
+
+      const currentScroll = container.scrollTop;
+      const sectionHeight = window.innerHeight;
+      let targetIndex = Math.round(currentScroll / sectionHeight);
+
+      if (e.key === 'ArrowDown') {
+        if (targetIndex < sections.length - 1) {
+          e.preventDefault();
+          scrollToSection(targetIndex + 1);
+        }
+      } else if (e.key === 'ArrowUp') {
+        if (targetIndex > 0) {
+          e.preventDefault();
+          scrollToSection(targetIndex - 1);
+        }
+      }
+    });
+
+    function scrollToSection(index) {
+      isScrolling = true;
+      sections[index].scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => { isScrolling = false; }, 800);
+    }
+  })();
+</script>
