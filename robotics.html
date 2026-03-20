@@ -179,16 +179,19 @@
     position: absolute;
     top: 2rem;
     left: 2.5rem;
-    font-size: 4rem;
+    font-size: 5.5rem;
     font-weight: 900;
     line-height: 1;
-    color: rgba(255, 255, 255, 0.03);
-    transition: all 0.6s ease;
+    color: rgba(255, 255, 255, 0.07);
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    font-family: 'Geist', sans-serif;
   }
 
   .process-card:hover .process-number {
-    color: rgba(122, 40, 255, 0.1);
-    transform: scale(1.1);
+    color: rgba(122, 40, 255, 0.2);
+    -webkit-text-stroke: 1px rgba(122, 40, 255, 0.4);
+    transform: scale(1.05) translateY(-5px);
   }
 
   .process-content h3 {
