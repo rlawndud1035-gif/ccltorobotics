@@ -207,9 +207,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const sections = document.querySelectorAll('section');
   let isScrolling = false;
   let currentSectionIndex = 0;
+  let isDetailViewActive = false;
 
   // Determine current section based on scroll position
   const updateCurrentIndex = () => {
+    if (isDetailViewActive) return;
     const scrollPos = window.scrollY;
     sections.forEach((section, index) => {
       if (Math.abs(scrollPos - section.offsetTop) < 10) {
@@ -219,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const scrollToSection = (index) => {
-    if (index < 0 || index >= sections.length || isScrolling) return;
+    if (index < 0 || index >= sections.length || isScrolling || isDetailViewActive) return;
     
     isScrolling = true;
     currentSectionIndex = index;
@@ -231,12 +233,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setTimeout(() => {
       isScrolling = false;
-    }, 800); // Wait for native smooth scroll to finish
+    }, 800);
   };
 
   // Keyboard Support
   window.addEventListener('keydown', (e) => {
-    if (isScrolling) return;
+    if (isScrolling || isDetailViewActive) return;
     
     if (e.key === 'ArrowDown' || e.key === 'PageDown') {
       e.preventDefault();
@@ -253,8 +255,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Wheel Event for Desktop
+  // Wheel Event
   window.addEventListener('wheel', (e) => {
+    if (isDetailViewActive) return;
     e.preventDefault();
     if (isScrolling) return;
     
@@ -265,21 +268,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, { passive: false });
 
-  // Touch Support for Mobile
+  // Touch Support
   let touchStartY = 0;
   window.addEventListener('touchstart', (e) => {
+    if (isDetailViewActive) return;
     touchStartY = e.touches[0].clientY;
   }, { passive: true });
 
   window.addEventListener('touchmove', (e) => {
+    if (isDetailViewActive) return;
     if (isScrolling) e.preventDefault();
   }, { passive: false });
 
   window.addEventListener('touchend', (e) => {
+    if (isDetailViewActive) return;
     const touchEndY = e.changedTouches[0].clientY;
     const deltaY = touchStartY - touchEndY;
     
-    if (Math.abs(deltaY) > 50) { // Threshold for swipe
+    if (Math.abs(deltaY) > 50) {
       if (deltaY > 0) {
         scrollToSection(currentSectionIndex + 1);
       } else {
@@ -288,13 +294,77 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, { passive: true });
 
-  // Initial check
+  // Robotics Card Expansion Implementation
+  const roboticsCard = document.querySelector('#robotics-card');
+  const roboticsDetail = document.querySelector('#robotics-detail');
+  const backBtn = document.querySelector('.back-btn');
+
+  const openRobotics = () => {
+    if (isDetailViewActive) return;
+    
+    isDetailViewActive = true;
+    const rect = roboticsCard.getBoundingClientRect();
+    
+    // Set initial fixed position for animation
+    roboticsCard.style.top = `${rect.top}px`;
+    roboticsCard.style.left = `${rect.left}px`;
+    roboticsCard.style.width = `${rect.width}px`;
+    roboticsCard.style.height = `${rect.height}px`;
+    roboticsCard.classList.add('expanding');
+
+    // Trigger expansion to full screen
+    requestAnimationFrame(() => {
+      roboticsCard.style.top = '0';
+      roboticsCard.style.left = '0';
+      roboticsCard.style.width = '100vw';
+      roboticsCard.style.height = '100vh';
+      roboticsCard.style.background = '#000';
+    });
+
+    // Show detail view content
+    setTimeout(() => {
+      roboticsDetail.classList.add('active');
+      history.pushState({ view: 'robotics' }, 'Robotics');
+    }, 600);
+  };
+
+  const closeRobotics = () => {
+    if (!isDetailViewActive) return;
+    
+    roboticsDetail.classList.remove('active');
+    
+    // Shrink card back to original grid position
+    // We need to re-calculate original grid position relative to viewport
+    const gridItem = document.querySelector('.expertise-grid').children[0];
+    const rect = gridItem.getBoundingClientRect();
+
+    roboticsCard.style.top = `${rect.top}px`;
+    roboticsCard.style.left = `${rect.left}px`;
+    roboticsCard.style.width = `${rect.width}px`;
+    roboticsCard.style.height = `${rect.height}px`;
+    roboticsCard.style.background = 'rgba(255, 255, 255, 0.02)';
+
+    setTimeout(() => {
+      roboticsCard.classList.remove('expanding');
+      roboticsCard.style = ''; // Reset inline styles
+      isDetailViewActive = false;
+    }, 800);
+  };
+
+  roboticsCard.addEventListener('click', openRobotics);
+  backBtn.addEventListener('click', () => history.back());
+
+  // Handle Browser Back Button
+  window.addEventListener('popstate', (e) => {
+    if (isDetailViewActive) {
+      closeRobotics();
+    }
+  });
+
   updateCurrentIndex();
 
   // Image Lightbox Implementation
-  const images = document.querySelectorAll('img');
-  
-  // Create Lightbox Elements
+  const images = document.querySelectorAll('.clickable-image img');
   const lightbox = document.createElement('div');
   lightbox.id = 'lightbox';
   const lightboxImg = document.createElement('img');
@@ -306,12 +376,12 @@ document.addEventListener('DOMContentLoaded', () => {
     image.addEventListener('click', (e) => {
       lightbox.classList.add('active');
       lightboxImg.src = image.src;
-      document.body.style.overflow = 'hidden'; // Prevent scrolling
+      document.body.style.overflow = 'hidden';
     });
   });
 
   lightbox.addEventListener('click', () => {
     lightbox.classList.remove('active');
-    document.body.style.overflow = 'auto'; // Re-enable scrolling
+    document.body.style.overflow = 'auto';
   });
 });
