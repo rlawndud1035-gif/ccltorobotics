@@ -202,8 +202,77 @@ class InteractiveNeuralVortex extends HTMLElement {
 
 customElements.define('neural-vortex', InteractiveNeuralVortex);
 
-// Image Lightbox Implementation
+// Premium Smooth Scroll Implementation
 document.addEventListener('DOMContentLoaded', () => {
+  const sections = document.querySelectorAll('section');
+  let isScrolling = false;
+  let currentSectionIndex = 0;
+
+  // Determine current section based on scroll position
+  const updateCurrentIndex = () => {
+    const scrollPos = window.scrollY;
+    sections.forEach((section, index) => {
+      if (Math.abs(scrollPos - section.offsetTop) < 10) {
+        currentSectionIndex = index;
+      }
+    });
+  };
+
+  const scrollToSection = (index) => {
+    if (index < 0 || index >= sections.length || isScrolling) return;
+    
+    isScrolling = true;
+    currentSectionIndex = index;
+    
+    window.scrollTo({
+      top: sections[index].offsetTop,
+      behavior: 'smooth'
+    });
+
+    setTimeout(() => {
+      isScrolling = false;
+    }, 800); // Wait for native smooth scroll to finish
+  };
+
+  // Wheel Event for Desktop
+  window.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    if (isScrolling) return;
+    
+    if (e.deltaY > 0) {
+      scrollToSection(currentSectionIndex + 1);
+    } else if (e.deltaY < 0) {
+      scrollToSection(currentSectionIndex - 1);
+    }
+  }, { passive: false });
+
+  // Touch Support for Mobile
+  let touchStartY = 0;
+  window.addEventListener('touchstart', (e) => {
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (isScrolling) e.preventDefault();
+  }, { passive: false });
+
+  window.addEventListener('touchend', (e) => {
+    const touchEndY = e.changedTouches[0].clientY;
+    const deltaY = touchStartY - touchEndY;
+    
+    if (Math.abs(deltaY) > 50) { // Threshold for swipe
+      if (deltaY > 0) {
+        scrollToSection(currentSectionIndex + 1);
+      } else {
+        scrollToSection(currentSectionIndex - 1);
+      }
+    }
+  }, { passive: true });
+
+  // Initial check
+  updateCurrentIndex();
+
+  // Image Lightbox Implementation
   const images = document.querySelectorAll('img');
   
   // Create Lightbox Elements
