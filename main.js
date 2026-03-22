@@ -477,15 +477,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (processTrigger && processBlocks.length > 0) {
       const observerOptions = {
         root: container, // Use the scroll container as root
-        threshold: 0.2
+        threshold: 0.1 // 6층 높이를 고려하여 조금 더 일찍 트리거
       };
 
       const animateBlocks = () => {
         processBlocks.forEach((block, index) => {
-          let delay = 0;
-          if (index < 3) delay = index * 200; // Base
-          else if (index < 5) delay = 600 + (index - 3) * 300; // Mid
-          else delay = 1200; // Top
+          // 01번(인덱스 0)이 가장 먼저, 06번(인덱스 5)이 가장 나중에 나타남
+          // 아래에서 위로 쌓이는 느낌을 위해 인덱스 순서대로 지연 시간 부여
+          const delay = index * 200; 
 
           setTimeout(() => {
             block.classList.add('active');
