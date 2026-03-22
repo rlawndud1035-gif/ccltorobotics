@@ -511,6 +511,32 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeGoalIndex = -1;
     let isGoalsSectionActive = false;
 
+    // --- Robotics 3D Gallery Logic ---
+    const galleryTrigger = document.getElementById('gallery-3d-trigger');
+    const galleryItems = document.querySelectorAll('.gallery-3d-item');
+    let activeGalleryIndex = 0;
+    let isGallerySectionActive = false;
+
+    const updateGallery3D = (index) => {
+      galleryItems.forEach((item, i) => {
+        item.className = 'gallery-3d-item'; // Reset classes
+        if (i === index) {
+          item.classList.add('active');
+        } else if (i === index - 1) {
+          item.classList.add('prev');
+        } else if (i === index + 1) {
+          item.classList.add('next');
+        } else if (i < index) {
+          item.classList.add('hidden-left');
+        } else {
+          item.classList.add('hidden-right');
+        }
+      });
+    };
+
+    // Initialize gallery state
+    if (galleryItems.length > 0) updateGallery3D(0);
+
     const updateGoals = (index) => {
       goalColumns.forEach((col, i) => {
         if (i <= index) {
@@ -527,20 +553,27 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
 
-    // Observer to check if user is in Goals section
+    // Observers
     const goalsObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         isGoalsSectionActive = entry.isIntersecting;
       });
     }, { threshold: 0.5 });
 
+    const galleryObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        isGallerySectionActive = entry.isIntersecting;
+      });
+    }, { threshold: 0.5 });
+
     if (goalsTrigger) goalsObserver.observe(goalsTrigger);
+    if (galleryTrigger) galleryObserver.observe(galleryTrigger);
 
     // Global Keyboard Listener for detail view
     const handleKeyDown = (e) => {
-      // Only run if detail view is active and it's not mobile
       if (!isDetailViewActive || window.innerWidth <= 768) return;
 
+      // Handle Goals Interaction
       if (isGoalsSectionActive) {
         if (e.key === 'ArrowRight') {
           if (activeGoalIndex < 3) {
@@ -552,6 +585,23 @@ document.addEventListener('DOMContentLoaded', () => {
           if (activeGoalIndex >= 0) {
             activeGoalIndex--;
             updateGoals(activeGoalIndex);
+            e.preventDefault();
+          }
+        }
+      }
+
+      // Handle 3D Gallery Interaction
+      if (isGallerySectionActive) {
+        if (e.key === 'ArrowRight') {
+          if (activeGalleryIndex < galleryItems.length - 1) {
+            activeGalleryIndex++;
+            updateGallery3D(activeGalleryIndex);
+            e.preventDefault();
+          }
+        } else if (e.key === 'ArrowLeft') {
+          if (activeGalleryIndex > 0) {
+            activeGalleryIndex--;
+            updateGallery3D(activeGalleryIndex);
             e.preventDefault();
           }
         }
