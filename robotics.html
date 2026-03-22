@@ -118,109 +118,90 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 120vh; /* 6층 높이를 고려하여 여유 공간 확보 */
+    height: 100vh; /* 한 화면에 고정 */
+    overflow: hidden;
   }
 
   .process-pyramid {
     display: flex;
-    flex-direction: column-reverse; /* 01번이 바닥, 06번이 꼭대기 */
+    flex-direction: column-reverse;
     align-items: center;
-    gap: 0.5rem; /* 층 사이 간격을 좁게 하여 블록이 쌓인 느낌 강조 */
+    gap: 0.3rem; /* 간격을 더 좁게 */
     width: 100%;
-    max-width: 1000px;
-    margin-top: 4rem;
+    max-width: 900px;
+    margin-top: 2rem;
     perspective: 2000px;
   }
 
   .process-block {
     position: relative;
-    height: 100px; /* 층별 높이 고정 */
+    height: 70px; /* 높이를 컴팩트하게 조정 */
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 1rem;
+    border-radius: 0.8rem;
     backdrop-filter: blur(15px);
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 1rem 2rem;
+    padding: 0.5rem 2rem;
     opacity: 0;
-    transform: translateY(300px) rotateX(-45deg) scale(0.5); /* 더 역동적인 등장 효과 */
-    transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-    overflow: hidden;
+    transform: translateY(100px) rotateX(-30deg) scale(0.9);
+    transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   }
 
-  /* 각 층별 너비 설정 (피라미드 형태) */
-  .process-block[data-index="0"] { width: 90%; z-index: 1; } /* 01 Discovery - Base */
-  .process-block[data-index="1"] { width: 80%; z-index: 2; } /* 02 UX Design */
-  .process-block[data-index="2"] { width: 70%; z-index: 3; } /* 03 AI Integration */
-  .process-block[data-index="3"] { width: 60%; z-index: 4; } /* 04 Prototyping */
-  .process-block[data-index="4"] { width: 50%; z-index: 5; } /* 05 Optimization */
-  .process-block[data-index="5"] { width: 40%; z-index: 6; } /* 06 Deployment - Top */
+  /* 각 층별 너비 설정 */
+  .process-block[data-index="0"] { width: 100%; z-index: 1; }
+  .process-block[data-index="1"] { width: 88%; z-index: 2; }
+  .process-block[data-index="2"] { width: 76%; z-index: 3; }
+  .process-block[data-index="3"] { width: 64%; z-index: 4; }
+  .process-block[data-index="4"] { width: 52%; z-index: 5; }
+  .process-block[data-index="5"] { width: 40%; z-index: 6; }
 
   .process-block.active {
     opacity: 1;
     transform: translateY(0) rotateX(0) scale(1);
   }
 
-  .process-block::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom, rgba(122, 40, 255, 0.15), transparent);
-    opacity: 0;
-    transition: opacity 0.8s ease;
-  }
-
-  .process-block.active::before {
-    opacity: 1;
-  }
-
-  .process-block:hover {
-    background: rgba(122, 40, 255, 0.08);
-    border-color: var(--accent-color);
-    box-shadow: 0 0 30px rgba(122, 40, 255, 0.3);
-    transform: translateZ(50px); /* 마우스 호버 시 튀어나오는 효과 */
-    z-index: 100;
-  }
-
   .block-num {
-    font-size: 2rem;
+    font-size: 1.5rem; /* 숫자 크기 축소 */
     font-weight: 900;
     color: rgba(255, 255, 255, 0.03);
     position: absolute;
-    left: 2rem;
+    left: 1.5rem;
     transition: all 0.6s ease;
   }
 
   .process-block.active .block-num {
-    color: rgba(122, 40, 255, 0.2);
+    color: rgba(122, 40, 255, 0.15);
   }
 
   .block-content {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 2rem;
+    gap: 1.5rem;
     width: 100%;
     justify-content: center;
   }
 
   .block-content h3 {
-    font-size: 1.4rem;
+    font-size: 1.1rem; /* 제목 크기 축소 */
     color: #fff;
-    font-weight: 300;
+    font-weight: 400;
     margin: 0;
-    white-space: nowrap;
   }
 
   .block-content p {
-    font-size: 0.95rem;
+    font-size: 0.85rem; /* 설명 크기 축소 */
     color: rgba(255, 255, 255, 0.4);
     margin: 0;
-    max-width: 400px;
+    max-width: 450px;
     text-align: left;
+    white-space: nowrap; /* 한 줄로 표시하여 높이 절약 */
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   @media (max-width: 768px) {
