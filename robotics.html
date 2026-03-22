@@ -118,7 +118,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh; /* 한 화면에 고정 */
+    height: 100vh;
     overflow: hidden;
   }
 
@@ -126,38 +126,39 @@
     display: flex;
     flex-direction: column-reverse;
     align-items: center;
-    gap: 0.3rem; /* 간격을 더 좁게 */
+    gap: 0.8rem; /* 층 사이 간격을 넓혀 구분감 강화 */
     width: 100%;
-    max-width: 900px;
-    margin-top: 2rem;
+    max-width: 1100px; /* 전체 너비 확대 */
+    margin-top: 3rem;
     perspective: 2000px;
   }
 
   .process-block {
     position: relative;
-    height: 70px; /* 높이를 컴팩트하게 조정 */
-    background: rgba(255, 255, 255, 0.03);
+    height: 90px; /* 블록 크기 확대 */
+    background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 0.8rem;
-    backdrop-filter: blur(15px);
+    border-top: 1px solid rgba(255, 255, 255, 0.2); /* 상단 하이라이트로 층 구분 강조 */
+    border-radius: 1.2rem;
+    backdrop-filter: blur(20px);
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 0.5rem 2rem;
+    padding: 0 3rem;
     opacity: 0;
-    transform: translateY(100px) rotateX(-30deg) scale(0.9);
+    transform: translateY(100px) rotateX(-20deg) scale(0.95);
     transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.5); /* 그림자 강화 */
   }
 
-  /* 각 층별 너비 설정 */
-  .process-block[data-index="0"] { width: 100%; z-index: 1; }
-  .process-block[data-index="1"] { width: 88%; z-index: 2; }
-  .process-block[data-index="2"] { width: 76%; z-index: 3; }
-  .process-block[data-index="3"] { width: 64%; z-index: 4; }
-  .process-block[data-index="4"] { width: 52%; z-index: 5; }
-  .process-block[data-index="5"] { width: 40%; z-index: 6; }
+  /* 각 층별 너비 및 미세한 색상 차이 (아래에서 위로 갈수록 밝아짐) */
+  .process-block[data-index="0"] { width: 100%; background: rgba(122, 40, 255, 0.08); z-index: 1; }
+  .process-block[data-index="1"] { width: 88%; background: rgba(122, 40, 255, 0.07); z-index: 2; }
+  .process-block[data-index="2"] { width: 76%; background: rgba(122, 40, 255, 0.06); z-index: 3; }
+  .process-block[data-index="3"] { width: 64%; background: rgba(122, 40, 255, 0.05); z-index: 4; }
+  .process-block[data-index="4"] { width: 52%; background: rgba(122, 40, 255, 0.04); z-index: 5; }
+  .process-block[data-index="5"] { width: 40%; background: rgba(122, 40, 255, 0.03); z-index: 6; }
 
   .process-block.active {
     opacity: 1;
@@ -165,43 +166,51 @@
   }
 
   .block-num {
-    font-size: 1.5rem; /* 숫자 크기 축소 */
+    font-size: 1.8rem;
     font-weight: 900;
-    color: rgba(255, 255, 255, 0.03);
+    color: rgba(255, 255, 255, 0.05);
     position: absolute;
-    left: 1.5rem;
+    left: 2.5rem;
     transition: all 0.6s ease;
   }
 
   .process-block.active .block-num {
-    color: rgba(122, 40, 255, 0.15);
+    color: rgba(122, 40, 255, 0.3);
   }
 
   .block-content {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 1.5rem;
+    gap: 3rem;
     width: 100%;
     justify-content: center;
   }
 
   .block-content h3 {
-    font-size: 1.1rem; /* 제목 크기 축소 */
+    font-size: 1.3rem; /* 제목 확대 */
     color: #fff;
-    font-weight: 400;
+    font-weight: 500;
     margin: 0;
+    letter-spacing: 0.05em;
   }
 
   .block-content p {
-    font-size: 0.85rem; /* 설명 크기 축소 */
-    color: rgba(255, 255, 255, 0.4);
+    font-size: 1rem; /* 설명 확대 */
+    color: rgba(255, 255, 255, 0.5);
     margin: 0;
-    max-width: 450px;
+    max-width: 500px;
     text-align: left;
-    white-space: nowrap; /* 한 줄로 표시하여 높이 절약 */
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .process-block:hover {
+    background: rgba(122, 40, 255, 0.15) !important;
+    border-color: var(--accent-color);
+    transform: scale(1.02) translateZ(50px);
+    z-index: 100;
   }
 
   @media (max-width: 768px) {
