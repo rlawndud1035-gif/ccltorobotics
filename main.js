@@ -461,6 +461,115 @@ document.addEventListener('DOMContentLoaded', () => {
   const roboticsDetail = document.querySelector('#robotics-detail');
   let isContentLoaded = false;
 
+  const initRoboticsAnimations = () => {
+    const container = document.getElementById('robotics-scroll-container');
+    if (!container) return;
+
+    const sections = container.querySelectorAll('section');
+    const goalSlider = document.getElementById('goal-slider');
+    const dots = document.querySelectorAll('.progress-dot');
+    let isScrollingLocal = false;
+
+    // --- Work Process Pyramid Animation ---
+    const processBlocks = document.querySelectorAll('.process-block');
+    const processTrigger = document.getElementById('process-trigger');
+    
+    if (processTrigger && processBlocks.length > 0) {
+      const observerOptions = {
+        root: container, // Use the scroll container as root
+        threshold: 0.2
+      };
+
+      const animateBlocks = () => {
+        processBlocks.forEach((block, index) => {
+          let delay = 0;
+          if (index < 3) delay = index * 200; // Base
+          else if (index < 5) delay = 600 + (index - 3) * 300; // Mid
+          else delay = 1200; // Top
+
+          setTimeout(() => {
+            block.classList.add('active');
+          }, delay);
+        });
+      };
+
+      const processObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            animateBlocks();
+            processObserver.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      processObserver.observe(processTrigger);
+    }
+
+    // --- Original Scroll Logic ---
+    if (goalSlider) {
+      goalSlider.addEventListener('scroll', () => {
+        const index = Math.round(goalSlider.scrollLeft / goalSlider.offsetWidth);
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('active', i === index);
+        });
+      });
+    }
+
+    window.scrollToGoal = function(index) {
+      if (goalSlider) {
+        goalSlider.scrollTo({
+          left: index * goalSlider.offsetWidth,
+          behavior: 'smooth'
+        });
+      }
+    };
+
+    // Keyboard & Scroll Logic for the detail view
+    container.addEventListener('keydown', (e) => {
+      if (isScrollingLocal || window.innerWidth <= 768) return;
+
+      const currentScroll = container.scrollTop;
+      const sectionHeight = window.innerHeight;
+      let targetSectionIndex = Math.round(currentScroll / sectionHeight);
+
+      if (e.key === 'ArrowDown') {
+        if (sections[targetSectionIndex].classList.contains('goals-section')) {
+          const currentIndex = Math.round(goalSlider.scrollLeft / goalSlider.offsetWidth);
+          if (currentIndex < 3) {
+            e.preventDefault();
+            scrollToGoal(currentIndex + 1);
+            return;
+          }
+        }
+        
+        if (targetSectionIndex < sections.length - 1) {
+          e.preventDefault();
+          scrollToSectionDetail(targetSectionIndex + 1);
+        }
+      } else if (e.key === 'ArrowUp') {
+        if (sections[targetSectionIndex].classList.contains('goals-section')) {
+          const currentIndex = Math.round(goalSlider.scrollLeft / goalSlider.offsetWidth);
+          if (currentIndex > 0) {
+            e.preventDefault();
+            scrollToGoal(currentIndex - 1);
+            return;
+          }
+        }
+
+        if (targetSectionIndex > 0) {
+          e.preventDefault();
+          scrollToSectionDetail(targetSectionIndex - 1);
+        }
+      }
+    });
+
+    function scrollToSectionDetail(index) {
+      isScrollingLocal = true;
+      sections[index].scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => { isScrollingLocal = false; }, 1000);
+    }
+  };
+
   const loadRoboticsContent = async () => {
     if (isContentLoaded) return;
     try {
@@ -469,6 +578,9 @@ document.addEventListener('DOMContentLoaded', () => {
       roboticsDetail.innerHTML = html;
       isContentLoaded = true;
       
+      // Initialize animations after content is injected
+      initRoboticsAnimations();
+
       // Bind back button after content is loaded
       const backBtn = roboticsDetail.querySelector('.back-btn');
       if (backBtn) {
