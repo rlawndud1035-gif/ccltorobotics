@@ -587,24 +587,25 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    padding: 6vh 0; /* Reduced padding to push items further apart */
+    justify-content: flex-start; /* Changed to flex-start for more control */
+    padding: 10vh 0; /* Consistent top padding */
     position: relative;
     overflow: hidden;
   }
 
   .brand-cards-container {
     display: flex;
-    gap: 1.5rem; /* Slightly reduced gap for more cards */
+    gap: 1.5rem;
     perspective: 1500px;
     z-index: 2;
     flex-wrap: wrap;
     justify-content: center;
     max-width: 90vw;
+    transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
   }
 
   .brand-card {
-    width: 160px; /* Slightly smaller to fit more */
+    width: 160px;
     height: 240px;
     border-radius: 1.5rem;
     display: flex;
@@ -644,7 +645,8 @@
   .card-purple { background: #8a2be2; }
 
   .identity-bottom {
-    position: relative;
+    position: absolute; /* Changed to absolute to pin at bottom in both states */
+    bottom: 10vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -660,7 +662,6 @@
     align-items: center;
     justify-content: center;
     border: 1px solid rgba(255, 255, 255, 0.2);
-    margin-top: 2rem;
   }
 
   .person-icon svg {
@@ -707,29 +708,23 @@
 
   /* Blue State Styles */
   .brand-identity-section.blue-state {
-    justify-content: flex-start;
-    padding-top: 15vh;
+    padding-top: 15vh; /* Pushes cards down slightly but keep same flow */
   }
 
   .brand-identity-section.blue-state .brand-cards-container {
-    transform: translateY(0);
     gap: 2rem;
   }
 
   .brand-identity-section.blue-state .brand-card:not(.card-blue) {
-    opacity: 0;
-    pointer-events: none;
-    transform: scale(0.8) translateY(-100px);
+    background: #0047ff !important; /* Force all to blue */
+    color: #fff !important;
+    border: none;
+    transform: scale(0.95);
   }
 
   .brand-identity-section.blue-state .brand-card.card-blue {
-    transform: rotateY(0) scale(1.2);
+    transform: rotateY(0) scale(1.1);
     box-shadow: 0 30px 60px rgba(0,71,255,0.6);
-  }
-
-  .brand-identity-section.blue-state .identity-bottom {
-    position: absolute;
-    bottom: 10vh;
   }
 
   .brand-identity-section.blue-state .hmm-bubble {
