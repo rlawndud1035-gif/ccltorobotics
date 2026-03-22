@@ -42,6 +42,7 @@ A web-based project for CCL Robotics, now integrated with a GitHub repository fo
     - Increased the distance between the brand card gallery and the person icon in the initial state for a more spacious layout.
     - Unified the "Blue State" experience: all brand cards now transition to DeltaX blue instead of disappearing, creating a more cohesive brand reveal.
     - Synchronized the position of the person icon across both states using absolute positioning to ensure visual continuity during the transition.
+    - Optimized the brand card count to 7 to ensure all cards stay on a single row without wrapping on standard desktop views.
     - Adjusted vertical alignment and padding for a more balanced presentation of the brand gallery.
 
 ## Future Plans
