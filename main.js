@@ -572,6 +572,27 @@ document.addEventListener('DOMContentLoaded', () => {
     if (goalsTrigger) goalsObserver.observe(goalsTrigger);
     if (galleryTrigger) galleryObserver.observe(galleryTrigger);
 
+    // --- Question Section Logic ---
+    const questionTrigger = document.getElementById('question-trigger');
+    const bubbleCards = document.querySelectorAll('.bubble-card');
+
+    const questionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          
+          // Add floating animation class after they have emerged from the back
+          setTimeout(() => {
+            bubbleCards.forEach(bubble => bubble.classList.add('floating'));
+          }, 2000);
+          
+          questionObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    if (questionTrigger) questionObserver.observe(questionTrigger);
+
     // Global Keyboard Listener for detail view
     const handleKeyDown = (e) => {
       if (!isDetailViewActive || window.innerWidth <= 768) return;

@@ -449,6 +449,87 @@
     .gallery-3d-item.next { transform: translateX(200px) rotateY(-45deg) scale(0.7) !important; }
   }
 
+  /* --- Question Section --- */
+  .question-section {
+    background: #000;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    perspective: 1500px;
+  }
+
+  .question-main-title {
+    font-size: clamp(2rem, 4vw, 4rem);
+    font-weight: 200;
+    color: #fff;
+    text-align: center;
+    z-index: 10;
+    max-width: 800px;
+    line-height: 1.4;
+    text-shadow: 0 0 30px rgba(122, 40, 255, 0.5);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 1.5s ease 0.5s;
+  }
+
+  .question-section.active .question-main-title {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .bubble-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .bubble-card {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem 2.5rem;
+    border-radius: 4rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 1.1rem;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateZ(-1000px) scale(0.5);
+    transition: all 2s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .question-section.active .bubble-card {
+    opacity: 1;
+    transform: translateZ(var(--z-depth, 0)) scale(var(--s-scale, 1));
+  }
+
+  @keyframes bubbleFloat {
+    0%, 100% { transform: translateZ(var(--z-depth, 0)) translateY(0) rotate(var(--r-rot, 0deg)); }
+    50% { transform: translateZ(calc(var(--z-depth, 0) + 50px)) translateY(-20px) rotate(calc(var(--r-rot, 0deg) + 2deg)); }
+  }
+
+  .question-section.active .bubble-card.floating {
+    animation: bubbleFloat var(--f-dur, 6s) ease-in-out infinite;
+  }
+
+  /* Bubble Positions & Randomness */
+  .b1 { top: 15%; left: 10%; --z-depth: -200px; --s-scale: 0.8; --r-rot: -5deg; --f-dur: 7s; transition-delay: 0.2s !important; }
+  .b2 { top: 25%; right: 15%; --z-depth: -400px; --s-scale: 0.7; --r-rot: 8deg; --f-dur: 9s; transition-delay: 0.8s !important; }
+  .b3 { bottom: 20%; left: 15%; --z-depth: -100px; --s-scale: 0.9; --r-rot: 3deg; --f-dur: 6s; transition-delay: 0.4s !important; }
+  .b4 { bottom: 30%; right: 10%; --z-depth: -300px; --s-scale: 0.75; --r-rot: -10deg; --f-dur: 10s; transition-delay: 1.2s !important; }
+  .b5 { top: 45%; left: 5%; --z-depth: -500px; --s-scale: 0.6; --r-rot: 15deg; --f-dur: 12s; transition-delay: 1.5s !important; }
+  .b6 { top: 10%; right: 30%; --z-depth: -150px; --s-scale: 0.85; --r-rot: -3deg; --f-dur: 8s; transition-delay: 0.6s !important; }
+  .b7 { bottom: 10%; right: 40%; --z-depth: -250px; --s-scale: 0.8; --r-rot: 5deg; --f-dur: 11s; transition-delay: 1.0s !important; }
+
+  @media (max-width: 768px) {
+    .bubble-card { font-size: 0.8rem; padding: 1rem 1.5rem; }
+  }
+
   @media (max-width: 768px) {
     .goals-container {
       flex-direction: column;
@@ -637,6 +718,21 @@
       <div class="gallery-3d-item" data-index="2"><img src="images/robotics/widget3.png" alt="Robotics 3"></div>
       <div class="gallery-3d-item" data-index="3"><img src="images/robotics/widget4.png" alt="Robotics 4"></div>
       <div class="gallery-3d-item" data-index="4"><img src="images/robotics/widget5.png" alt="Robotics 5"></div>
+    </div>
+  </section>
+
+  <!-- Question Section -->
+  <section class="question-section" id="question-trigger">
+    <h2 class="question-main-title">What is the next step for human-robot synergy?</h2>
+    
+    <div class="bubble-container">
+      <div class="bubble-card b1">Can robots feel empathy?</div>
+      <div class="bubble-card b2">How will AI reshape daily life?</div>
+      <div class="bubble-card b3">Limit of human-machine synergy?</div>
+      <div class="bubble-card b4">Will robots replace creativity?</div>
+      <div class="bubble-card b5">Defining trust in autonomy?</div>
+      <div class="bubble-card b6">Learning without human input?</div>
+      <div class="bubble-card b7">Ethics of robotic integration?</div>
     </div>
   </section>
 
