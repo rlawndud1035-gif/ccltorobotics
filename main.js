@@ -617,9 +617,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (ddsTrigger) ddsObserver.observe(ddsTrigger);
 
+    // --- Brand Identity Section Logic ---
+    const brandTrigger = document.getElementById('brand-trigger');
+    let isBrandSectionActive = false;
+
+    const brandObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        isBrandSectionActive = entry.isIntersecting;
+      });
+    }, {
+      root: container,
+      threshold: 0.3
+    });
+
+    if (brandTrigger) brandObserver.observe(brandTrigger);
+
     // Global Keyboard Listener for detail view
     const handleKeyDown = (e) => {
       if (!isDetailViewActive || window.innerWidth <= 768) return;
+
+      // Handle Brand Interaction
+      if (isBrandSectionActive) {
+        if (e.key === 'ArrowRight') {
+          brandTrigger.classList.add('blue-state');
+          e.preventDefault();
+          return;
+        } else if (e.key === 'ArrowLeft') {
+          brandTrigger.classList.remove('blue-state');
+          e.preventDefault();
+          return;
+        }
+      }
 
       // Handle DDS Interaction
       if (isDdsSectionActive) {

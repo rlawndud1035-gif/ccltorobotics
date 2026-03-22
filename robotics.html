@@ -682,6 +682,63 @@
     font-size: 1rem;
     box-shadow: 0 10px 20px rgba(0,0,0,0.2);
     animation: bubbleFloat 3s ease-in-out infinite;
+    transition: opacity 0.5s ease;
+  }
+
+  .delta-bubble {
+    position: absolute;
+    top: -60px;
+    left: -120px;
+    background: #0047ff;
+    color: #fff;
+    padding: 1rem 1.8rem;
+    border-radius: 2rem;
+    border-bottom-right-radius: 0.2rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    box-shadow: 0 15px 30px rgba(0,71,255,0.4);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 10;
+  }
+
+  /* Blue State Styles */
+  .brand-identity-section.blue-state {
+    justify-content: flex-start;
+    padding-top: 15vh;
+  }
+
+  .brand-identity-section.blue-state .brand-cards-container {
+    transform: translateY(0);
+    gap: 2rem;
+  }
+
+  .brand-identity-section.blue-state .brand-card:not(.card-blue) {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.8) translateY(-100px);
+  }
+
+  .brand-identity-section.blue-state .brand-card.card-blue {
+    transform: rotateY(0) scale(1.2);
+    box-shadow: 0 30px 60px rgba(0,71,255,0.6);
+  }
+
+  .brand-identity-section.blue-state .identity-bottom {
+    position: absolute;
+    bottom: 10vh;
+  }
+
+  .brand-identity-section.blue-state .hmm-bubble {
+    opacity: 0;
+  }
+
+  .brand-identity-section.blue-state .delta-bubble {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   @keyframes bubbleFloat {
@@ -918,7 +975,7 @@
   </section>
 
   <!-- Brand Identity Section -->
-  <section class="brand-identity-section">
+  <section class="brand-identity-section" id="brand-trigger">
     <div class="brand-cards-container">
       <div class="brand-card card-red">DeltaX</div>
       <div class="brand-card card-white">DeltaX</div>
@@ -932,6 +989,7 @@
 
     <div class="identity-bottom">
       <div class="hmm-bubble">hmm...</div>
+      <div class="delta-bubble">The blue represents DeltaX!</div>
       <div class="person-icon">
         <svg viewBox="0 0 24 24">
           <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
