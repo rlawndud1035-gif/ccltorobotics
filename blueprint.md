@@ -38,6 +38,11 @@ A web-based project for CCL Robotics, now integrated with a GitHub repository fo
     - Implemented a "stacking" animation using Intersection Observer where blocks slide and drop into place from base to top.
     - Added synchronized text reveals (title and description) for each block to ensure a polished, cohesive experience.
     - Optimized for mobile by transitioning to a vertical stack for better readability.
+- **DeltaX Brand Identity Update:**
+    - Rebranded the "Coca-Cola" section to "DeltaX" to align with the new project identity.
+    - Expanded the brand card gallery from 4 to 8 cards with a broader color palette (Blue, Green, Yellow, Purple).
+    - Increased the vertical spacing between the brand cards and the person icon for a more open, breathable layout.
+    - Updated card hover effects and container perspective for enhanced depth.
 
 ## Future Plans
 - Any further updates to the code will be automatically pushed to the GitHub repository as requested.

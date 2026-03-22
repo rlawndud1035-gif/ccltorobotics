@@ -588,31 +588,34 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding: 10vh 0;
+    padding: 6vh 0; /* Reduced padding to push items further apart */
     position: relative;
     overflow: hidden;
   }
 
   .brand-cards-container {
     display: flex;
-    gap: 2rem;
-    perspective: 1000px;
+    gap: 1.5rem; /* Slightly reduced gap for more cards */
+    perspective: 1500px;
     z-index: 2;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 90vw;
   }
 
   .brand-card {
-    width: 180px;
-    height: 260px;
+    width: 160px; /* Slightly smaller to fit more */
+    height: 240px;
     border-radius: 1.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: 'Geist', sans-serif;
     font-weight: 900;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     color: #fff;
     box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-    transform: rotateY(-20deg);
+    transform: rotateY(-15deg);
     transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
     position: relative;
     overflow: hidden;
@@ -626,7 +629,7 @@
   }
 
   .brand-card:hover {
-    transform: rotateY(0) translateY(-20px) scale(1.1);
+    transform: rotateY(0) translateY(-15px) scale(1.05);
     z-index: 10;
   }
 
@@ -635,6 +638,10 @@
   .card-white { background: #ffffff; color: #fe001a; }
   .card-black { background: #000000; border: 1px solid #333; }
   .card-silver { background: #d1d3d4; color: #333; }
+  .card-blue { background: #0047ff; }
+  .card-green { background: #00ff66; color: #000; }
+  .card-yellow { background: #ffff00; color: #000; }
+  .card-purple { background: #8a2be2; }
 
   .identity-bottom {
     position: relative;
@@ -913,10 +920,14 @@
   <!-- Brand Identity Section -->
   <section class="brand-identity-section">
     <div class="brand-cards-container">
-      <div class="brand-card card-red">Coca-Cola</div>
-      <div class="brand-card card-white">Coca-Cola</div>
-      <div class="brand-card card-black">Coca-Cola</div>
-      <div class="brand-card card-silver">Coca-Cola</div>
+      <div class="brand-card card-red">DeltaX</div>
+      <div class="brand-card card-white">DeltaX</div>
+      <div class="brand-card card-black">DeltaX</div>
+      <div class="brand-card card-silver">DeltaX</div>
+      <div class="brand-card card-blue">DeltaX</div>
+      <div class="brand-card card-green">DeltaX</div>
+      <div class="brand-card card-yellow">DeltaX</div>
+      <div class="brand-card card-purple">DeltaX</div>
     </div>
 
     <div class="identity-bottom">
