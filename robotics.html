@@ -543,23 +543,25 @@
   }
 
   .dds-title {
-    font-size: clamp(3rem, 8vw, 8rem);
+    font-size: clamp(2rem, 5vw, 5rem);
     font-weight: 900;
     color: #fff;
     display: flex;
-    gap: 0.5em;
-    transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+    gap: 0.4em;
+    transition: all 2.5s cubic-bezier(0.23, 1, 0.32, 1);
   }
 
   .dds-word {
     display: flex;
-    transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+    transition: all 2.5s cubic-bezier(0.23, 1, 0.32, 1);
   }
 
   .dds-rest {
     max-width: 500px;
     opacity: 1;
-    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    transition: max-width 2.5s cubic-bezier(0.23, 1, 0.32, 1), 
+                opacity 2s ease,
+                margin 2.5s cubic-bezier(0.23, 1, 0.32, 1);
     display: inline-block;
     overflow: hidden;
   }
@@ -567,105 +569,12 @@
   .dds-section.active-dds .dds-rest {
     max-width: 0;
     opacity: 0;
+    margin-right: -0.05em;
   }
 
   .dds-section.active-dds .dds-title {
     gap: 0;
-    letter-spacing: -0.05em;
-    color: var(--accent-color);
-    text-shadow: 0 0 50px rgba(122, 40, 255, 0.6);
-  }
-
-  /* --- DDS Section --- */
-  .dds-section {
-    background: #000;
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .dds-title {
-    font-size: clamp(3rem, 8vw, 8rem);
-    font-weight: 900;
-    color: #fff;
-    display: flex;
-    gap: 0.5em;
-    transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  .dds-word {
-    display: flex;
-    overflow: hidden;
-    transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  .dds-rest {
-    max-width: 500px;
-    opacity: 1;
-    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-    display: inline-block;
-  }
-
-  .dds-section.active-dds .dds-rest {
-    max-width: 0;
-    opacity: 0;
-    margin-right: -0.1em;
-  }
-
-  .dds-section.active-dds .dds-title {
-    gap: 0;
-    letter-spacing: -0.05em;
-    color: var(--accent-color);
-    text-shadow: 0 0 50px rgba(122, 40, 255, 0.6);
-  }
-
-  /* --- DDS Section --- */
-  .dds-section {
-    background: #000;
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .dds-title {
-    font-size: clamp(3rem, 8vw, 8rem);
-    font-weight: 900;
-    color: #fff;
-    display: flex;
-    gap: 0.5em;
-    transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  .dds-word {
-    display: flex;
-    overflow: hidden;
-    transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  .dds-rest {
-    max-width: 500px;
-    opacity: 1;
-    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-    display: inline-block;
-  }
-
-  .dds-section.active-dds .dds-rest {
-    max-width: 0;
-    opacity: 0;
-    margin-right: -0.1em;
-  }
-
-  .dds-section.active-dds .dds-title {
-    gap: 0;
-    letter-spacing: -0.05em;
+    letter-spacing: -0.02em;
     color: var(--accent-color);
     text-shadow: 0 0 50px rgba(122, 40, 255, 0.6);
   }

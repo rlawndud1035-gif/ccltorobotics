@@ -561,13 +561,19 @@ document.addEventListener('DOMContentLoaded', () => {
       entries.forEach(entry => {
         isGoalsSectionActive = entry.isIntersecting;
       });
-    }, { threshold: 0.5 });
+    }, { 
+      root: container,
+      threshold: 0.3 
+    });
 
     const galleryObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         isGallerySectionActive = entry.isIntersecting;
       });
-    }, { threshold: 0.5 });
+    }, { 
+      root: container,
+      threshold: 0.3 
+    });
 
     if (goalsTrigger) goalsObserver.observe(goalsTrigger);
     if (galleryTrigger) galleryObserver.observe(galleryTrigger);
@@ -589,7 +595,10 @@ document.addEventListener('DOMContentLoaded', () => {
           questionObserver.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.3 });
+    }, { 
+      root: container,
+      threshold: 0.3 
+    });
 
     if (questionTrigger) questionObserver.observe(questionTrigger);
 
@@ -601,7 +610,10 @@ document.addEventListener('DOMContentLoaded', () => {
       entries.forEach(entry => {
         isDdsSectionActive = entry.isIntersecting;
       });
-    }, { threshold: 0.5 });
+    }, { 
+      root: container,
+      threshold: 0.2 // Lower threshold for better response
+    });
 
     if (ddsTrigger) ddsObserver.observe(ddsTrigger);
 
