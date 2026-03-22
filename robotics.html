@@ -530,6 +530,146 @@
     .bubble-card { font-size: 0.8rem; padding: 1rem 1.5rem; }
   }
 
+  /* --- DDS Section --- */
+  .dds-section {
+    background: #000;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dds-title {
+    font-size: clamp(3rem, 8vw, 8rem);
+    font-weight: 900;
+    color: #fff;
+    display: flex;
+    gap: 0.5em;
+    transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .dds-word {
+    display: flex;
+    transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .dds-rest {
+    max-width: 500px;
+    opacity: 1;
+    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    display: inline-block;
+    overflow: hidden;
+  }
+
+  .dds-section.active-dds .dds-rest {
+    max-width: 0;
+    opacity: 0;
+  }
+
+  .dds-section.active-dds .dds-title {
+    gap: 0;
+    letter-spacing: -0.05em;
+    color: var(--accent-color);
+    text-shadow: 0 0 50px rgba(122, 40, 255, 0.6);
+  }
+
+  /* --- DDS Section --- */
+  .dds-section {
+    background: #000;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dds-title {
+    font-size: clamp(3rem, 8vw, 8rem);
+    font-weight: 900;
+    color: #fff;
+    display: flex;
+    gap: 0.5em;
+    transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .dds-word {
+    display: flex;
+    overflow: hidden;
+    transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .dds-rest {
+    max-width: 500px;
+    opacity: 1;
+    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    display: inline-block;
+  }
+
+  .dds-section.active-dds .dds-rest {
+    max-width: 0;
+    opacity: 0;
+    margin-right: -0.1em;
+  }
+
+  .dds-section.active-dds .dds-title {
+    gap: 0;
+    letter-spacing: -0.05em;
+    color: var(--accent-color);
+    text-shadow: 0 0 50px rgba(122, 40, 255, 0.6);
+  }
+
+  /* --- DDS Section --- */
+  .dds-section {
+    background: #000;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dds-title {
+    font-size: clamp(3rem, 8vw, 8rem);
+    font-weight: 900;
+    color: #fff;
+    display: flex;
+    gap: 0.5em;
+    transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .dds-word {
+    display: flex;
+    overflow: hidden;
+    transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .dds-rest {
+    max-width: 500px;
+    opacity: 1;
+    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    display: inline-block;
+  }
+
+  .dds-section.active-dds .dds-rest {
+    max-width: 0;
+    opacity: 0;
+    margin-right: -0.1em;
+  }
+
+  .dds-section.active-dds .dds-title {
+    gap: 0;
+    letter-spacing: -0.05em;
+    color: var(--accent-color);
+    text-shadow: 0 0 50px rgba(122, 40, 255, 0.6);
+  }
+
   @media (max-width: 768px) {
     .goals-container {
       flex-direction: column;
@@ -734,6 +874,15 @@
       <div class="bubble-card b6">Learning without human input?</div>
       <div class="bubble-card b7">Ethics of robotic integration?</div>
     </div>
+  </section>
+
+  <!-- DDS Section -->
+  <section class="dds-section" id="dds-trigger">
+    <h2 class="dds-title" id="dds-title">
+      <span class="dds-word">D<span class="dds-rest">ashboard</span></span>
+      <span class="dds-word">D<span class="dds-rest">esign</span></span>
+      <span class="dds-word">S<span class="dds-rest">ystem</span></span>
+    </h2>
   </section>
 
   <!-- CTA Section -->

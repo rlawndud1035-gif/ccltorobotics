@@ -593,9 +593,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (questionTrigger) questionObserver.observe(questionTrigger);
 
+    // --- DDS Section Logic ---
+    const ddsTrigger = document.getElementById('dds-trigger');
+    let isDdsSectionActive = false;
+
+    const ddsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        isDdsSectionActive = entry.isIntersecting;
+      });
+    }, { threshold: 0.5 });
+
+    if (ddsTrigger) ddsObserver.observe(ddsTrigger);
+
     // Global Keyboard Listener for detail view
     const handleKeyDown = (e) => {
       if (!isDetailViewActive || window.innerWidth <= 768) return;
+
+      // Handle DDS Interaction
+      if (isDdsSectionActive) {
+        if (['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+          if (!ddsTrigger.classList.contains('active-dds')) {
+            ddsTrigger.classList.add('active-dds');
+            e.preventDefault();
+            return; // Stay in section for the animation
+          }
+        }
+      }
 
       // Handle Goals Interaction
       if (isGoalsSectionActive) {
