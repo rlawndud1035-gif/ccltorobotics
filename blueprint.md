@@ -33,6 +33,11 @@ A web-based project for CCL Robotics, now integrated with a GitHub repository fo
     - Set all sections to `height: 100vh` with `scroll-snap-align: start`.
     - Enabled smooth scrolling for navigation.
     - Ensured accessibility by allowing internal scrolling for sections that might overflow on very small devices.
+- **Work Process Pyramid Animation:**
+    - Redesigned the "Work Process" section in the Robotics detail view as a pyramid layout (3-2-1 structure).
+    - Implemented a "stacking" animation using Intersection Observer where blocks slide and drop into place from base to top.
+    - Added synchronized text reveals (title and description) for each block to ensure a polished, cohesive experience.
+    - Optimized for mobile by transitioning to a vertical stack for better readability.
 
 ## Future Plans
 - Any further updates to the code will be automatically pushed to the GitHub repository as requested.
