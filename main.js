@@ -508,7 +508,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const goalsTrigger = document.getElementById('goals-interactive-trigger');
     const goalColumns = document.querySelectorAll('.goal-column');
     const goalsInstruction = document.getElementById('goals-instruction');
-    let activeGoalIndex = -1;
+    let activeGoalIndex = 0; // Start with first goal visible
     let isGoalsSectionActive = false;
 
     // --- Robotics 3D Gallery Logic ---
@@ -552,6 +552,9 @@ document.addEventListener('DOMContentLoaded', () => {
         goalsInstruction.classList.remove('hidden');
       }
     };
+
+    // Initialize first goal state
+    if (goalColumns.length > 0) updateGoals(0);
 
     // Observers
     const goalsObserver = new IntersectionObserver((entries) => {
