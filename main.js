@@ -504,22 +504,25 @@ document.addEventListener('DOMContentLoaded', () => {
       processObserver.observe(processTrigger);
     }
 
-    // --- Original Scroll Logic ---
-    if (goalSlider) {
-      goalSlider.addEventListener('scroll', () => {
-        const index = Math.round(goalSlider.scrollLeft / goalSlider.offsetWidth);
-        dots.forEach((dot, i) => {
-          dot.classList.toggle('active', i === index);
-        });
-      });
-    }
+    // --- Project Goals Interactive (Keyboard Reveal) ---
+    const goalsTrigger = document.getElementById('goals-interactive-trigger');
+    const goalColumns = document.querySelectorAll('.goal-column');
+    const goalsInstruction = document.getElementById('goals-instruction');
+    let activeGoalIndex = -1;
 
-    window.scrollToGoal = function(index) {
-      if (goalSlider) {
-        goalSlider.scrollTo({
-          left: index * goalSlider.offsetWidth,
-          behavior: 'smooth'
-        });
+    const updateGoals = (index) => {
+      goalColumns.forEach((col, i) => {
+        if (i <= index) {
+          col.classList.add('active');
+        } else {
+          col.classList.remove('active');
+        }
+      });
+      
+      if (index >= 0 && goalsInstruction) {
+        goalsInstruction.classList.add('hidden');
+      } else if (index < 0 && goalsInstruction) {
+        goalsInstruction.classList.remove('hidden');
       }
     };
 
@@ -530,31 +533,32 @@ document.addEventListener('DOMContentLoaded', () => {
       const currentScroll = container.scrollTop;
       const sectionHeight = window.innerHeight;
       let targetSectionIndex = Math.round(currentScroll / sectionHeight);
+      const currentSection = sections[targetSectionIndex];
 
-      if (e.key === 'ArrowDown') {
-        if (sections[targetSectionIndex].classList.contains('goals-section')) {
-          const currentIndex = Math.round(goalSlider.scrollLeft / goalSlider.offsetWidth);
-          if (currentIndex < 3) {
+      if (e.key === 'ArrowRight') {
+        if (currentSection && currentSection.classList.contains('goals-interactive-section')) {
+          if (activeGoalIndex < 3) {
+            activeGoalIndex++;
+            updateGoals(activeGoalIndex);
             e.preventDefault();
-            scrollToGoal(currentIndex + 1);
-            return;
           }
         }
-        
+      } else if (e.key === 'ArrowLeft') {
+        if (currentSection && currentSection.classList.contains('goals-interactive-section')) {
+          if (activeGoalIndex >= 0) {
+            activeGoalIndex--;
+            updateGoals(activeGoalIndex);
+            e.preventDefault();
+          }
+        }
+      } else if (e.key === 'ArrowDown') {
+        // If we are in goals section and not all goals are revealed, maybe stay here?
+        // But user said "when I press right key", so ArrowDown should probably just go to next section.
         if (targetSectionIndex < sections.length - 1) {
           e.preventDefault();
           scrollToSectionDetail(targetSectionIndex + 1);
         }
       } else if (e.key === 'ArrowUp') {
-        if (sections[targetSectionIndex].classList.contains('goals-section')) {
-          const currentIndex = Math.round(goalSlider.scrollLeft / goalSlider.offsetWidth);
-          if (currentIndex > 0) {
-            e.preventDefault();
-            scrollToGoal(currentIndex - 1);
-            return;
-          }
-        }
-
         if (targetSectionIndex > 0) {
           e.preventDefault();
           scrollToSectionDetail(targetSectionIndex - 1);

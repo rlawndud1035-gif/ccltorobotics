@@ -235,154 +235,150 @@
     }
   }
 
-  /* --- Project Goals INTERACTIVE Section --- */
-  .goals-section {
-    background: transparent;
+  /* --- Project Goals INTERACTIVE Section (Column Fill) --- */
+  .goals-interactive-section {
+    background: #000;
     padding: 0 !important;
-    perspective: 1000px;
-  }
-
-  .goals-slider-container {
-    width: 100%;
-    height: 100%;
-    overflow-x: auto;
-    display: flex;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-
-  .goals-slider-container::-webkit-scrollbar { display: none; }
-
-  .goal-slide {
-    min-width: 100vw;
     height: 100vh;
-    scroll-snap-align: center;
-    scroll-snap-stop: always; /* Ensure one-by-one snapping */
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 12vw;
-    box-sizing: border-box;
+    width: 100vw;
     position: relative;
-  }
-
-  .goal-bg-number {
-    position: absolute;
-    font-size: 25vw;
-    font-weight: 900;
-    color: rgba(255, 255, 255, 0.02);
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    z-index: 0;
-    transition: transform 1.5s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  .goal-content {
-    flex: 1;
-    max-width: 480px;
-    z-index: 2;
-    transform: translateZ(50px);
-  }
-
-  .goal-tag {
-    font-size: 0.75rem;
-    color: var(--accent-color);
-    text-transform: uppercase;
-    letter-spacing: 0.4em;
-    display: inline-block;
-    margin-bottom: 1rem;
-    padding: 0.5rem 1rem;
-    background: rgba(122, 40, 255, 0.1);
-    border-radius: 2rem;
-    border: 1px solid rgba(122, 40, 255, 0.2);
-  }
-
-  .goal-title {
-    font-size: clamp(3rem, 5vw, 5.5rem);
-    font-weight: 200;
-    line-height: 1;
-    margin-bottom: 2rem;
-    color: #fff;
-    letter-spacing: -0.02em;
-  }
-
-  .goal-desc {
-    font-size: 1.15rem;
-    color: rgba(255, 255, 255, 0.4);
-    line-height: 1.8;
-    font-weight: 300;
-  }
-
-  .goal-visual {
-    flex: 1;
-    max-width: 600px;
-    height: 60vh;
-    position: relative;
-    z-index: 1;
-    transform-style: preserve-3d;
-    transition: transform 0.8s ease;
-  }
-
-  .goal-image-card {
-    width: 100%;
-    height: 100%;
-    border-radius: 4rem;
     overflow: hidden;
-    border: 1px solid var(--border-color);
-    position: relative;
-    background: #111;
-    box-shadow: 0 50px 100px -20px rgba(0,0,0,0.8);
+    display: flex;
+    flex-direction: column;
   }
 
-  .goal-image-card img {
+  .goals-container {
+    display: flex;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    filter: grayscale(0.2) contrast(1.1);
-    transition: transform 2s ease, filter 0.8s ease;
+    position: relative;
   }
 
-  .goal-image-card::after {
+  .goal-column {
+    flex: 0;
+    width: 0;
+    height: 100%;
+    opacity: 0;
+    position: relative;
+    overflow: hidden;
+    transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    background: linear-gradient(180deg, rgba(122, 40, 255, 0.05) 0%, transparent 100%);
+  }
+
+  .goal-column.active {
+    flex: 1;
+    width: 25%;
+    opacity: 1;
+  }
+
+  .goal-column::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.8));
+    background: radial-gradient(circle at 50% 50%, rgba(122, 40, 255, 0.1) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 1s ease;
   }
 
-  .goal-slide:hover .goal-image-card img {
-    transform: scale(1.1) rotate(1deg);
-    filter: grayscale(0) contrast(1);
+  .goal-column.active::after {
+    opacity: 1;
   }
 
-  .goal-slide:hover .goal-bg-number {
-    transform: translate(-45%, -55%) scale(1.1);
+  .goal-column-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -40%);
+    width: 80%;
+    text-align: center;
+    z-index: 2;
+    opacity: 0;
+    transition: all 0.8s ease 0.4s;
   }
 
-  .goals-progress {
+  .goal-column.active .goal-column-content {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+
+  .goal-column .goal-num {
+    font-size: clamp(4rem, 10vw, 8rem);
+    font-weight: 900;
+    line-height: 1;
+    display: block;
+    margin-bottom: 2rem;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .goal-column h3 {
+    font-size: clamp(1.5rem, 2.5vw, 2.5rem);
+    font-weight: 200;
+    color: #fff;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+    word-break: keep-all;
+  }
+
+  .goal-column p {
+    font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+    color: rgba(255, 255, 255, 0.4);
+    line-height: 1.6;
+    font-weight: 300;
+    word-break: keep-all;
+  }
+
+  .goals-instruction {
     position: absolute;
     bottom: 4rem;
-    left: 12vw;
-    display: flex;
-    gap: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 10;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.9rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: opacity 0.5s ease;
   }
 
-  .progress-dot {
-    width: 40px;
-    height: 2px;
-    background: rgba(255, 255, 255, 0.1);
-    transition: all 0.5s ease;
-    cursor: pointer;
+  .goals-instruction.hidden {
+    opacity: 0;
   }
 
-  .progress-dot.active {
-    background: var(--accent-color);
-    width: 80px;
-    box-shadow: var(--neon-glow);
+  .key-hint {
+    padding: 0.4rem 0.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.4rem;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  @media (max-width: 768px) {
+    .goals-container {
+      flex-direction: column;
+    }
+    .goal-column.active {
+      width: 100%;
+      height: 25%;
+    }
+    .goal-column-content {
+      transform: translate(-50%, -50%);
+    }
+    .goal-column .goal-num {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+    .goal-column h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+    .goal-column p {
+      font-size: 0.8rem;
+    }
   }
 
   /* --- Navigation --- */
@@ -507,72 +503,48 @@
     </div>
   </section>
 
-  <!-- INTERACTIVE Project Goals Section -->
-  <section class="goals-section">
-    <div class="goals-slider-container" id="goal-slider">
+  <!-- Project Goals INTERACTIVE Section -->
+  <section class="goals-interactive-section" id="goals-interactive-trigger">
+    <div class="goals-container" id="goals-container">
       <!-- Goal 1 -->
-      <div class="goal-slide" data-index="0">
-        <div class="goal-bg-number">01</div>
-        <div class="goal-content">
-          <span class="goal-tag">System Logic</span>
-          <h2 class="goal-title">Precision<br>Control</h2>
-          <p class="goal-desc">Achieving sub-millimeter accuracy through advanced neural control loops and real-time sensor fusion.</p>
-        </div>
-        <div class="goal-visual">
-          <div class="goal-image-card">
-            <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1200" alt="Goal 1">
-          </div>
+      <div class="goal-column" data-goal="0">
+        <div class="goal-column-content">
+          <span class="goal-num">01</span>
+          <h3>Precision Control</h3>
+          <p>Achieving sub-millimeter accuracy through advanced neural control loops and real-time sensor fusion.</p>
         </div>
       </div>
       <!-- Goal 2 -->
-      <div class="goal-slide" data-index="1">
-        <div class="goal-bg-number">02</div>
-        <div class="goal-content">
-          <span class="goal-tag">User Experience</span>
-          <h2 class="goal-title">Seamless<br>Interaction</h2>
-          <p class="goal-desc">Designing intuitive human-machine interfaces that reduce cognitive load and enhance operational efficiency.</p>
-        </div>
-        <div class="goal-visual">
-          <div class="goal-image-card">
-            <img src="https://images.unsplash.com/photo-1531746790731-6c087fdec0ed?q=80&w=1200" alt="Goal 2">
-          </div>
+      <div class="goal-column" data-goal="1">
+        <div class="goal-column-content">
+          <span class="goal-num">02</span>
+          <h3>Seamless Interaction</h3>
+          <p>Designing intuitive human-machine interfaces that reduce cognitive load and enhance operational efficiency.</p>
         </div>
       </div>
       <!-- Goal 3 -->
-      <div class="goal-slide" data-index="2">
-        <div class="goal-bg-number">03</div>
-        <div class="goal-content">
-          <span class="goal-tag">Visual AI</span>
-          <h2 class="goal-title">Machine<br>Vision</h2>
-          <p class="goal-desc">Deploying robust AI models for object recognition and spatial awareness in complex industrial environments.</p>
-        </div>
-        <div class="goal-visual">
-          <div class="goal-image-card">
-            <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=1200" alt="Goal 3">
-          </div>
+      <div class="goal-column" data-goal="2">
+        <div class="goal-column-content">
+          <span class="goal-num">03</span>
+          <h3>Machine Vision</h3>
+          <p>Deploying robust AI models for object recognition and spatial awareness in complex industrial environments.</p>
         </div>
       </div>
       <!-- Goal 4 -->
-      <div class="goal-slide" data-index="3">
-        <div class="goal-bg-number">04</div>
-        <div class="goal-content">
-          <span class="goal-tag">Safety First</span>
-          <h2 class="goal-title">Fail-safe<br>Security</h2>
-          <p class="goal-desc">Implementing multi-layered safety protocols and predictive maintenance to ensure zero-downtime operations.</p>
-        </div>
-        <div class="goal-visual">
-          <div class="goal-image-card">
-            <img src="https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?q=80&w=1200" alt="Goal 4">
-          </div>
+      <div class="goal-column" data-goal="3">
+        <div class="goal-column-content">
+          <span class="goal-num">04</span>
+          <h3>Fail-safe Security</h3>
+          <p>Implementing multi-layered safety protocols and predictive maintenance to ensure zero-downtime operations.</p>
         </div>
       </div>
     </div>
-    
-    <div class="goals-progress">
-      <div class="progress-dot active" onclick="scrollToGoal(0)"></div>
-      <div class="progress-dot" onclick="scrollToGoal(1)"></div>
-      <div class="progress-dot" onclick="scrollToGoal(2)"></div>
-      <div class="progress-dot" onclick="scrollToGoal(3)"></div>
+
+    <!-- Interactive Instruction -->
+    <div class="goals-instruction" id="goals-instruction">
+      <span>Use</span>
+      <span class="key-hint">→</span>
+      <span>to reveal goals</span>
     </div>
   </section>
 
