@@ -509,6 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const goalColumns = document.querySelectorAll('.goal-column');
     const goalsInstruction = document.getElementById('goals-instruction');
     let activeGoalIndex = -1;
+    let isGoalsSectionActive = false;
 
     const updateGoals = (index) => {
       goalColumns.forEach((col, i) => {
@@ -526,45 +527,58 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
 
-    // Keyboard & Scroll Logic for the detail view
-    container.addEventListener('keydown', (e) => {
-      if (isScrollingLocal || window.innerWidth <= 768) return;
+    // Observer to check if user is in Goals section
+    const goalsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        isGoalsSectionActive = entry.isIntersecting;
+      });
+    }, { threshold: 0.5 });
 
-      const currentScroll = container.scrollTop;
-      const sectionHeight = window.innerHeight;
-      let targetSectionIndex = Math.round(currentScroll / sectionHeight);
-      const currentSection = sections[targetSectionIndex];
+    if (goalsTrigger) goalsObserver.observe(goalsTrigger);
 
-      if (e.key === 'ArrowRight') {
-        if (currentSection && currentSection.classList.contains('goals-interactive-section')) {
+    // Global Keyboard Listener for detail view
+    const handleKeyDown = (e) => {
+      // Only run if detail view is active and it's not mobile
+      if (!isDetailViewActive || window.innerWidth <= 768) return;
+
+      if (isGoalsSectionActive) {
+        if (e.key === 'ArrowRight') {
           if (activeGoalIndex < 3) {
             activeGoalIndex++;
             updateGoals(activeGoalIndex);
             e.preventDefault();
           }
-        }
-      } else if (e.key === 'ArrowLeft') {
-        if (currentSection && currentSection.classList.contains('goals-interactive-section')) {
+        } else if (e.key === 'ArrowLeft') {
           if (activeGoalIndex >= 0) {
             activeGoalIndex--;
             updateGoals(activeGoalIndex);
             e.preventDefault();
           }
         }
-      } else if (e.key === 'ArrowDown') {
-        // If we are in goals section and not all goals are revealed, maybe stay here?
-        // But user said "when I press right key", so ArrowDown should probably just go to next section.
+      }
+
+      // Handle Section Navigation (ArrowUp/Down)
+      const currentScroll = container.scrollTop;
+      const sectionHeight = window.innerHeight;
+      let targetSectionIndex = Math.round(currentScroll / sectionHeight);
+
+      if (e.key === 'ArrowDown' && !e.repeat) {
         if (targetSectionIndex < sections.length - 1) {
           e.preventDefault();
           scrollToSectionDetail(targetSectionIndex + 1);
         }
-      } else if (e.key === 'ArrowUp') {
+      } else if (e.key === 'ArrowUp' && !e.repeat) {
         if (targetSectionIndex > 0) {
           e.preventDefault();
           scrollToSectionDetail(targetSectionIndex - 1);
         }
       }
-    });
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    // Cleanup function when needed (though detail view is persistent in this app)
+    // In a full SPA we would remove this on component unmount.
 
     function scrollToSectionDetail(index) {
       isScrollingLocal = true;
