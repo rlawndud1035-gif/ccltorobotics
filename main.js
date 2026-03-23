@@ -631,11 +631,15 @@ document.addEventListener('DOMContentLoaded', () => {
             p.style.transition = "stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease";
             p.style.strokeDashoffset = "0";
             p.style.opacity = "0.8";
+            // Add flow class after initial drawing
+            setTimeout(() => p.classList.add('flow-active'), 1500);
           });
           setTimeout(() => {
             mainPath.style.transition = "stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease";
             mainPath.style.strokeDashoffset = "0";
             mainPath.style.opacity = "1";
+            // Add flow class to main path too
+            setTimeout(() => mainPath.classList.add('flow-active'), 1500);
           }, 800);
         });
       });

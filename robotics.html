@@ -366,14 +366,14 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    perspective: 2000px;
+    perspective: 3000px; /* Increased perspective for larger items */
     overflow: hidden;
   }
 
   .gallery-3d-container {
     position: relative;
     width: 100%;
-    height: 60vh;
+    height: 70vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -383,12 +383,12 @@
 
   .gallery-3d-item {
     position: absolute;
-    width: 500px;
-    height: 350px;
+    width: 800px; /* Increased from 500px */
+    height: 550px; /* Increased from 350px */
     transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
     transform-style: preserve-3d;
     cursor: pointer;
-    filter: brightness(0.3);
+    filter: brightness(0.2);
   }
 
   .gallery-3d-item img {
@@ -396,35 +396,35 @@
     height: 100%;
     object-fit: contain;
     border-radius: 2rem;
-    filter: drop-shadow(0 20px 50px rgba(0,0,0,0.8));
+    filter: drop-shadow(0 30px 60px rgba(0,0,0,0.9));
   }
 
   .gallery-3d-item.active {
     filter: brightness(1);
-    transform: translateZ(200px) !important;
+    transform: translateZ(400px) !important; /* Move more forward */
     z-index: 10;
   }
 
   .gallery-3d-item.prev {
-    transform: translateX(-450px) rotateY(45deg) scale(0.8) !important;
-    filter: brightness(0.4) blur(2px);
+    transform: translateX(-600px) rotateY(35deg) scale(0.7) !important; /* Adjusted offset */
+    filter: brightness(0.3) blur(4px);
     z-index: 5;
   }
 
   .gallery-3d-item.next {
-    transform: translateX(450px) rotateY(-45deg) scale(0.8) !important;
-    filter: brightness(0.4) blur(2px);
+    transform: translateX(600px) rotateY(-35deg) scale(0.7) !important; /* Adjusted offset */
+    filter: brightness(0.3) blur(4px);
     z-index: 5;
   }
 
   .gallery-3d-item.hidden-left {
-    transform: translateX(-800px) rotateY(60deg) scale(0.5) !important;
+    transform: translateX(-1200px) rotateY(50deg) scale(0.4) !important;
     opacity: 0;
     pointer-events: none;
   }
 
   .gallery-3d-item.hidden-right {
-    transform: translateX(800px) rotateY(-60deg) scale(0.5) !important;
+    transform: translateX(1200px) rotateY(-50deg) scale(0.4) !important;
     opacity: 0;
     pointer-events: none;
   }
@@ -493,14 +493,23 @@
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(10px);
-    padding: 1.5rem 2.5rem;
-    border-radius: 4rem;
-    color: rgba(255, 255, 255, 0.4);
-    font-size: 1.1rem;
+    padding: 2rem 3.5rem; /* Increased padding */
+    border-radius: 5rem;
+    color: rgba(255, 255, 255, 0.5); /* Slightly brighter */
+    font-size: 1.4rem; /* Increased font size */
     white-space: nowrap;
     opacity: 0;
     transform: translateZ(-1000px) scale(0.5);
-    transition: all 2s cubic-bezier(0.23, 1, 0.32, 1);
+    transition: all 2s cubic-bezier(0.23, 1, 0.32, 1), background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    cursor: default;
+  }
+
+  .bubble-card:hover {
+    background: rgba(122, 40, 255, 0.1);
+    border-color: var(--accent-color);
+    color: #fff;
+    transform: translateZ(var(--z-depth, 0)) scale(calc(var(--s-scale, 1) * 1.1)) !important;
+    z-index: 100;
   }
 
   .question-section.active .bubble-card {
@@ -518,16 +527,39 @@
   }
 
   /* Bubble Positions & Randomness */
-  .b1 { top: 15%; left: 10%; --z-depth: -200px; --s-scale: 0.8; --r-rot: -5deg; --f-dur: 7s; transition-delay: 0.2s !important; }
-  .b2 { top: 25%; right: 15%; --z-depth: -400px; --s-scale: 0.7; --r-rot: 8deg; --f-dur: 9s; transition-delay: 0.8s !important; }
-  .b3 { bottom: 20%; left: 15%; --z-depth: -100px; --s-scale: 0.9; --r-rot: 3deg; --f-dur: 6s; transition-delay: 0.4s !important; }
-  .b4 { bottom: 30%; right: 10%; --z-depth: -300px; --s-scale: 0.75; --r-rot: -10deg; --f-dur: 10s; transition-delay: 1.2s !important; }
-  .b5 { top: 45%; left: 5%; --z-depth: -500px; --s-scale: 0.6; --r-rot: 15deg; --f-dur: 12s; transition-delay: 1.5s !important; }
-  .b6 { top: 10%; right: 30%; --z-depth: -150px; --s-scale: 0.85; --r-rot: -3deg; --f-dur: 8s; transition-delay: 0.6s !important; }
-  .b7 { bottom: 10%; right: 40%; --z-depth: -250px; --s-scale: 0.8; --r-rot: 5deg; --f-dur: 11s; transition-delay: 1.0s !important; }
+  .b1 { top: 12%; left: 8%; --z-depth: -200px; --s-scale: 0.85; --r-rot: -5deg; --f-dur: 7s; transition-delay: 0.2s !important; }
+  .b2 { top: 22%; right: 12%; --z-depth: -400px; --s-scale: 0.75; --r-rot: 8deg; --f-dur: 9s; transition-delay: 0.8s !important; }
+  .b3 { bottom: 18%; left: 12%; --z-depth: -100px; --s-scale: 0.95; --r-rot: 3deg; --f-dur: 6s; transition-delay: 0.4s !important; }
+  .b4 { bottom: 28%; right: 8%; --z-depth: -300px; --s-scale: 0.8; --r-rot: -10deg; --f-dur: 10s; transition-delay: 1.2s !important; }
+  .b5 { top: 42%; left: 4%; --z-depth: -500px; --s-scale: 0.65; --r-rot: 15deg; --f-dur: 12s; transition-delay: 1.5s !important; }
+  .b6 { top: 8%; right: 28%; --z-depth: -150px; --s-scale: 0.9; --r-rot: -3deg; --f-dur: 8s; transition-delay: 0.6s !important; }
+  .b7 { bottom: 8%; right: 38%; --z-depth: -250px; --s-scale: 0.85; --r-rot: 5deg; --f-dur: 11s; transition-delay: 1.0s !important; }
 
   @media (max-width: 768px) {
-    .bubble-card { font-size: 0.8rem; padding: 1rem 1.5rem; }
+    .bubble-card { font-size: 0.9rem; padding: 1.2rem 2rem; }
+  }
+
+  /* --- Products Section Enhancement: Data Flow --- */
+  @keyframes lineFlow {
+    from { stroke-dashoffset: 100%; }
+    to { stroke-dashoffset: 0; }
+  }
+
+  .connecting-path {
+    fill: none;
+    stroke: #7a28ff; 
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: opacity 0.5s ease;
+    opacity: 0;
+  }
+
+  /* Pulse animation for the flow effect */
+  .connecting-path.flow-active {
+    animation: lineFlow 3s linear infinite;
+    stroke-dasharray: 10 20; /* Creates dots/dashes that move */
+    opacity: 0.6;
   }
 
   /* --- DDS Section --- */
@@ -1211,21 +1243,21 @@
     align-items: center;
     justify-content: center;
     color: #fff;
-    font-size: 1.5rem;
+    font-size: 2.2rem; /* Increased from 1.5rem */
     font-weight: 800;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     pointer-events: none;
     box-shadow: none !important;
-    margin-top: -0.75rem; /* Centering text vertically */
+    margin-top: -1.1rem; /* Adjusted for larger font */
     --orbit-dist: 280px; /* Half of orbit diameter */
   }
 
   .satellite span {
     display: block;
     text-shadow: 
-      0 0 10px rgba(122, 40, 255, 1),
-      0 0 20px rgba(122, 40, 255, 0.8);
+      0 0 15px rgba(122, 40, 255, 1),
+      0 0 30px rgba(122, 40, 255, 0.8);
     white-space: nowrap;
     /* Exactly match parent rotation speed in reverse */
     animation: counter-rotate 25s linear infinite;
@@ -1281,8 +1313,8 @@
 
   .merge-widget {
     position: absolute;
-    width: 320px;
-    height: 320px;
+    width: 450px; /* Increased from 320px */
+    height: 450px; /* Increased from 320px */
     opacity: 0;
     /* Removed rotation, increased initial depth scattering */
     transform: translate3d(var(--x), var(--y), -2000px) scale(0.1);

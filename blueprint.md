@@ -54,8 +54,14 @@ A web-based project for CCL Robotics, now integrated with a GitHub repository fo
 - **Dashboard Design System (DDS) Section Background:**
     - Integrated a dynamic background using images "DS1" through "DS6".
     - Implemented a transition effect where background elements clarify and shift depth when the section becomes active.
-- **Robotics 3D Gallery Section:**
-    - Removed the "Ready to build?" Call-To-Action (CTA) section from `robotics.html` for a cleaner, more focused page end.
+- **Robotics 3D Gallery Section Refinement:**
+    - Increased item dimensions to 800px x 550px for maximum visual impact and clarity.
+    - Adjusted 3D transform offsets and perspective to accommodate the larger assets while maintaining a balanced layout.
+- **Section-wide Visibility & Impact Enhancements:**
+    - **Question Section:** Enlarged interaction bubbles and added a hover-zoom effect with brand color highlights.
+    - **Products Section:** Implemented a "Data Flow" animation on connecting lines, creating a living system feel using SVG stroke-dasharray transitions.
+    - **DDS Core Elements:** Scaled up satellite text elements and enhanced their glow for better readability in 3D space.
+    - **Widget Merge Section:** Increased the scale of emerging widgets to 450px for a more immersive transformation experience.
 
 ## Future Plans
 - Any further updates to the code will be automatically pushed to the GitHub repository as requested.
