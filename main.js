@@ -736,25 +736,46 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      // --- Interaction: Products & Collaboration Mode (Modified) ---
+      // --- Interaction: Products & Collaboration Mode (Multi-Stage) ---
       const productsSection = document.getElementById('products-trigger');
       const isProductsActive = productsSection && Math.abs(container.scrollTop - productsSection.offsetTop) < 10;
 
       if (isProductsActive) {
-        const isCollabMode = productsSection.classList.contains('collab-mode');
+        // Stages: 0 (Initial), 1 (Collab), 2 (Glow), 3 (Okay)
+        const hasCollab = productsSection.classList.contains('collab-mode');
+        const hasGlow = productsSection.classList.contains('dds-glow-mode');
+        const hasOkay = productsSection.classList.contains('okay-mode');
         
-        if (e.key === 'ArrowDown' && !isCollabMode) {
-          // First Down Arrow: Switch to Collab Mode
-          productsSection.classList.add('collab-mode');
-          e.preventDefault();
-          return;
-        } else if (e.key === 'ArrowUp' && isCollabMode) {
-          // Up Arrow in Collab Mode: Back to Products Mode
-          productsSection.classList.remove('collab-mode');
-          e.preventDefault();
-          return;
+        if (e.key === 'ArrowDown') {
+          if (!hasCollab) {
+            productsSection.classList.add('collab-mode');
+            e.preventDefault();
+            return;
+          } else if (!hasGlow) {
+            productsSection.classList.add('dds-glow-mode');
+            e.preventDefault();
+            return;
+          } else if (!hasOkay) {
+            productsSection.classList.add('okay-mode');
+            e.preventDefault();
+            return;
+          }
+          // If all stages are done, fall through to scroll to next section
+        } else if (e.key === 'ArrowUp') {
+          if (hasOkay) {
+            productsSection.classList.remove('okay-mode');
+            e.preventDefault();
+            return;
+          } else if (hasGlow) {
+            productsSection.classList.remove('dds-glow-mode');
+            e.preventDefault();
+            return;
+          } else if (hasCollab) {
+            productsSection.classList.remove('collab-mode');
+            e.preventDefault();
+            return;
+          }
         }
-        // If isCollabMode is true and ArrowDown is pressed, it will fall through to normal section scroll
       }
 
       // --- Interaction: Goals Section ---

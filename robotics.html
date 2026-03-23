@@ -874,6 +874,16 @@
     margin: 40px 0;
   }
 
+  /* Strong Glow State */
+  .products-section.dds-glow-mode .dds-node {
+    box-shadow: 0 0 100px rgba(122, 40, 255, 0.8), 
+                0 0 40px rgba(122, 40, 255, 0.6),
+                inset 0 0 30px rgba(122, 40, 255, 0.4);
+    border-color: #fff;
+    background: rgba(122, 40, 255, 0.3);
+    transform: scale(1.1);
+  }
+
   .dds-node::before {
     content: '';
     position: absolute;
@@ -883,115 +893,9 @@
     animation: rotate 10s linear infinite;
   }
 
-  @keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
+  /* ... (중략) ... */
 
-  .products-section.active-products .dds-node {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  .widget-row {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    width: 100%;
-    position: absolute;
-    top: 5vh;
-    padding: 0 5vw;
-  }
-
-  .product-widget {
-    width: clamp(50px, 7vw, 90px);
-    height: auto;
-    object-fit: contain;
-    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5)) grayscale(0.2);
-    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-    transform: translateY(-20px);
-  }
-
-  .products-section.active-products .product-widget {
-    transform: translateY(0);
-  }
-
-  .products-title {
-    position: absolute;
-    bottom: 5vh;
-    font-size: clamp(1.8rem, 4vw, 2.8rem);
-    font-weight: 300;
-    color: #fff;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    text-shadow: 0 0 20px rgba(122, 40, 255, 0.5);
-  }
-
-  /* Collaboration Overlay */
-  .collab-overlay {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 120px;
-    pointer-events: none;
-    opacity: 0;
-    transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
-    transform: scale(1.1);
-  }
-
-  .products-section.collab-mode .collab-overlay {
-    opacity: 1;
-    pointer-events: auto;
-    transform: scale(1);
-  }
-
-  .collab-user {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    position: relative;
-  }
-
-  .user-icon-wrapper {
-    width: 110px;
-    height: 110px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.6s ease;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  }
-
-  .collab-user:hover .user-icon-wrapper {
-    border-color: var(--accent-color);
-    background: rgba(122, 40, 255, 0.05);
-    box-shadow: 0 0 40px rgba(122, 40, 255, 0.3);
-    transform: translateY(-10px);
-  }
-
-  .user-icon-wrapper svg {
-    width: 55px;
-    height: 55px;
-    fill: rgba(255, 255, 255, 0.5);
-    transition: fill 0.3s ease;
-  }
-
-  .user-label {
-    color: #fff;
-    font-size: 1.3rem;
-    font-weight: 200;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    opacity: 0.6;
-  }
-
-  .update-bubble {
+  .update-bubble, .okay-bubble {
     position: absolute;
     top: -70px;
     left: 50%;
@@ -1007,6 +911,24 @@
     white-space: nowrap;
     animation: bubbleFloat 3s ease-in-out infinite;
     z-index: 20;
+    opacity: 0;
+    transition: all 0.5s ease;
+  }
+
+  .okay-bubble {
+    background: #00ff66; /* Green for Okay */
+    box-shadow: 0 15px 30px rgba(0, 255, 102, 0.3);
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 4px;
+  }
+
+  /* Bubble visibility based on modes */
+  .products-section.collab-mode .update-bubble {
+    opacity: 1;
+  }
+
+  .products-section.okay-mode .okay-bubble {
+    opacity: 1;
   }
 
   @keyframes bubbleFloat {
@@ -1257,15 +1179,17 @@
         </div>
 
         <div style="width: 140px;"></div> <!-- Gap for the DDS node -->
+<!-- Developer (Right) -->
+<div class="collab-user">
+  <div class="okay-bubble">Okay!</div>
+  <div class="user-icon-wrapper">
+    <svg viewBox="0 0 24 24">
+      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+    </svg>
+  </div>
+  <span class="user-label">Developer</span>
+</div>
 
-        <div class="collab-user">
-          <div class="user-icon-wrapper">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-            </svg>
-          </div>
-          <span class="user-label">Developer</span>
-        </div>
       </div>
 
       <!-- Bottom Title -->
