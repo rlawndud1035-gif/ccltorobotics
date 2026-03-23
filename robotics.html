@@ -1419,20 +1419,11 @@
   }
 
   .dashboard-v-title {
-    font-size: clamp(3rem, 10vw, 10rem) !important;
+    font-size: clamp(3rem, 10vw, 8rem) !important;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 0 50px rgba(122, 40, 255, 0.4);
     text-align: center;
-  }
-
-  .dashboard-video-section.active .dds-rest {
-    max-width: 0;
-    opacity: 0;
-    margin-right: -0.05em;
-  }
-
-  .dashboard-video-section.active .dds-title {
-    gap: 0;
-    letter-spacing: -0.02em;
-    text-shadow: 0 0 80px rgba(122, 40, 255, 0.8);
   }
 
 </style>
@@ -1738,9 +1729,7 @@
   <!-- Dashboard Video Section -->
   <section class="dashboard-video-section" id="dashboard-video-trigger">
     <div class="dash-split-left">
-      <h2 class="dds-title dashboard-v-title">
-        <span class="dds-word">D<span class="dds-rest">ashboard</span></span>
-      </h2>
+      <h2 class="geist-h1 dashboard-v-title">Dashboard</h2>
     </div>
     <div class="dash-split-right">
       <div class="dash-video-container">
