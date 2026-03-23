@@ -642,47 +642,56 @@ document.addEventListener('DOMContentLoaded', () => {
     function drawProductLines() {
       if (!productsLinesSvg || !productsTitle || !ddsCentralNode || widgetItems.length === 0) return;
 
-      // Clear existing lines
-      productsLinesSvg.innerHTML = '';
+      // Clear existing lines and setup gradient
+      productsLinesSvg.innerHTML = `
+        <defs>
+          <linearGradient id="line-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:rgba(122, 40, 255, 0.8);stop-opacity:1" />
+            <stop offset="100%" style="stop-color:rgba(122, 40, 255, 0.2);stop-opacity:0.5" />
+          </linearGradient>
+        </defs>
+      `;
 
       const svgRect = productsLinesSvg.getBoundingClientRect();
       const ddsRect = ddsCentralNode.getBoundingClientRect();
       const titleRect = productsTitle.getBoundingClientRect();
 
-      // DDS Node positions
+      // DDS Node Center (Relative to SVG)
       const ddsCenterX = (ddsRect.left + ddsRect.right) / 2 - svgRect.left;
-      const ddsTopY = ddsRect.top - svgRect.top;
-      const ddsBottomY = ddsRect.bottom - svgRect.top;
+      const ddsCenterY = (ddsRect.top + ddsRect.bottom) / 2 - svgRect.top;
 
-      // 1. Lines from Widgets to DDS Node
+      // 1. Curved Paths from Widgets to DDS Node
       widgetItems.forEach(widget => {
         const widgetRect = widget.getBoundingClientRect();
         const startX = (widgetRect.left + widgetRect.right) / 2 - svgRect.left;
         const startY = widgetRect.bottom - svgRect.top;
 
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('x1', startX);
-        line.setAttribute('y1', startY);
-        line.setAttribute('x2', ddsCenterX);
-        line.setAttribute('y2', ddsTopY + 10); // Target slightly inside the circle
-        line.setAttribute('class', 'connecting-line');
-        productsLinesSvg.appendChild(line);
+        // Create a Bezier Curve path
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        // Control point is halfway between Y coordinates
+        const cpY = (startY + ddsCenterY) / 2;
+        const d = `M ${startX} ${startY} C ${startX} ${cpY}, ${ddsCenterX} ${cpY}, ${ddsCenterX} ${ddsCenterY}`;
+
+        path.setAttribute('d', d);
+        path.setAttribute('class', 'connecting-path');
+        productsLinesSvg.appendChild(path);
       });
 
-      // 2. Single Line from DDS Node to Title
+      // 2. Main Connection from DDS Node to Title
       const titleCenterX = (titleRect.left + titleRect.right) / 2 - svgRect.left;
       const titleTopY = titleRect.top - svgRect.top;
 
-      const mainLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      mainLine.setAttribute('x1', ddsCenterX);
-      mainLine.setAttribute('y1', ddsBottomY - 10); // Start slightly inside the circle
-      mainLine.setAttribute('x2', titleCenterX);
-      mainLine.setAttribute('y2', titleTopY);
-      mainLine.setAttribute('class', 'connecting-line');
-      mainLine.style.strokeWidth = "3"; // Make the main connection thicker
-      mainLine.style.stroke = "var(--accent-color)";
-      productsLinesSvg.appendChild(mainLine);
+      const mainPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      const mainCpY = (ddsCenterY + titleTopY) / 2;
+      const mainD = `M ${ddsCenterX} ${ddsCenterY} C ${ddsCenterX} ${mainCpY}, ${titleCenterX} ${mainCpY}, ${titleCenterX} ${titleTopY}`;
+
+      mainPath.setAttribute('d', mainD);
+      mainPath.setAttribute('class', 'connecting-path');
+      mainPath.style.strokeWidth = "3";
+      mainPath.style.opacity = "0.8";
+      productsLinesSvg.appendChild(mainPath);
     }
+
     const productsObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {

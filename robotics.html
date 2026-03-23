@@ -809,29 +809,111 @@
 
   /* --- Products Section --- */
   .products-section {
-    background: #000;
+    background: radial-gradient(circle at 50% 50%, rgba(122, 40, 255, 0.05) 0%, #000 70%);
     height: 100vh;
     width: 100vw;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    padding: 10vh 0;
+    justify-content: center;
     position: relative;
     overflow: hidden;
   }
 
+  .products-container {
+    width: 100%;
+    max-width: 1400px;
+    height: 80vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5vh 0;
+  }
+
+  .dds-node {
+    width: 140px;
+    height: 140px;
+    background: rgba(122, 40, 255, 0.1);
+    border: 1px solid rgba(122, 40, 255, 0.5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 900;
+    font-size: 1.8rem;
+    letter-spacing: 0.15em;
+    box-shadow: 0 0 50px rgba(122, 40, 255, 0.3), inset 0 0 20px rgba(122, 40, 255, 0.2);
+    backdrop-filter: blur(10px);
+    z-index: 10;
+    opacity: 0;
+    transform: scale(0.8) rotate(-10deg);
+    transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1) 0.4s;
+    position: relative;
+  }
+
+  .dds-node::before {
+    content: '';
+    position: absolute;
+    inset: -10px;
+    border: 1px dashed rgba(122, 40, 255, 0.3);
+    border-radius: 50%;
+    animation: rotate 10s linear infinite;
+  }
+
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .products-section.active-products .dds-node {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+
+  .widget-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    z-index: 5;
+    padding: 0 5vw;
+  }
+
+  .product-widget {
+    width: clamp(50px, 7vw, 90px);
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5)) grayscale(0.2);
+    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+
+  .product-widget:hover {
+    filter: drop-shadow(0 15px 30px rgba(122, 40, 255, 0.5)) grayscale(0);
+    transform: scale(1.2) translateY(-10px);
+  }
+
+  .products-section.active-products .product-widget {
+    opacity: 0.8;
+    transform: translateY(0);
+  }
+
   .products-title {
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: 200;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 300;
     color: #fff;
     text-align: center;
     z-index: 10;
-    margin-bottom: 2rem;
-    text-shadow: 0 0 30px rgba(122, 40, 255, 0.4);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-shadow: 0 0 20px rgba(122, 40, 255, 0.5);
     opacity: 0;
     transform: translateY(20px);
-    transition: all 1s ease 0.3s;
+    transition: all 1s ease 0.6s;
   }
 
   .products-section.active-products .products-title {
@@ -839,92 +921,26 @@
     transform: translateY(0);
   }
 
-  .products-container {
-    width: 100%;
-    flex-grow: 1;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding-top: 5vh;
-  }
-
-  .dds-node {
-    width: 120px;
-    height: 120px;
-    background: rgba(122, 40, 255, 0.1);
-    border: 2px solid var(--accent-color);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-weight: 900;
-    font-size: 1.5rem;
-    letter-spacing: 0.1em;
-    box-shadow: 0 0 40px rgba(122, 40, 255, 0.4);
-    z-index: 10;
-    margin: 4vh 0;
-    opacity: 0;
-    transform: scale(0.5);
-    transition: all 1s cubic-bezier(0.23, 1, 0.32, 1) 0.5s;
-  }
-
-  .products-section.active-products .dds-node {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  .widget-row {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: clamp(0.5rem, 2vw, 2rem);
-    width: 90%;
-    z-index: 5;
-  }
-
-  .product-widget {
-    width: clamp(40px, 8vw, 100px);
-    height: auto;
-    object-fit: contain;
-    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
-    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-    opacity: 0;
-    transform: translateY(-50px);
-  }
-
-  .products-section.active-products .product-widget {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .product-widget:hover {
-    transform: translateY(15px) scale(1.15) rotate(5deg);
-    filter: drop-shadow(0 20px 40px rgba(122, 40, 255, 0.4));
-  }
-
   .connecting-lines-svg {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
     width: 100%;
     height: 100%;
     pointer-events: none;
     z-index: 1;
   }
 
-  .connecting-line {
-    stroke: rgba(122, 40, 255, 0.6);
-    stroke-width: 2;
+  .connecting-path {
+    stroke: url(#line-gradient);
+    stroke-width: 1.5;
     fill: none;
     stroke-dasharray: 1000;
     stroke-dashoffset: 1000;
-    transition: stroke-dashoffset 2s ease 0.8s, stroke 0.3s ease;
+    transition: stroke-dashoffset 2.5s cubic-bezier(0.45, 0, 0.55, 1) 0.8s;
+    opacity: 0.4;
   }
 
-  .products-section.active-products .connecting-line {
+  .products-section.active-products .connecting-path {
     stroke-dashoffset: 0;
   }
 </style>
