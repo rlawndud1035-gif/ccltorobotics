@@ -57,6 +57,11 @@ A web-based project for CCL Robotics, now integrated with a GitHub repository fo
 - **Robotics 3D Gallery Section Refinement:**
     - Increased item dimensions to 800px x 550px for maximum visual impact and clarity.
     - Adjusted 3D transform offsets and perspective to accommodate the larger assets while maintaining a balanced layout.
+    - **Dashboard Video Section (New):**
+        - Added a half-split section below the 3D Robotics Gallery.
+        - Left side: "Dashboard" title with the signature "DDS" word-shrinking animation.
+        - Right side: Integrated `videos/prototype_1.mov` video demonstration with a 3D-perspective reveal.
+        - Uses Intersection Observer to trigger animations when scrolling into view.
 - **Section-wide Visibility & Impact Enhancements:**
     - **Question Section:** Enlarged interaction bubbles and added a hover-zoom effect with brand color highlights.
     - **Products Section:** Implemented a "Data Flow" animation on connecting lines, creating a living system feel using SVG stroke-dasharray transitions.

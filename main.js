@@ -573,11 +573,21 @@ document.addEventListener('DOMContentLoaded', () => {
       }, { root: container, threshold: 0.4 }).observe(ddsTrigger);
     }
 
-    if (galleryTrigger) new IntersectionObserver(entries => { 
-      isGallerySectionActive = entries[0].isIntersecting; 
+    if (galleryTrigger) new IntersectionObserver(entries => {
+      isGallerySectionActive = entries[0].isIntersecting;
       if (isGallerySectionActive) startGalleryAutoScroll();
       else stopGalleryAutoScroll();
     }, { root: container, threshold: 0.3 }).observe(galleryTrigger);
+
+    const dashVideoTrigger = document.getElementById('dashboard-video-trigger');
+    if (dashVideoTrigger) {
+      new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) {
+          entries[0].target.classList.add('active');
+        }
+      }, { root: container, threshold: 0.4 }).observe(dashVideoTrigger);
+    }
+
     if (goalsTrigger) new IntersectionObserver(entries => { isGoalsSectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.3 }).observe(goalsTrigger);
     
     if (coreElementsTrigger) {
