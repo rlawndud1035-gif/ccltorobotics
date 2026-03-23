@@ -64,11 +64,9 @@ A modern web project for CCL Robotics, powered by the **Vite** build system for 
 - **Robotics 3D Gallery Section Refinement:**
     - Increased item dimensions to 800px x 550px for maximum visual impact and clarity.
     - Adjusted 3D transform offsets and perspective to accommodate the larger assets while maintaining a balanced layout.
-    - **Dashboard Video Section (New):**
-        - Added a half-split section below the 3D Robotics Gallery.
-        - Left side: "Dashboard" title with a high-impact, minimalist design.
-        - Right side: Integrated `videos/prototype_1.mov` video demonstration with a 3D-perspective reveal.
-        - Uses Intersection Observer to trigger the video's focus animation when scrolling into view.
+    - **Title Scale Optimization:**
+    - Reduced the font size of the **DDS title** and the final **Dashboard title** to ensure better visual balance and prevent them from overwhelming the layout.
+    - Adjusted `clamp()` values for these titles to provide a more refined scaling experience across different screen sizes.
 - **Section-wide Visibility & Impact Enhancements:**
     - **Question Section:** Enlarged interaction bubbles and added a hover-zoom effect with brand color highlights.
     - **Products Section:** Implemented a "Data Flow" animation on connecting lines, creating a living system feel using SVG stroke-dasharray transitions.
