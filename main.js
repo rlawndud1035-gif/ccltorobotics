@@ -470,33 +470,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const sections = container.querySelectorAll('section');
-    let isScrollingLocal = false;
 
     // --- Work Process Pyramid Animation ---
     const processBlocks = document.querySelectorAll('.process-block');
     const processTrigger = document.getElementById('process-trigger');
-    
     if (processTrigger && processBlocks.length > 0) {
       const processObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            processBlocks.forEach((block, index) => {
-              setTimeout(() => block.classList.add('active'), index * 200);
-            });
-            processObserver.unobserve(entry.target);
-          }
-        });
+        if (entries[0].isIntersecting) {
+          processBlocks.forEach((block, index) => setTimeout(() => block.classList.add('active'), index * 200));
+          processObserver.unobserve(entries[0].target);
+        }
       }, { root: container, threshold: 0.1 });
       processObserver.observe(processTrigger);
     }
 
     // --- Project Goals Interactive ---
-    const goalsTrigger = document.getElementById('goals-interactive-trigger');
     const goalColumns = document.querySelectorAll('.goal-column');
     const goalsInstruction = document.getElementById('goals-instruction');
     let activeGoalIndex = 0; 
     let isGoalsSectionActive = false;
-
     const updateGoals = (index) => {
       goalColumns.forEach((col, i) => i <= index ? col.classList.add('active') : col.classList.remove('active'));
       if (goalsInstruction) index >= 0 ? goalsInstruction.classList.add('hidden') : goalsInstruction.classList.remove('hidden');
@@ -504,11 +496,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (goalColumns.length > 0) updateGoals(0);
 
     // --- Robotics 3D Gallery ---
-    const galleryTrigger = document.getElementById('gallery-3d-trigger');
     const galleryItems = document.querySelectorAll('.gallery-3d-item');
     let activeGalleryIndex = 0;
     let isGallerySectionActive = false;
-
     const updateGallery3D = (index) => {
       galleryItems.forEach((item, i) => {
         item.className = 'gallery-3d-item';
@@ -523,50 +513,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Question Section ---
     const questionTrigger = document.getElementById('question-trigger');
-    const bubbleCards = document.querySelectorAll('.bubble-card');
     if (questionTrigger) {
       const questionObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('active');
-            setTimeout(() => bubbleCards.forEach(b => b.classList.add('floating')), 2000);
-            questionObserver.unobserve(entry.target);
-          }
-        });
+        if (entries[0].isIntersecting) {
+          entries[0].target.classList.add('active');
+          setTimeout(() => document.querySelectorAll('.bubble-card').forEach(b => b.classList.add('floating')), 2000);
+          questionObserver.unobserve(entries[0].target);
+        }
       }, { root: container, threshold: 0.3 });
       questionObserver.observe(questionTrigger);
     }
 
-    // --- DDS Section ---
-    const ddsTrigger = document.getElementById('dds-trigger');
-    let isDdsSectionActive = false;
-    if (ddsTrigger) {
-      const ddsObserver = new IntersectionObserver(entries => {
-        isDdsSectionActive = entries[0].isIntersecting;
-      }, { root: container, threshold: 0.2 });
-      ddsObserver.observe(ddsTrigger);
-    }
-
-    // --- Brand Identity ---
-    const brandTrigger = document.getElementById('brand-trigger');
-    let isBrandSectionActive = false;
-    if (brandTrigger) {
-      const brandObserver = new IntersectionObserver(entries => {
-        isBrandSectionActive = entries[0].isIntersecting;
-      }, { root: container, threshold: 0.3 });
-      brandObserver.observe(brandTrigger);
-    }
-
-    // --- Products Section & Sequential Line Drawing ---
+    // --- Products Section & Lines ---
     const productsTrigger = document.getElementById('products-trigger');
     const productsLinesSvg = document.getElementById('products-lines-svg');
     const productsTitle = document.querySelector('.products-title');
     const ddsCentralNode = document.getElementById('dds-central-node');
-    const widgetItems = document.querySelectorAll('.product-widget');
 
     function drawProductLines() {
-      if (!productsLinesSvg || !productsTitle || !ddsCentralNode || widgetItems.length === 0) return;
+      if (!productsLinesSvg || !productsTitle || !ddsCentralNode) return;
+      const widgetItemsCurrent = document.querySelectorAll('.product-widget');
+      if (widgetItemsCurrent.length === 0) return;
 
+      // Clear SVG paths
       const existingPaths = productsLinesSvg.querySelectorAll('path');
       existingPaths.forEach(p => p.remove());
 
@@ -583,11 +552,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const ddsCenterY = (ddsRect.top + ddsRect.bottom) / 2 - svgRect.top;
       const widgetPaths = [];
 
-      widgetItems.forEach(widget => {
+      widgetItemsCurrent.forEach(widget => {
         const widgetRect = widget.getBoundingClientRect();
         const startX = (widgetRect.left + widgetRect.right) / 2 - svgRect.left;
         const startY = (widgetRect.top + widgetRect.bottom) / 2 - svgRect.top;
-
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         const cpY = (startY + ddsCenterY) / 2;
         path.setAttribute('d', `M ${startX} ${startY} C ${startX} ${cpY}, ${ddsCenterX} ${cpY}, ${ddsCenterX} ${ddsCenterY}`);
@@ -612,6 +580,9 @@ document.addEventListener('DOMContentLoaded', () => {
       mainPath.style.strokeDasharray = mainLen;
       mainPath.style.strokeDashoffset = mainLen;
 
+      // Force Reflow
+      productsLinesSvg.getBoundingClientRect();
+
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           widgetPaths.forEach(p => {
@@ -632,150 +603,83 @@ document.addEventListener('DOMContentLoaded', () => {
       const productsObserver = new IntersectionObserver(entries => {
         if (entries[0].isIntersecting) {
           entries[0].target.classList.add('active-products');
-          setTimeout(drawProductLines, 400);
+          setTimeout(drawProductLines, 600);
         }
       }, { root: container, threshold: 0.1 });
       productsObserver.observe(productsTrigger);
     }
 
-    const goalsObserver = new IntersectionObserver(entries => { isGoalsSectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.3 });
-    if (goalsTrigger) goalsObserver.observe(goalsTrigger);
+    // Observers for state management
+    let isBrandSectionActive = false;
+    let isDdsSectionActive = false;
+    let isGallerySectionActive = false;
+    const brandTrigger = document.getElementById('brand-trigger');
+    const ddsTrigger = document.getElementById('dds-trigger');
+    const galleryTrigger = document.getElementById('gallery-3d-trigger');
+    const goalsTrigger = document.getElementById('goals-interactive-trigger');
 
-    const galleryObserver = new IntersectionObserver(entries => { isGallerySectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.3 });
-    if (galleryTrigger) galleryObserver.observe(galleryTrigger);
+    if (brandTrigger) new IntersectionObserver(entries => { isBrandSectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.3 }).observe(brandTrigger);
+    if (ddsTrigger) new IntersectionObserver(entries => { isDdsSectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.2 }).observe(ddsTrigger);
+    if (galleryTrigger) new IntersectionObserver(entries => { isGallerySectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.3 }).observe(galleryTrigger);
+    if (goalsTrigger) new IntersectionObserver(entries => { isGoalsSectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.3 }).observe(goalsTrigger);
 
     // Global Keyboard Listener for detail view
     const handleKeyDown = (e) => {
       if (!isDetailViewActive || window.innerWidth <= 768) return;
 
-      // --- Interaction: Brand Identity Section ---
       if (isBrandSectionActive) {
-        if (e.key === 'ArrowRight') {
-          brandTrigger.classList.add('blue-state');
-          e.preventDefault();
-          return;
-        } else if (e.key === 'ArrowLeft') {
-          brandTrigger.classList.remove('blue-state');
-          e.preventDefault();
-          return;
-        }
+        if (e.key === 'ArrowRight') brandTrigger.classList.add('blue-state');
+        else if (e.key === 'ArrowLeft') brandTrigger.classList.remove('blue-state');
+        if (e.key.startsWith('Arrow')) e.preventDefault();
       }
 
-      // --- Interaction: DDS Transformation Section ---
       if (isDdsSectionActive) {
         if (['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
           if (!ddsTrigger.classList.contains('active-dds')) {
             ddsTrigger.classList.add('active-dds');
             e.preventDefault();
-            return;
           }
         }
       }
 
-      // --- Interaction: Products & Collaboration Mode (Multi-Stage) ---
       const productsSection = document.getElementById('products-trigger');
-      const isProductsActive = productsSection && Math.abs(container.scrollTop - productsSection.offsetTop) < 10;
-
-      if (isProductsActive) {
-        // Stages: 0 (Initial), 1 (Collab), 2 (Glow), 3 (Okay)
+      if (productsSection && Math.abs(container.scrollTop - productsSection.offsetTop) < 10) {
         const hasCollab = productsSection.classList.contains('collab-mode');
         const hasGlow = productsSection.classList.contains('dds-glow-mode');
         const hasOkay = productsSection.classList.contains('okay-mode');
-        
         if (e.key === 'ArrowDown') {
-          if (!hasCollab) {
-            productsSection.classList.add('collab-mode');
-            e.preventDefault();
-            return;
-          } else if (!hasGlow) {
-            productsSection.classList.add('dds-glow-mode');
-            e.preventDefault();
-            return;
-          } else if (!hasOkay) {
-            productsSection.classList.add('okay-mode');
-            e.preventDefault();
-            return;
-          }
-          // If all stages are done, fall through to scroll to next section
+          if (!hasCollab) { productsSection.classList.add('collab-mode'); e.preventDefault(); return; }
+          else if (!hasGlow) { productsSection.classList.add('dds-glow-mode'); e.preventDefault(); return; }
+          else if (!hasOkay) { productsSection.classList.add('okay-mode'); e.preventDefault(); return; }
         } else if (e.key === 'ArrowUp') {
-          if (hasOkay) {
-            productsSection.classList.remove('okay-mode');
-            e.preventDefault();
-            return;
-          } else if (hasGlow) {
-            productsSection.classList.remove('dds-glow-mode');
-            e.preventDefault();
-            return;
-          } else if (hasCollab) {
-            productsSection.classList.remove('collab-mode');
-            e.preventDefault();
-            return;
-          }
+          if (hasOkay) { productsSection.classList.remove('okay-mode'); e.preventDefault(); return; }
+          else if (hasGlow) { productsSection.classList.remove('dds-glow-mode'); e.preventDefault(); return; }
+          else if (hasCollab) { productsSection.classList.remove('collab-mode'); e.preventDefault(); return; }
         }
       }
 
-      // --- Interaction: Goals Section ---
       if (isGoalsSectionActive) {
-        if (e.key === 'ArrowRight') {
-          if (activeGoalIndex < 3) {
-            activeGoalIndex++;
-            updateGoals(activeGoalIndex);
-            e.preventDefault();
-          }
-        } else if (e.key === 'ArrowLeft') {
-          if (activeGoalIndex >= 0) {
-            activeGoalIndex--;
-            updateGoals(activeGoalIndex);
-            e.preventDefault();
-          }
-        }
+        if (e.key === 'ArrowRight' && activeGoalIndex < 3) { activeGoalIndex++; updateGoals(activeGoalIndex); e.preventDefault(); }
+        else if (e.key === 'ArrowLeft' && activeGoalIndex >= 0) { activeGoalIndex--; updateGoals(activeGoalIndex); e.preventDefault(); }
       }
 
-      // --- Interaction: 3D Gallery ---
       if (isGallerySectionActive) {
-        if (e.key === 'ArrowRight') {
-          if (activeGalleryIndex < galleryItems.length - 1) {
-            activeGalleryIndex++;
-            updateGallery3D(activeGalleryIndex);
-            e.preventDefault();
-          }
-        } else if (e.key === 'ArrowLeft') {
-          if (activeGalleryIndex > 0) {
-            activeGalleryIndex--;
-            updateGallery3D(activeGalleryIndex);
-            e.preventDefault();
-          }
-        }
+        if (e.key === 'ArrowRight' && activeGalleryIndex < galleryItems.length - 1) { activeGalleryIndex++; updateGallery3D(activeGalleryIndex); e.preventDefault(); }
+        else if (e.key === 'ArrowLeft' && activeGalleryIndex > 0) { activeGalleryIndex--; updateGallery3D(activeGalleryIndex); e.preventDefault(); }
       }
 
-      // --- Standard Section Navigation (ArrowUp/Down) ---
       const currentScroll = container.scrollTop;
       const sectionHeight = window.innerHeight;
       let targetSectionIndex = Math.round(currentScroll / sectionHeight);
-
-      if (e.key === 'ArrowDown' && !e.repeat) {
-        if (targetSectionIndex < sections.length - 1) {
-          e.preventDefault();
-          scrollToSectionDetail(targetSectionIndex + 1);
-        }
-      } else if (e.key === 'ArrowUp' && !e.repeat) {
-        if (targetSectionIndex > 0) {
-          e.preventDefault();
-          scrollToSectionDetail(targetSectionIndex - 1);
-        }
+      if (e.key === 'ArrowDown' && !e.repeat && targetSectionIndex < sections.length - 1) {
+        e.preventDefault();
+        sections[targetSectionIndex + 1].scrollIntoView({ behavior: 'smooth' });
+      } else if (e.key === 'ArrowUp' && !e.repeat && targetSectionIndex > 0) {
+        e.preventDefault();
+        sections[targetSectionIndex - 1].scrollIntoView({ behavior: 'smooth' });
       }
     };
-
     window.addEventListener('keydown', handleKeyDown);
-
-    // Cleanup function when needed (though detail view is persistent in this app)
-    // In a full SPA we would remove this on component unmount.
-
-    function scrollToSectionDetail(index) {
-      isScrollingLocal = true;
-      sections[index].scrollIntoView({ behavior: 'smooth' });
-      setTimeout(() => { isScrollingLocal = false; }, 1000);
-    }
   };
 
   const loadRoboticsContent = async () => {
@@ -785,36 +689,26 @@ document.addEventListener('DOMContentLoaded', () => {
       const html = await response.text();
       roboticsDetail.innerHTML = html;
       isContentLoaded = true;
-      
-      // Initialize animations after content is injected
       initRoboticsAnimations();
-
-      // Bind back button after content is loaded
       const backBtn = roboticsDetail.querySelector('.back-btn');
-      if (backBtn) {
-        backBtn.addEventListener('click', () => history.back());
-      }
+      if (backBtn) backBtn.addEventListener('click', () => history.back());
     } catch (err) {
       console.error('Failed to load robotics content:', err);
     }
   };
 
-  // Pre-fetch content for zero-latency transition
   loadRoboticsContent();
 
   const openRobotics = () => {
     if (isDetailViewActive) return;
-    
     isDetailViewActive = true;
     const rect = roboticsCard.getBoundingClientRect();
-    
     roboticsCard.style.top = `${rect.top}px`;
     roboticsCard.style.left = `${rect.left}px`;
     roboticsCard.style.width = `${rect.width}px`;
     roboticsCard.style.height = `${rect.height}px`;
     roboticsCard.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
     roboticsCard.classList.add('expanding');
-
     requestAnimationFrame(() => {
       roboticsCard.style.top = '0';
       roboticsCard.style.left = '0';
@@ -822,7 +716,6 @@ document.addEventListener('DOMContentLoaded', () => {
       roboticsCard.style.height = '100vh';
       roboticsCard.style.backgroundColor = '#000';
     });
-
     setTimeout(() => {
       roboticsDetail.classList.add('active');
       history.pushState({ view: 'robotics' }, 'Robotics');
@@ -831,19 +724,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const closeRobotics = () => {
     if (!isDetailViewActive) return;
-    
     roboticsDetail.classList.remove('active');
-    
     setTimeout(() => {
       const gridItem = document.querySelector('.expertise-grid').children[0];
       const rect = gridItem.getBoundingClientRect();
-
       roboticsCard.style.top = `${rect.top}px`;
       roboticsCard.style.left = `${rect.left}px`;
       roboticsCard.style.width = `${rect.width}px`;
       roboticsCard.style.height = `${rect.height}px`;
       roboticsCard.style.backgroundColor = 'rgba(255, 255, 255, 0.02)';
-
       setTimeout(() => {
         roboticsCard.classList.remove('expanding');
         roboticsCard.style = '';
@@ -853,32 +742,23 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   roboticsCard.addEventListener('click', openRobotics);
-
-  window.addEventListener('popstate', (e) => {
-    if (isDetailViewActive) {
-      closeRobotics();
-    }
-  });
-
+  window.addEventListener('popstate', () => { if (isDetailViewActive) closeRobotics(); });
   updateCurrentIndex();
 
-  // Image Lightbox Implementation
   const images = document.querySelectorAll('.clickable-image img');
   const lightbox = document.createElement('div');
   lightbox.id = 'lightbox';
   const lightboxImg = document.createElement('img');
   lightbox.appendChild(lightboxImg);
   document.body.appendChild(lightbox);
-
   images.forEach(image => {
     image.style.cursor = 'zoom-in';
-    image.addEventListener('click', (e) => {
+    image.addEventListener('click', () => {
       lightbox.classList.add('active');
       lightboxImg.src = image.src;
       document.body.style.overflow = 'hidden';
     });
   });
-
   lightbox.addEventListener('click', () => {
     lightbox.classList.remove('active');
     document.body.style.overflow = 'auto';
