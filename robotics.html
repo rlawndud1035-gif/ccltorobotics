@@ -1137,30 +1137,72 @@
 
   .satellite {
     position: absolute;
-    width: 100px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(122, 40, 255, 0.5);
-    border-radius: 20px;
+    width: auto;
+    height: auto;
+    background: none !important;
+    border: none !important;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
-    font-size: 0.9rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 0 20px rgba(122, 40, 255, 0.2);
-    /* Calculate positions around the circle */
-    --radius: 200px; /* Half of active core-circle width */
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    pointer-events: none;
+    box-shadow: none !important;
+    --orbit-radius: 280px;
   }
 
-  /* Specific satellite positioning logic will be handled via JS or fixed angles */
-  .s1 { transform: rotate(0deg) translate(var(--radius)) rotate(0deg); }
-  .s2 { transform: rotate(72deg) translate(var(--radius)) rotate(-72deg); }
-  .s3 { transform: rotate(144deg) translate(var(--radius)) rotate(-144deg); }
-  .s4 { transform: rotate(216deg) translate(var(--radius)) rotate(-216deg); }
-  .s5 { transform: rotate(288deg) translate(var(--radius)) rotate(-288deg); }
+  .satellite span {
+    display: block;
+    text-shadow: 
+      0 0 10px rgba(122, 40, 255, 1),
+      0 0 20px rgba(122, 40, 255, 0.8),
+      0 0 40px rgba(122, 40, 255, 0.6);
+    white-space: nowrap;
+    animation: counter-rotate 20s linear infinite;
+  }
+
+  @keyframes counter-rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(-360deg); }
+  }
+
+  .s1 { transform: rotate(0deg) translate(var(--orbit-radius)); }
+  .s2 { transform: rotate(72deg) translate(var(--orbit-radius)); }
+  .s3 { transform: rotate(144deg) translate(var(--orbit-radius)); }
+  .s4 { transform: rotate(216deg) translate(var(--orbit-radius)); }
+  .s5 { transform: rotate(288deg) translate(var(--orbit-radius)); }
+    text-transform: uppercase;
+    pointer-events: none;
+    box-shadow: none !important;
+    /* Radius for satellites to orbit */
+    --orbit-radius: 280px;
+  }
+
+  .satellite span {
+    display: block;
+    text-shadow: 
+      0 0 10px rgba(122, 40, 255, 1),
+      0 0 20px rgba(122, 40, 255, 0.8),
+      0 0 40px rgba(122, 40, 255, 0.6);
+    white-space: nowrap;
+    /* Counter-rotate text so it stays upright */
+    animation: counter-rotate 20s linear infinite;
+  }
+
+  @keyframes counter-rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(-360deg); }
+  }
+
+  /* Distribute satellites along the orbit */
+  .s1 { transform: rotate(0deg) translate(var(--orbit-radius)); }
+  .s2 { transform: rotate(72deg) translate(var(--orbit-radius)); }
+  .s3 { transform: rotate(144deg) translate(var(--orbit-radius)); }
+  .s4 { transform: rotate(216deg) translate(var(--orbit-radius)); }
+  .s5 { transform: rotate(288deg) translate(var(--orbit-radius)); }
 
   .dds-core-elements .geist-h1 {
     position: absolute;
@@ -1425,11 +1467,11 @@
     <div class="core-orbit-container">
       <div class="core-circle">DDS</div>
       <div class="orbit-path">
-        <div class="satellite s1">Text</div>
-        <div class="satellite s2">Component</div>
-        <div class="satellite s3">Icon</div>
-        <div class="satellite s4">Color</div>
-        <div class="satellite s5">Grid</div>
+        <div class="satellite s1"><span>Text</span></div>
+        <div class="satellite s2"><span>Component</span></div>
+        <div class="satellite s3"><span>Icon</span></div>
+        <div class="satellite s4"><span>Color</span></div>
+        <div class="satellite s5"><span>Grid</span></div>
       </div>
     </div>
   </section>
