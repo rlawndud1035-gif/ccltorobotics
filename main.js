@@ -646,8 +646,8 @@ document.addEventListener('DOMContentLoaded', () => {
       productsLinesSvg.innerHTML = `
         <defs>
           <linearGradient id="line-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" style="stop-color:rgba(122, 40, 255, 0.8);stop-opacity:1" />
-            <stop offset="100%" style="stop-color:rgba(122, 40, 255, 0.2);stop-opacity:0.5" />
+            <stop offset="0%" style="stop-color:rgba(122, 40, 255, 1);stop-opacity:1" />
+            <stop offset="100%" style="stop-color:rgba(122, 40, 255, 0.4);stop-opacity:0.8" />
           </linearGradient>
         </defs>
       `;
@@ -663,8 +663,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // 1. Curved Paths from Widgets to DDS Node
       widgetItems.forEach(widget => {
         const widgetRect = widget.getBoundingClientRect();
+        // Use center of widget
         const startX = (widgetRect.left + widgetRect.right) / 2 - svgRect.left;
-        const startY = widgetRect.bottom - svgRect.top;
+        const startY = (widgetRect.top + widgetRect.bottom) / 2 - svgRect.top;
 
         // Create a Bezier Curve path
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -687,8 +688,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       mainPath.setAttribute('d', mainD);
       mainPath.setAttribute('class', 'connecting-path');
-      mainPath.style.strokeWidth = "3";
-      mainPath.style.opacity = "0.8";
+      mainPath.style.strokeWidth = "4"; // Thicker main line
+      mainPath.style.opacity = "1";
       productsLinesSvg.appendChild(mainPath);
     }
 
