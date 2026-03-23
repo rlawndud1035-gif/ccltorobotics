@@ -46,6 +46,8 @@ A web-based project for CCL Robotics, now integrated with a GitHub repository fo
     - Adjusted vertical alignment and padding for a more balanced presentation of the brand gallery.
 - **DDS Core Elements Section Refinement:**
     - Removed the "DDS Core Elements" title from the section to create a more minimalist, focused layout as requested.
+- **CTA Section Removal:**
+    - Removed the "Ready to build?" Call-To-Action (CTA) section from `robotics.html` for a cleaner, more focused page end.
 
 ## Future Plans
 - Any further updates to the code will be automatically pushed to the GitHub repository as requested.
