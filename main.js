@@ -698,7 +698,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Use requestAnimationFrame to ensure DOM is ready
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          // A. Draw widget paths
+          // A. Draw widget paths IMMEDIATELY in active state
           widgetPaths.forEach(p => {
             p.style.transition = "stroke-dashoffset 1.5s cubic-bezier(0.45, 0, 0.55, 1), opacity 0.5s ease";
             p.style.strokeDashoffset = "0";
@@ -710,7 +710,7 @@ document.addEventListener('DOMContentLoaded', () => {
             mainPath.style.transition = "stroke-dashoffset 1.5s cubic-bezier(0.45, 0, 0.55, 1), opacity 0.5s ease";
             mainPath.style.strokeDashoffset = "0";
             mainPath.style.opacity = "1";
-          }, 1200); // Start when widgets are ~80% done
+          }, 800); // Start slightly earlier for a snappier initial state
         });
       });
     }
