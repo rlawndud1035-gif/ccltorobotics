@@ -828,8 +828,27 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    padding: 5vh 0;
+    justify-content: center;
+  }
+
+  /* Initial State (Widgets & Title visible) */
+  .widget-row, .products-title, .connecting-lines-svg {
+    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    opacity: 0;
+  }
+
+  .products-section.active-products .widget-row,
+  .products-section.active-products .products-title {
+    opacity: 1;
+  }
+
+  /* Transition to Collab Mode: Hide widgets and title */
+  .products-section.collab-mode .widget-row,
+  .products-section.collab-mode .products-title,
+  .products-section.collab-mode .connecting-lines-svg {
+    opacity: 0 !important;
+    pointer-events: none;
+    transform: translateY(20px) scale(0.95);
   }
 
   .dds-node {
@@ -849,9 +868,10 @@
     backdrop-filter: blur(10px);
     z-index: 10;
     opacity: 0;
-    transform: scale(0.8) rotate(-10deg);
-    transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1) 0.4s;
+    transform: scale(0.8);
+    transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
     position: relative;
+    margin: 40px 0;
   }
 
   .dds-node::before {
@@ -870,7 +890,7 @@
 
   .products-section.active-products .dds-node {
     opacity: 1;
-    transform: scale(1) rotate(0deg);
+    transform: scale(1);
   }
 
   .widget-row {
@@ -878,7 +898,8 @@
     justify-content: space-around;
     align-items: center;
     width: 100%;
-    z-index: 5;
+    position: absolute;
+    top: 5vh;
     padding: 0 5vw;
   }
 
@@ -888,37 +909,109 @@
     object-fit: contain;
     filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5)) grayscale(0.2);
     transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-    opacity: 0;
-    transform: translateY(-30px);
-  }
-
-  .product-widget:hover {
-    filter: drop-shadow(0 15px 30px rgba(122, 40, 255, 0.5)) grayscale(0);
-    transform: scale(1.2) translateY(-10px);
+    transform: translateY(-20px);
   }
 
   .products-section.active-products .product-widget {
-    opacity: 0.8;
     transform: translateY(0);
   }
 
   .products-title {
+    position: absolute;
+    bottom: 5vh;
     font-size: clamp(1.8rem, 4vw, 2.8rem);
     font-weight: 300;
     color: #fff;
-    text-align: center;
-    z-index: 10;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     text-shadow: 0 0 20px rgba(122, 40, 255, 0.5);
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 1s ease 0.6s;
   }
 
-  .products-section.active-products .products-title {
+  /* Collaboration Overlay */
+  .collab-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 120px;
+    pointer-events: none;
+    opacity: 0;
+    transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+    transform: scale(1.1);
+  }
+
+  .products-section.collab-mode .collab-overlay {
     opacity: 1;
-    transform: translateY(0);
+    pointer-events: auto;
+    transform: scale(1);
+  }
+
+  .collab-user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+  }
+
+  .user-icon-wrapper {
+    width: 110px;
+    height: 110px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.6s ease;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
+
+  .collab-user:hover .user-icon-wrapper {
+    border-color: var(--accent-color);
+    background: rgba(122, 40, 255, 0.05);
+    box-shadow: 0 0 40px rgba(122, 40, 255, 0.3);
+    transform: translateY(-10px);
+  }
+
+  .user-icon-wrapper svg {
+    width: 55px;
+    height: 55px;
+    fill: rgba(255, 255, 255, 0.5);
+    transition: fill 0.3s ease;
+  }
+
+  .user-label {
+    color: #fff;
+    font-size: 1.3rem;
+    font-weight: 200;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+
+  .update-bubble {
+    position: absolute;
+    top: -70px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent-color);
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 30px;
+    border-bottom-left-radius: 4px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    box-shadow: 0 15px 30px rgba(122, 40, 255, 0.5);
+    white-space: nowrap;
+    animation: bubbleFloat 3s ease-in-out infinite;
+    z-index: 20;
+  }
+
+  @keyframes bubbleFloat {
+    0%, 100% { transform: translate(-50%, 0); }
+    50% { transform: translate(-50%, -12px); }
   }
 
   .connecting-lines-svg {
@@ -942,101 +1035,6 @@
 
   .products-section.active-products .connecting-path {
     stroke-dashoffset: 0;
-  }
-
-  /* --- Collaboration Section --- */
-  .collaboration-section {
-    background: #000;
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .collab-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 100px;
-    position: relative;
-  }
-
-  .collab-user {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    position: relative;
-  }
-
-  .user-icon-wrapper {
-    width: 100px;
-    height: 100px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.5s ease;
-  }
-
-  .collab-user:hover .user-icon-wrapper {
-    border-color: var(--accent-color);
-    box-shadow: 0 0 30px rgba(122, 40, 255, 0.3);
-    transform: translateY(-5px);
-  }
-
-  .user-icon-wrapper svg {
-    width: 50px;
-    height: 50px;
-    fill: rgba(255, 255, 255, 0.6);
-  }
-
-  .user-label {
-    color: #fff;
-    font-size: 1.2rem;
-    font-weight: 300;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    opacity: 0.7;
-  }
-
-  .collab-dds {
-    /* Reuse DDS styles but centered in this flex row */
-    margin: 0 !important;
-  }
-
-  .update-bubble {
-    position: absolute;
-    top: -60px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--accent-color);
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 20px;
-    border-bottom-left-radius: 2px;
-    font-weight: 600;
-    font-size: 1rem;
-    box-shadow: 0 10px 20px rgba(122, 40, 255, 0.4);
-    white-space: nowrap;
-    animation: bubbleFloat 3s ease-in-out infinite;
-  }
-
-  @keyframes bubbleFloat {
-    0%, 100% { transform: translate(-50%, 0); }
-    50% { transform: translate(-50%, -10px); }
-  }
-
-  @media (max-width: 768px) {
-    .collab-container { gap: 40px; }
-    .user-icon-wrapper { width: 70px; height: 100px; }
-    .user-icon-wrapper svg { width: 35px; height: 35px; }
-    .user-label { font-size: 0.9rem; }
   }
 </style>
 
@@ -1228,6 +1226,8 @@
   <section class="products-section" id="products-trigger">
     <div class="products-container">
       <svg class="connecting-lines-svg" id="products-lines-svg"></svg>
+      
+      <!-- Top Widgets -->
       <div class="widget-row" id="widget-row">
         <img src="images/robotics/widget1.png" class="product-widget" style="transition-delay: 0.1s" alt="Widget 1">
         <img src="images/robotics/widget2.png" class="product-widget" style="transition-delay: 0.2s" alt="Widget 2">
@@ -1241,38 +1241,35 @@
         <img src="images/robotics/widget10.png" class="product-widget" style="transition-delay: 1.0s" alt="Widget 10">
       </div>
       
+      <!-- Central Fixed Node -->
       <div class="dds-node" id="dds-central-node">DDS</div>
       
+      <!-- Collaboration Overlay -->
+      <div class="collab-overlay" id="collab-overlay">
+        <div class="collab-user">
+          <div class="update-bubble">Update!</div>
+          <div class="user-icon-wrapper">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+          </div>
+          <span class="user-label">Designer</span>
+        </div>
+
+        <div style="width: 140px;"></div> <!-- Gap for the DDS node -->
+
+        <div class="collab-user">
+          <div class="user-icon-wrapper">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+          </div>
+          <span class="user-label">Developer</span>
+        </div>
+      </div>
+
+      <!-- Bottom Title -->
       <h2 class="products-title">Robotics Products</h2>
-    </div>
-  </section>
-
-  <!-- Collaboration Section -->
-  <section class="collaboration-section" id="collaboration-trigger">
-    <div class="collab-container">
-      <!-- Designer (Left) -->
-      <div class="collab-user">
-        <div class="update-bubble">Update!</div>
-        <div class="user-icon-wrapper">
-          <svg viewBox="0 0 24 24">
-            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-          </svg>
-        </div>
-        <span class="user-label">Designer</span>
-      </div>
-
-      <!-- DDS Node (Center) -->
-      <div class="dds-node collab-dds">DDS</div>
-
-      <!-- Developer (Right) -->
-      <div class="collab-user">
-        <div class="user-icon-wrapper">
-          <svg viewBox="0 0 24 24">
-            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-          </svg>
-        </div>
-        <span class="user-label">Developer</span>
-      </div>
     </div>
   </section>
 

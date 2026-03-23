@@ -711,7 +711,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const handleKeyDown = (e) => {
       if (!isDetailViewActive || window.innerWidth <= 768) return;
 
-      // Handle Brand Interaction
+      // --- Interaction: Brand Identity Section ---
       if (isBrandSectionActive) {
         if (e.key === 'ArrowRight') {
           brandTrigger.classList.add('blue-state');
@@ -724,18 +724,39 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      // Handle DDS Interaction
+      // --- Interaction: DDS Transformation Section ---
       if (isDdsSectionActive) {
         if (['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
           if (!ddsTrigger.classList.contains('active-dds')) {
             ddsTrigger.classList.add('active-dds');
             e.preventDefault();
-            return; // Stay in section for the animation
+            return;
           }
         }
       }
 
-      // Handle Goals Interaction
+      // --- Interaction: Products & Collaboration Mode (Modified) ---
+      const productsSection = document.getElementById('products-trigger');
+      const isProductsActive = productsSection && Math.abs(container.scrollTop - productsSection.offsetTop) < 10;
+
+      if (isProductsActive) {
+        const isCollabMode = productsSection.classList.contains('collab-mode');
+        
+        if (e.key === 'ArrowDown' && !isCollabMode) {
+          // First Down Arrow: Switch to Collab Mode
+          productsSection.classList.add('collab-mode');
+          e.preventDefault();
+          return;
+        } else if (e.key === 'ArrowUp' && isCollabMode) {
+          // Up Arrow in Collab Mode: Back to Products Mode
+          productsSection.classList.remove('collab-mode');
+          e.preventDefault();
+          return;
+        }
+        // If isCollabMode is true and ArrowDown is pressed, it will fall through to normal section scroll
+      }
+
+      // --- Interaction: Goals Section ---
       if (isGoalsSectionActive) {
         if (e.key === 'ArrowRight') {
           if (activeGoalIndex < 3) {
@@ -752,7 +773,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      // Handle 3D Gallery Interaction
+      // --- Interaction: 3D Gallery ---
       if (isGallerySectionActive) {
         if (e.key === 'ArrowRight') {
           if (activeGalleryIndex < galleryItems.length - 1) {
@@ -769,7 +790,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      // Handle Section Navigation (ArrowUp/Down)
+      // --- Standard Section Navigation (ArrowUp/Down) ---
       const currentScroll = container.scrollTop;
       const sectionHeight = window.innerHeight;
       let targetSectionIndex = Math.round(currentScroll / sectionHeight);
