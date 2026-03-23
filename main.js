@@ -554,9 +554,10 @@ document.addEventListener('DOMContentLoaded', () => {
       new IntersectionObserver(entries => {
         if (entries[0].isIntersecting) {
           entries[0].target.classList.add('active');
+          // Start converging after they appear
           setTimeout(() => {
             entries[0].target.classList.add('converge');
-          }, 3000);
+          }, 1000); // Shorter delay for faster reaction
         }
       }, { root: container, threshold: 0.4 }).observe(mergeTrigger);
     }
