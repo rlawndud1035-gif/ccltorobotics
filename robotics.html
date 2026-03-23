@@ -1216,17 +1216,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    transform-style: preserve-3d;
   }
 
   .merge-widget {
     position: absolute;
-    width: 240px;
-    height: 240px;
+    width: 280px;
+    height: 280px;
     opacity: 0;
-    /* Initial state: small, scattered, and far back */
-    transform: translate3d(var(--x), var(--y), -1000px) scale(0.1) rotate(var(--r));
-    transition: all 2.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-    filter: blur(15px);
+    /* Initial state: deep background, like hero widgets */
+    transform: translate3d(var(--x), var(--y), -1500px) scale(0.1) rotate(var(--r));
+    transition: all 3s cubic-bezier(0.23, 1, 0.32, 1);
+    filter: blur(30px);
     pointer-events: none;
   }
 
@@ -1234,18 +1235,18 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
-    filter: drop-shadow(0 10px 30px rgba(122, 40, 255, 0.4));
+    filter: drop-shadow(0 20px 50px rgba(0,0,0,0.8));
   }
 
   .target-image {
     position: absolute;
-    width: 850px; /* Larger as requested */
-    height: 850px;
+    width: 900px; /* Even larger */
+    height: 900px;
     opacity: 0;
-    transform: scale(0.2) rotateY(-90deg);
-    transition: all 2s cubic-bezier(0.23, 1, 0.32, 1);
+    transform: translateZ(-500px) scale(0.5);
+    transition: all 2.5s cubic-bezier(0.19, 1, 0.22, 1);
     z-index: 10;
-    filter: drop-shadow(0 0 100px rgba(122, 40, 255, 0.7));
+    filter: drop-shadow(0 0 120px rgba(122, 40, 255, 0.8));
   }
 
   .target-image img {
@@ -1254,38 +1255,36 @@
     object-fit: contain;
   }
 
-  /* Define varied scattered positions */
-  .mw1 { --x: -45%; --y: -40%; --r: -30deg; transition-delay: 0.1s; }
-  .mw2 { --x: 45%; --y: -45%; --r: 45deg; transition-delay: 0.3s; }
-  .mw3 { --x: -50%; --y: 40%; --r: 15deg; transition-delay: 0.2s; }
-  .mw4 { --x: 50%; --y: 35%; --r: -40deg; transition-delay: 0.5s; }
-  .mw5 { --x: -20%; --y: -50%; --r: 10deg; transition-delay: 0.4s; }
-  .mw6 { --x: 20%; --y: 50%; --r: -20deg; transition-delay: 0.6s; }
-  .mw7 { --x: -55%; --y: 5%; --r: 60deg; transition-delay: 0.15s; }
-  .mw8 { --x: 55%; --y: 10%; --r: -50deg; transition-delay: 0.35s; }
-  .mw9 { --x: -25%; --y: 30%; --r: 25deg; transition-delay: 0.25s; }
-  .mw10 { --x: 25%; --y: -30%; --r: -15deg; transition-delay: 0.45s; }
+  /* Varied starting positions in 3D space */
+  .mw1 { --x: -30%; --y: -25%; --r: -20deg; transition-delay: 0.1s; }
+  .mw2 { --x: 35%; --y: -30%; --r: 30deg; transition-delay: 0.4s; }
+  .mw3 { --x: -40%; --y: 35%; --r: 15deg; transition-delay: 0.2s; }
+  .mw4 { --x: 40%; --y: 25%; --r: -35deg; transition-delay: 0.6s; }
+  .mw5 { --x: -10%; --y: -40%; --r: 10deg; transition-delay: 0.3s; }
+  .mw6 { --x: 15%; --y: 45%; --r: -15deg; transition-delay: 0.7s; }
+  .mw7 { --x: -45%; --y: 5%; --r: 50deg; transition-delay: 0.15s; }
+  .mw8 { --x: 45%; --y: 10%; --r: -40deg; transition-delay: 0.5s; }
+  .mw9 { --x: -20%; --y: 20%; --r: 20deg; transition-delay: 0.25s; }
+  .mw10 { --x: 25%; --y: -20%; --r: -10deg; transition-delay: 0.45s; }
 
-  /* Phase 1: Widgets appear scattered and small */
+  /* Phase 1: Widgets emerge from the back, similar to hero entry */
   .widget-merge-section.active .merge-widget {
-    opacity: 0.8;
-    filter: blur(5px);
-    /* Still somewhat back but visible */
-    transform: translate3d(var(--x), var(--y), -500px) scale(0.4) rotate(var(--r));
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(var(--x), var(--y), -200px) scale(1) rotate(var(--r));
   }
 
-  /* Phase 2: Converge to center and overlap */
+  /* Phase 2: Converge forward and center into "2" */
   .widget-merge-section.active.converge .merge-widget {
-    transform: translate3d(0, 0, 200px) scale(1.2) rotate(calc(var(--r) * 2));
+    transform: translate3d(0, 0, 800px) scale(0.5) rotate(calc(var(--r) * 4));
     opacity: 0;
-    filter: blur(20px);
-    transition: all 1.5s cubic-bezier(0.7, 0, 0.3, 1);
+    filter: blur(40px);
+    transition: all 2s cubic-bezier(0.7, 0, 0.3, 1);
   }
 
-  /* Target image appears when widgets converge */
   .widget-merge-section.active.converge .target-image {
     opacity: 1;
-    transform: scale(1) rotateY(0deg);
+    transform: translateZ(0) scale(1);
   }
 </style>
 
