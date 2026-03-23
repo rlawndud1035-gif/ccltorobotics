@@ -55,9 +55,12 @@ A modern web project for CCL Robotics, powered by the **Vite** build system for 
     - Features 10 unique widgets appearing from the background, scaling up, and converging towards the center.
     - As widgets meet at the center, they naturally transform into a large "2" image (representing a key milestone or version).
     - Uses CSS 3D transforms and Intersection Observer for scroll-triggered performance.
-- **Dashboard Design System (DDS) Section Background:**
-    - Integrated a dynamic background using images "DS1" through "DS6".
-    - Implemented a transition effect where background elements clarify and shift depth when the section becomes active.
+- **Dashboard Design System (DDS) Section Enhancements:**
+    - Transitioned from scattered background images to a structured **3x2 aligned grid** layout for a more organized, "systematic" feel.
+    - Updated background assets to use 6 unique design system images (`DDS1.png` to `DDS6.png`).
+    - Implemented a sophisticated background using multi-layered `oklch` radial gradients and a subtle noise texture for a premium, tactile feel.
+    - Significantly enhanced "DDS" title visibility with a high-intensity glow (`text-shadow`), increased scale, and a pulsing "aura" effect behind the text.
+    - Optimized 3D transitions for background elements, ensuring they clarify and snap into alignment when the section is activated.
 - **Robotics 3D Gallery Section Refinement:**
     - Increased item dimensions to 800px x 550px for maximum visual impact and clarity.
     - Adjusted 3D transform offsets and perspective to accommodate the larger assets while maintaining a balanced layout.
