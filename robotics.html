@@ -1206,7 +1206,7 @@
     justify-content: center;
     position: relative;
     overflow: hidden;
-    perspective: 2500px; /* Increased perspective for smoother depth */
+    perspective: 3000px; /* Enhanced perspective for dramatic depth */
   }
 
   .merge-container {
@@ -1221,13 +1221,13 @@
 
   .merge-widget {
     position: absolute;
-    width: 260px;
-    height: 260px;
+    width: 300px;
+    height: 300px;
     opacity: 0;
-    /* Organic starting state: deep, rotated, and scattered */
-    transform: translate3d(var(--x), var(--y), -1800px) scale(0.05) rotate(var(--r));
-    transition: all 3.5s cubic-bezier(0.22, 1, 0.36, 1);
-    filter: blur(20px);
+    /* Start very deep and small at individual coordinates */
+    transform: translate3d(var(--x), var(--y), -2500px) scale(0.01) rotate(var(--r));
+    transition: all 4s cubic-bezier(0.25, 1, 0.5, 1);
+    filter: blur(40px);
     pointer-events: none;
     will-change: transform, opacity, filter;
   }
@@ -1236,19 +1236,18 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
-    filter: drop-shadow(0 15px 40px rgba(0,0,0,0.6));
+    filter: drop-shadow(0 20px 60px rgba(0,0,0,0.7));
   }
 
   .target-image {
     position: absolute;
-    width: 800px;
-    height: 800px;
+    width: 1000px; /* Even larger for impact */
+    height: 1000px;
     opacity: 0;
-    transform: scale(0.8) translateZ(-200px);
-    transition: all 2.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform: scale(0.5) translateZ(-500px);
+    transition: all 3s cubic-bezier(0.34, 1.56, 0.64, 1);
     z-index: 10;
-    /* Use oklch for a more vibrant, modern glow */
-    filter: drop-shadow(0 0 100px oklch(65% 0.25 280 / 0.6));
+    filter: drop-shadow(0 0 120px oklch(65% 0.25 280 / 0.7));
   }
 
   .target-image img {
@@ -1257,34 +1256,34 @@
     object-fit: contain;
   }
 
-  /* Optimized spread to avoid early overlap */
-  .mw1 { --x: -38%; --y: -35%; --r: -25deg; transition-delay: 0.1s; }
-  .mw2 { --x: 42%; --y: -38%; --r: 35deg; transition-delay: 0.4s; }
-  .mw3 { --x: -45%; --y: 42%; --r: 18deg; transition-delay: 0.2s; }
-  .mw4 { --x: 48%; --y: 35%; --r: -42deg; transition-delay: 0.6s; }
-  .mw5 { --x: -12%; --y: -45%; --r: 12deg; transition-delay: 0.3s; }
-  .mw6 { --x: 18%; --y: 50%; --r: -18deg; transition-delay: 0.7s; }
-  .mw7 { --x: -52%; --y: 8%; --r: 55deg; transition-delay: 0.15s; }
-  .mw8 { --x: 52%; --y: 12%; --r: -45deg; transition-delay: 0.5s; }
-  .mw9 { --x: -25%; --y: 25%; --r: 22deg; transition-delay: 0.25s; }
-  .mw10 { --x: 28%; --y: -22%; --r: -12deg; transition-delay: 0.45s; }
+  /* Scattered positions for emergence */
+  .mw1 { --x: -40%; --y: -35%; --r: -30deg; transition-delay: 0.1s; }
+  .mw2 { --x: 45%; --y: -40%; --r: 40deg; transition-delay: 0.5s; }
+  .mw3 { --x: -50%; --y: 45%; --r: 20deg; transition-delay: 0.3s; }
+  .mw4 { --x: 55%; --y: 30%; --r: -45deg; transition-delay: 0.8s; }
+  .mw5 { --x: -15%; --y: -50%; --r: 15deg; transition-delay: 0.4s; }
+  .mw6 { --x: 20%; --y: 55%; --r: -20deg; transition-delay: 0.9s; }
+  .mw7 { --x: -60%; --y: 10%; --r: 60deg; transition-delay: 0.2s; }
+  .mw8 { --x: 60%; --y: 15%; --r: -50deg; transition-delay: 0.6s; }
+  .mw9 { --x: -30%; --y: 35%; --r: 25deg; transition-delay: 0.35s; }
+  .mw10 { --x: 35%; --y: -25%; --r: -15deg; transition-delay: 0.7s; }
 
-  /* Phase 1: Floating in from depth, gracefully positioned */
+  /* Phase 1: Gradually appearing from the depth */
   .widget-merge-section.active .merge-widget {
-    opacity: 0.9;
+    opacity: 1;
     filter: blur(0);
-    transform: translate3d(var(--x), var(--y), -300px) scale(1) rotate(var(--r));
+    transform: translate3d(var(--x), var(--y), -500px) scale(1) rotate(var(--r));
   }
 
-  /* Phase 2: Gentle convergence towards the center point */
+  /* Phase 2: Forward movement, converging, and fading out */
   .widget-merge-section.active.converge .merge-widget {
-    transform: translate3d(0, 0, 100px) scale(0.2) rotate(calc(var(--r) * 2));
+    transform: translate3d(0, 0, 1000px) scale(1.5) rotate(calc(var(--r) * 2));
     opacity: 0;
-    filter: blur(15px);
-    transition: all 2.2s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: blur(30px);
+    transition: all 2.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Phase 2: "2" image grows and stabilizes */
+  /* Phase 2: Target image "2" emerges smoothly */
   .widget-merge-section.active.converge .target-image {
     opacity: 1;
     transform: scale(1) translateZ(0);
