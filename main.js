@@ -463,11 +463,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const initRoboticsAnimations = () => {
     const container = document.getElementById('robotics-scroll-container');
-    if (!container) return;
+    if (!container) {
+      console.warn('Robotics container not found, retrying...');
+      setTimeout(initRoboticsAnimations, 100);
+      return;
+    }
 
     const sections = container.querySelectorAll('section');
-    const goalSlider = document.getElementById('goal-slider');
-    const dots = document.querySelectorAll('.progress-dot');
     let isScrollingLocal = false;
 
     // --- Work Process Pyramid Animation ---
@@ -475,43 +477,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const processTrigger = document.getElementById('process-trigger');
     
     if (processTrigger && processBlocks.length > 0) {
-      const observerOptions = {
-        root: container, // Use the scroll container as root
-        threshold: 0.1 // 6층 높이를 고려하여 조금 더 일찍 트리거
-      };
-
-      const animateBlocks = () => {
-        processBlocks.forEach((block, index) => {
-          // 01번(인덱스 0)이 가장 먼저, 06번(인덱스 5)이 가장 나중에 나타남
-          // 아래에서 위로 쌓이는 느낌을 위해 인덱스 순서대로 지연 시간 부여
-          const delay = index * 200; 
-
-          setTimeout(() => {
-            block.classList.add('active');
-          }, delay);
-        });
-      };
-
       const processObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            animateBlocks();
+            processBlocks.forEach((block, index) => {
+              setTimeout(() => block.classList.add('active'), index * 200);
+            });
             processObserver.unobserve(entry.target);
           }
         });
-      }, observerOptions);
-
+      }, { root: container, threshold: 0.1 });
       processObserver.observe(processTrigger);
     }
 
-    // --- Project Goals Interactive (Keyboard Reveal) ---
+    // --- Project Goals Interactive ---
     const goalsTrigger = document.getElementById('goals-interactive-trigger');
     const goalColumns = document.querySelectorAll('.goal-column');
     const goalsInstruction = document.getElementById('goals-instruction');
-    let activeGoalIndex = 0; // Start with first goal visible
+    let activeGoalIndex = 0; 
     let isGoalsSectionActive = false;
 
-    // --- Robotics 3D Gallery Logic ---
+    const updateGoals = (index) => {
+      goalColumns.forEach((col, i) => i <= index ? col.classList.add('active') : col.classList.remove('active'));
+      if (goalsInstruction) index >= 0 ? goalsInstruction.classList.add('hidden') : goalsInstruction.classList.remove('hidden');
+    };
+    if (goalColumns.length > 0) updateGoals(0);
+
+    // --- Robotics 3D Gallery ---
     const galleryTrigger = document.getElementById('gallery-3d-trigger');
     const galleryItems = document.querySelectorAll('.gallery-3d-item');
     let activeGalleryIndex = 0;
@@ -519,120 +511,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const updateGallery3D = (index) => {
       galleryItems.forEach((item, i) => {
-        item.className = 'gallery-3d-item'; // Reset classes
-        if (i === index) {
-          item.classList.add('active');
-        } else if (i === index - 1) {
-          item.classList.add('prev');
-        } else if (i === index + 1) {
-          item.classList.add('next');
-        } else if (i < index) {
-          item.classList.add('hidden-left');
-        } else {
-          item.classList.add('hidden-right');
-        }
+        item.className = 'gallery-3d-item';
+        if (i === index) item.classList.add('active');
+        else if (i === index - 1) item.classList.add('prev');
+        else if (i === index + 1) item.classList.add('next');
+        else if (i < index) item.classList.add('hidden-left');
+        else item.classList.add('hidden-right');
       });
     };
-
-    // Initialize gallery state
     if (galleryItems.length > 0) updateGallery3D(0);
 
-    const updateGoals = (index) => {
-      goalColumns.forEach((col, i) => {
-        if (i <= index) {
-          col.classList.add('active');
-        } else {
-          col.classList.remove('active');
-        }
-      });
-      
-      if (index >= 0 && goalsInstruction) {
-        goalsInstruction.classList.add('hidden');
-      } else if (index < 0 && goalsInstruction) {
-        goalsInstruction.classList.remove('hidden');
-      }
-    };
-
-    // Initialize first goal state
-    if (goalColumns.length > 0) updateGoals(0);
-
-    // Observers
-    const goalsObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        isGoalsSectionActive = entry.isIntersecting;
-      });
-    }, { 
-      root: container,
-      threshold: 0.3 
-    });
-
-    const galleryObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        isGallerySectionActive = entry.isIntersecting;
-      });
-    }, { 
-      root: container,
-      threshold: 0.3 
-    });
-
-    if (goalsTrigger) goalsObserver.observe(goalsTrigger);
-    if (galleryTrigger) galleryObserver.observe(galleryTrigger);
-
-    // --- Question Section Logic ---
+    // --- Question Section ---
     const questionTrigger = document.getElementById('question-trigger');
     const bubbleCards = document.querySelectorAll('.bubble-card');
+    if (questionTrigger) {
+      const questionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            setTimeout(() => bubbleCards.forEach(b => b.classList.add('floating')), 2000);
+            questionObserver.unobserve(entry.target);
+          }
+        });
+      }, { root: container, threshold: 0.3 });
+      questionObserver.observe(questionTrigger);
+    }
 
-    const questionObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-          
-          // Add floating animation class after they have emerged from the back
-          setTimeout(() => {
-            bubbleCards.forEach(bubble => bubble.classList.add('floating'));
-          }, 2000);
-          
-          questionObserver.unobserve(entry.target);
-        }
-      });
-    }, { 
-      root: container,
-      threshold: 0.3 
-    });
-
-    if (questionTrigger) questionObserver.observe(questionTrigger);
-
-    // --- DDS Section Logic ---
+    // --- DDS Section ---
     const ddsTrigger = document.getElementById('dds-trigger');
     let isDdsSectionActive = false;
+    if (ddsTrigger) {
+      const ddsObserver = new IntersectionObserver(entries => {
+        isDdsSectionActive = entries[0].isIntersecting;
+      }, { root: container, threshold: 0.2 });
+      ddsObserver.observe(ddsTrigger);
+    }
 
-    const ddsObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        isDdsSectionActive = entry.isIntersecting;
-      });
-    }, { 
-      root: container,
-      threshold: 0.2 // Lower threshold for better response
-    });
-
-    if (ddsTrigger) ddsObserver.observe(ddsTrigger);
-
-    // --- Brand Identity Section Logic ---
+    // --- Brand Identity ---
     const brandTrigger = document.getElementById('brand-trigger');
     let isBrandSectionActive = false;
+    if (brandTrigger) {
+      const brandObserver = new IntersectionObserver(entries => {
+        isBrandSectionActive = entries[0].isIntersecting;
+      }, { root: container, threshold: 0.3 });
+      brandObserver.observe(brandTrigger);
+    }
 
-    const brandObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        isBrandSectionActive = entry.isIntersecting;
-      });
-    }, {
-      root: container,
-      threshold: 0.3
-    });
-
-    if (brandTrigger) brandObserver.observe(brandTrigger);
-
-    // --- Products Section Logic ---
+    // --- Products Section & Sequential Line Drawing ---
     const productsTrigger = document.getElementById('products-trigger');
     const productsLinesSvg = document.getElementById('products-lines-svg');
     const productsTitle = document.querySelector('.products-title');
@@ -642,7 +567,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function drawProductLines() {
       if (!productsLinesSvg || !productsTitle || !ddsCentralNode || widgetItems.length === 0) return;
 
-      // 1. Reset SVG
       const existingPaths = productsLinesSvg.querySelectorAll('path');
       existingPaths.forEach(p => p.remove());
 
@@ -650,85 +574,75 @@ document.addEventListener('DOMContentLoaded', () => {
       const ddsRect = ddsCentralNode.getBoundingClientRect();
       const titleRect = productsTitle.getBoundingClientRect();
 
-      // DDS Node Center (Relative to SVG)
+      if (svgRect.width === 0 || ddsRect.width === 0) {
+        setTimeout(drawProductLines, 100);
+        return;
+      }
+
       const ddsCenterX = (ddsRect.left + ddsRect.right) / 2 - svgRect.left;
       const ddsCenterY = (ddsRect.top + ddsRect.bottom) / 2 - svgRect.top;
-
       const widgetPaths = [];
 
-      // 2. Create Paths from Widgets to DDS Node
-      widgetItems.forEach((widget) => {
+      widgetItems.forEach(widget => {
         const widgetRect = widget.getBoundingClientRect();
         const startX = (widgetRect.left + widgetRect.right) / 2 - svgRect.left;
         const startY = (widgetRect.top + widgetRect.bottom) / 2 - svgRect.top;
 
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         const cpY = (startY + ddsCenterY) / 2;
-        const d = `M ${startX} ${startY} C ${startX} ${cpY}, ${ddsCenterX} ${cpY}, ${ddsCenterX} ${ddsCenterY}`;
-        
-        path.setAttribute('d', d);
+        path.setAttribute('d', `M ${startX} ${startY} C ${startX} ${cpY}, ${ddsCenterX} ${cpY}, ${ddsCenterX} ${ddsCenterY}`);
         path.setAttribute('class', 'connecting-path widget-path');
-        
-        // Initial hidden state for dash animation
         productsLinesSvg.appendChild(path);
-        const length = path.getTotalLength();
-        path.style.strokeDasharray = length;
-        path.style.strokeDashoffset = length;
         
+        const len = path.getTotalLength();
+        path.style.strokeDasharray = len;
+        path.style.strokeDashoffset = len;
         widgetPaths.push(path);
       });
 
-      // 3. Create Main Connection from DDS Node to Title
       const titleCenterX = (titleRect.left + titleRect.right) / 2 - svgRect.left;
       const titleTopY = titleRect.top - svgRect.top;
-
       const mainPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       const mainCpY = (ddsCenterY + titleTopY) / 2;
-      const mainD = `M ${ddsCenterX} ${ddsCenterY} C ${ddsCenterX} ${mainCpY}, ${titleCenterX} ${mainCpY}, ${titleCenterX} ${titleTopY}`;
-      
-      mainPath.setAttribute('d', mainD);
+      mainPath.setAttribute('d', `M ${ddsCenterX} ${ddsCenterY} C ${ddsCenterX} ${mainCpY}, ${titleCenterX} ${mainCpY}, ${titleCenterX} ${titleTopY}`);
       mainPath.setAttribute('class', 'connecting-path main-path');
-      
       productsLinesSvg.appendChild(mainPath);
-      const mainLength = mainPath.getTotalLength();
-      mainPath.style.strokeDasharray = mainLength;
-      mainPath.style.strokeDashoffset = mainLength;
+      
+      const mainLen = mainPath.getTotalLength();
+      mainPath.style.strokeDasharray = mainLen;
+      mainPath.style.strokeDashoffset = mainLen;
 
-      // 4. Trigger Animations Sequentially
-      // Use requestAnimationFrame to ensure DOM is ready
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          // A. Draw widget paths IMMEDIATELY in active state
           widgetPaths.forEach(p => {
-            p.style.transition = "stroke-dashoffset 1.5s cubic-bezier(0.45, 0, 0.55, 1), opacity 0.5s ease";
+            p.style.transition = "stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease";
             p.style.strokeDashoffset = "0";
             p.style.opacity = "0.8";
           });
-
-          // B. Draw main path after delay
           setTimeout(() => {
-            mainPath.style.transition = "stroke-dashoffset 1.5s cubic-bezier(0.45, 0, 0.55, 1), opacity 0.5s ease";
+            mainPath.style.transition = "stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease";
             mainPath.style.strokeDashoffset = "0";
             mainPath.style.opacity = "1";
-          }, 800); // Start slightly earlier for a snappier initial state
+          }, 800);
         });
       });
     }
 
-    const productsObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active-products');
-          // Delay line drawing to ensure layout is settled and animations started
-          setTimeout(drawProductLines, 100);
+    if (productsTrigger) {
+      const productsObserver = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) {
+          entries[0].target.classList.add('active-products');
+          setTimeout(drawProductLines, 400);
         }
-      });
-    }, {
-      root: container,
-      threshold: 0.2
-    });
+      }, { root: container, threshold: 0.1 });
+      productsObserver.observe(productsTrigger);
+    }
 
-    if (productsTrigger) productsObserver.observe(productsTrigger);
+    const goalsObserver = new IntersectionObserver(entries => { isGoalsSectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.3 });
+    if (goalsTrigger) goalsObserver.observe(goalsTrigger);
+
+    const galleryObserver = new IntersectionObserver(entries => { isGallerySectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.3 });
+    if (galleryTrigger) galleryObserver.observe(galleryTrigger);
 
     // Global Keyboard Listener for detail view
     const handleKeyDown = (e) => {
