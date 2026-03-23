@@ -1,3 +1,5 @@
+import './style.css';
+
 class IsoLevelWarp extends HTMLElement {
   constructor() {
     super();

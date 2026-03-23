@@ -1,6 +1,5 @@
-node_modules/
-dist/
-.DS_Store
+node_modules
+dist
+.idx
 firebase-debug.log
-.idx/
-.vscode/
+.DS_Store

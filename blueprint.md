@@ -1,24 +1,28 @@
 # Blueprint: CCL Robotics Project
 
 ## Overview
-A web-based project for CCL Robotics, now integrated with a GitHub repository for continuous updates and version control.
+A modern web project for CCL Robotics, powered by the **Vite** build system for optimized performance, asset management, and seamless Cloudflare Pages deployment.
 
 ## Project Outline
 - **Entry Point:** `index.html`
-- **Styling:** `style.css` (Vanilla CSS, Geist font, modern grid layouts)
-- **Logic:** `main.js` (JavaScript, custom web components, interactive lightbox)
-- **Environment:** Firebase Studio / Code OSS
-- **Assets:** 
-    - `images/`: hosting project-specific visual content.
-    - `images/robotics/`: dedicated folder for robotics page visual assets.
-    - `videos/`: hosting video demonstrations and prototypes.
-    - `fonts/`: hosting local custom font files for self-hosted typography.
+- **Build System:** Vite 5.x
+- **Styling:** `style.css` (Imported via `main.js`, bundled by Vite)
+- **Logic:** `main.js` (ES Modules, bundled by Vite)
+- **Environment:** Cloudflare Pages (Build Command: `npm run build`, Output: `dist`)
+- **Assets:** (Managed via `public/` directory)
+    - `images/`: project-specific visual content.
+    - `videos/`: video demonstrations and prototypes.
+    - `fonts/`: local custom font files.
 - **Version Control:** Connected to [https://github.com/rlawndud1035-gif/ccltorobotics](https://github.com/rlawndud1035-gif/ccltorobotics)
 
 ## Current Status & Tasks
+- **Vite Migration:** Successfully migrated from a vanilla setup to a Vite build system.
+- **Asset Reorganization:** Moved all static assets to the `public/` directory for standard Vite handling.
+- **Multi-Page Support:** Configured `vite.config.js` to handle both `index.html` and `robotics.html` as entry points.
+- **Deployment Update:** Configured for Cloudflare Pages with `npm run build` and `dist` output directory.
 - **Connected to GitHub:** Successfully linked the local repository to the remote origin.
 - **Initial Push:** All existing code has been pushed to the `main` branch.
-- **Git Ignore:** Added `.gitignore` to prevent tracking of unnecessary logs and configurations.
+- **Git Ignore:** Updated `.gitignore` to include `node_modules` and `dist`.
 - **Hero Update:** Changed the hero section title to "From CCL to Robotics".
 - **Scan Section:** Added a subtle "Scan and enjoy!" section below the Hero section featuring `images/code.png`.
 - **Gallery Section:** Added a "Captured Moments" gallery section at the bottom of the landing page.
@@ -71,6 +75,7 @@ A web-based project for CCL Robotics, now integrated with a GitHub repository fo
 ## Deployment Log
 - **2026-03-23:** Manual push to trigger Cloudflare Pages deployment (Simplified Dashboard Section).
 - **2026-03-23 (v2):** Re-triggering deployment after confirming Cloudflare settings.
+- **2026-03-23 (v3):** Migrated to Vite build system for better deployment reliability on Cloudflare.
 
 ## Future Plans
 - Any further updates to the code will be automatically pushed to the GitHub repository as requested.
