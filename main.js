@@ -636,37 +636,53 @@ document.addEventListener('DOMContentLoaded', () => {
     const productsTrigger = document.getElementById('products-trigger');
     const productsLinesSvg = document.getElementById('products-lines-svg');
     const productsTitle = document.querySelector('.products-title');
+    const ddsCentralNode = document.getElementById('dds-central-node');
     const widgetItems = document.querySelectorAll('.product-widget');
 
     function drawProductLines() {
-      if (!productsLinesSvg || !productsTitle || widgetItems.length === 0) return;
+      if (!productsLinesSvg || !productsTitle || !ddsCentralNode || widgetItems.length === 0) return;
 
       // Clear existing lines
       productsLinesSvg.innerHTML = '';
 
       const svgRect = productsLinesSvg.getBoundingClientRect();
+      const ddsRect = ddsCentralNode.getBoundingClientRect();
       const titleRect = productsTitle.getBoundingClientRect();
-      
-      // Target point is the TOP center of the title (now at bottom)
-      const targetX = (titleRect.left + titleRect.right) / 2 - svgRect.left;
-      const targetY = titleRect.top - svgRect.top;
 
+      // DDS Node positions
+      const ddsCenterX = (ddsRect.left + ddsRect.right) / 2 - svgRect.left;
+      const ddsTopY = ddsRect.top - svgRect.top;
+      const ddsBottomY = ddsRect.bottom - svgRect.top;
+
+      // 1. Lines from Widgets to DDS Node
       widgetItems.forEach(widget => {
         const widgetRect = widget.getBoundingClientRect();
-        // Start point is the BOTTOM center of the widget (now at top)
         const startX = (widgetRect.left + widgetRect.right) / 2 - svgRect.left;
         const startY = widgetRect.bottom - svgRect.top;
 
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         line.setAttribute('x1', startX);
         line.setAttribute('y1', startY);
-        line.setAttribute('x2', targetX);
-        line.setAttribute('y2', targetY);
+        line.setAttribute('x2', ddsCenterX);
+        line.setAttribute('y2', ddsTopY + 10); // Target slightly inside the circle
         line.setAttribute('class', 'connecting-line');
         productsLinesSvg.appendChild(line);
       });
-    }
 
+      // 2. Single Line from DDS Node to Title
+      const titleCenterX = (titleRect.left + titleRect.right) / 2 - svgRect.left;
+      const titleTopY = titleRect.top - svgRect.top;
+
+      const mainLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      mainLine.setAttribute('x1', ddsCenterX);
+      mainLine.setAttribute('y1', ddsBottomY - 10); // Start slightly inside the circle
+      mainLine.setAttribute('x2', titleCenterX);
+      mainLine.setAttribute('y2', titleTopY);
+      mainLine.setAttribute('class', 'connecting-line');
+      mainLine.style.strokeWidth = "3"; // Make the main connection thicker
+      mainLine.style.stroke = "var(--accent-color)";
+      productsLinesSvg.appendChild(mainLine);
+    }
     const productsObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
