@@ -1049,40 +1049,27 @@
     height: 100%;
     pointer-events: none;
     z-index: 1;
-    overflow: visible; /* Ensure lines aren't clipped */
+    overflow: visible;
   }
 
   .connecting-path {
-    stroke: #7a28ff; /* Fallback color */
-    stroke: url(#line-gradient);
-    stroke-width: 2.5;
     fill: none;
-    stroke-dasharray: 1200;
-    stroke-dashoffset: 1200;
+    stroke: #7a28ff; /* Fallback neon purple */
+    stroke: url(#line-gradient);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: opacity 0.5s ease;
     opacity: 0;
-    transition: stroke-dashoffset 2s cubic-bezier(0.45, 0, 0.55, 1), opacity 0.5s ease;
   }
 
-  /* When drawing starts */
-  .connecting-path.drawing {
-    opacity: 0.8;
-    stroke-dashoffset: 0;
-  }
-
-  /* Sequence 1: Widgets to DDS */
+  /* Specific styles for path types */
   .widget-path {
-    transition-delay: 0.5s;
+    stroke-width: 2;
   }
 
-  /* Sequence 2: DDS to Title */
   .main-path {
     stroke-width: 5;
-    opacity: 0;
-    transition-delay: 1.8s;
-  }
-
-  .main-path.drawing {
-    opacity: 1;
+    filter: drop-shadow(0 0 10px rgba(122, 40, 255, 0.5));
   }
 </style>
 

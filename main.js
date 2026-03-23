@@ -642,7 +642,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function drawProductLines() {
       if (!productsLinesSvg || !productsTitle || !ddsCentralNode || widgetItems.length === 0) return;
 
-      // Clear only existing paths, keeping the <defs> from HTML
+      // 1. Reset SVG
       const existingPaths = productsLinesSvg.querySelectorAll('path');
       existingPaths.forEach(p => p.remove());
 
@@ -650,13 +650,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const ddsRect = ddsCentralNode.getBoundingClientRect();
       const titleRect = productsTitle.getBoundingClientRect();
 
+      // DDS Node Center (Relative to SVG)
       const ddsCenterX = (ddsRect.left + ddsRect.right) / 2 - svgRect.left;
       const ddsCenterY = (ddsRect.top + ddsRect.bottom) / 2 - svgRect.top;
 
-      const paths = [];
+      const widgetPaths = [];
 
-      // 1. Curved Paths from Widgets to DDS Node
-      widgetItems.forEach(widget => {
+      // 2. Create Paths from Widgets to DDS Node
+      widgetItems.forEach((widget) => {
         const widgetRect = widget.getBoundingClientRect();
         const startX = (widgetRect.left + widgetRect.right) / 2 - svgRect.left;
         const startY = (widgetRect.top + widgetRect.bottom) / 2 - svgRect.top;
@@ -667,11 +668,17 @@ document.addEventListener('DOMContentLoaded', () => {
         
         path.setAttribute('d', d);
         path.setAttribute('class', 'connecting-path widget-path');
+        
+        // Initial hidden state for dash animation
         productsLinesSvg.appendChild(path);
-        paths.push(path);
+        const length = path.getTotalLength();
+        path.style.strokeDasharray = length;
+        path.style.strokeDashoffset = length;
+        
+        widgetPaths.push(path);
       });
 
-      // 2. Main Connection from DDS Node to Title
+      // 3. Create Main Connection from DDS Node to Title
       const titleCenterX = (titleRect.left + titleRect.right) / 2 - svgRect.left;
       const titleTopY = titleRect.top - svgRect.top;
 
@@ -681,13 +688,29 @@ document.addEventListener('DOMContentLoaded', () => {
       
       mainPath.setAttribute('d', mainD);
       mainPath.setAttribute('class', 'connecting-path main-path');
+      
       productsLinesSvg.appendChild(mainPath);
-      paths.push(mainPath);
+      const mainLength = mainPath.getTotalLength();
+      mainPath.style.strokeDasharray = mainLength;
+      mainPath.style.strokeDashoffset = mainLength;
 
-      // Trigger animation after a brief delay to ensure paths are in DOM
+      // 4. Trigger Animations Sequentially
+      // Use requestAnimationFrame to ensure DOM is ready
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          paths.forEach(p => p.classList.add('drawing'));
+          // A. Draw widget paths
+          widgetPaths.forEach(p => {
+            p.style.transition = "stroke-dashoffset 1.5s cubic-bezier(0.45, 0, 0.55, 1), opacity 0.5s ease";
+            p.style.strokeDashoffset = "0";
+            p.style.opacity = "0.8";
+          });
+
+          // B. Draw main path after delay
+          setTimeout(() => {
+            mainPath.style.transition = "stroke-dashoffset 1.5s cubic-bezier(0.45, 0, 0.55, 1), opacity 0.5s ease";
+            mainPath.style.strokeDashoffset = "0";
+            mainPath.style.opacity = "1";
+          }, 1200); // Start when widgets are ~80% done
         });
       });
     }
