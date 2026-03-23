@@ -527,16 +527,27 @@ document.addEventListener('DOMContentLoaded', () => {
     let isDdsSectionActive = false;
     let isGallerySectionActive = false;
     let isGoalsSectionActive = false;
+    let isCoreElementsActive = false;
 
     const brandTrigger = document.getElementById('brand-trigger');
     const ddsTrigger = document.getElementById('dds-trigger');
     const galleryTrigger = document.getElementById('gallery-3d-trigger');
     const goalsTrigger = document.getElementById('goals-interactive-trigger');
+    const coreElementsTrigger = document.getElementById('core-elements-trigger');
 
     if (brandTrigger) new IntersectionObserver(entries => { isBrandSectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.3 }).observe(brandTrigger);
     if (ddsTrigger) new IntersectionObserver(entries => { isDdsSectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.2 }).observe(ddsTrigger);
     if (galleryTrigger) new IntersectionObserver(entries => { isGallerySectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.3 }).observe(galleryTrigger);
     if (goalsTrigger) new IntersectionObserver(entries => { isGoalsSectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.3 }).observe(goalsTrigger);
+    
+    if (coreElementsTrigger) {
+      new IntersectionObserver(entries => {
+        isCoreElementsActive = entries[0].isIntersecting;
+        if (entries[0].isIntersecting) {
+          entries[0].target.classList.add('active');
+        }
+      }, { root: container, threshold: 0.4 }).observe(coreElementsTrigger);
+    }
 
     // --- Products Section & Sequential Line Drawing ---
     const productsTrigger = document.getElementById('products-trigger');
