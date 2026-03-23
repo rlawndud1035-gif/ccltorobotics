@@ -491,33 +491,35 @@
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(10px);
-    padding: 2rem 3.5rem; /* Increased padding */
+    padding: 1.2rem 2.2rem; /* Reduced padding */
     border-radius: 5rem;
-    color: rgba(255, 255, 255, 0.5); /* Slightly brighter */
-    font-size: 1.4rem; /* Increased font size */
+    color: rgba(255, 255, 255, 0.5); 
+    font-size: 1.1rem; /* Reduced font size */
     white-space: nowrap;
     opacity: 0;
-    transform: translateZ(-1000px) scale(0.5);
+    transform: translate(-50%, -50%) translateZ(-1000px) scale(0.5);
     transition: all 2s cubic-bezier(0.23, 1, 0.32, 1), background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
     cursor: default;
+    will-change: transform, opacity;
   }
 
   .bubble-card:hover {
     background: rgba(122, 40, 255, 0.1);
     border-color: var(--accent-color);
     color: #fff;
-    transform: translateZ(var(--z-depth, 0)) scale(calc(var(--s-scale, 1) * 1.1)) !important;
+    /* translate(-50%, -50%) added for absolute positioning stability */
+    transform: translate(-50%, -50%) translateZ(var(--z-depth, 0)) scale(calc(var(--s-scale, 1) * 1.1)) !important;
     z-index: 100;
   }
 
   .question-section.active .bubble-card {
     opacity: 1;
-    transform: translateZ(var(--z-depth, 0)) scale(var(--s-scale, 1));
+    transform: translate(-50%, -50%) translateZ(var(--z-depth, 0)) scale(var(--s-scale, 1));
   }
 
   @keyframes bubbleFloat {
-    0%, 100% { transform: translateZ(var(--z-depth, 0)) translateY(0) rotate(var(--r-rot, 0deg)); }
-    50% { transform: translateZ(calc(var(--z-depth, 0) + 50px)) translateY(-20px) rotate(calc(var(--r-rot, 0deg) + 2deg)); }
+    0%, 100% { transform: translate(-50%, -50%) translateZ(var(--z-depth, 0)) scale(var(--s-scale, 1)); }
+    50% { transform: translate(-50%, -50%) translateZ(var(--z-depth, 0)) scale(calc(var(--s-scale, 1) * 1.05)); }
   }
 
   .question-section.active .bubble-card.floating {
