@@ -647,14 +647,15 @@ document.addEventListener('DOMContentLoaded', () => {
       const svgRect = productsLinesSvg.getBoundingClientRect();
       const titleRect = productsTitle.getBoundingClientRect();
       
-      // Target point is the bottom center of the title
+      // Target point is the TOP center of the title (now at bottom)
       const targetX = (titleRect.left + titleRect.right) / 2 - svgRect.left;
-      const targetY = (titleRect.bottom) - svgRect.top;
+      const targetY = titleRect.top - svgRect.top;
 
       widgetItems.forEach(widget => {
         const widgetRect = widget.getBoundingClientRect();
+        // Start point is the BOTTOM center of the widget (now at top)
         const startX = (widgetRect.left + widgetRect.right) / 2 - svgRect.left;
-        const startY = widgetRect.top - svgRect.top;
+        const startY = widgetRect.bottom - svgRect.top;
 
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         line.setAttribute('x1', startX);
