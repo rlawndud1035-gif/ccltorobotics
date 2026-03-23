@@ -469,7 +469,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const sections = container.querySelectorAll('section');
+    const sectionsLocal = container.querySelectorAll('section');
 
     // --- Work Process Pyramid Animation ---
     const processBlocks = document.querySelectorAll('.process-block');
@@ -488,7 +488,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const goalColumns = document.querySelectorAll('.goal-column');
     const goalsInstruction = document.getElementById('goals-instruction');
     let activeGoalIndex = 0; 
-    let isGoalsSectionActive = false;
     const updateGoals = (index) => {
       goalColumns.forEach((col, i) => i <= index ? col.classList.add('active') : col.classList.remove('active'));
       if (goalsInstruction) index >= 0 ? goalsInstruction.classList.add('hidden') : goalsInstruction.classList.remove('hidden');
@@ -498,7 +497,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Robotics 3D Gallery ---
     const galleryItems = document.querySelectorAll('.gallery-3d-item');
     let activeGalleryIndex = 0;
-    let isGallerySectionActive = false;
     const updateGallery3D = (index) => {
       galleryItems.forEach((item, i) => {
         item.className = 'gallery-3d-item';
@@ -524,7 +522,23 @@ document.addEventListener('DOMContentLoaded', () => {
       questionObserver.observe(questionTrigger);
     }
 
-    // --- Products Section & Lines ---
+    // --- State Management Variables ---
+    let isBrandSectionActive = false;
+    let isDdsSectionActive = false;
+    let isGallerySectionActive = false;
+    let isGoalsSectionActive = false;
+
+    const brandTrigger = document.getElementById('brand-trigger');
+    const ddsTrigger = document.getElementById('dds-trigger');
+    const galleryTrigger = document.getElementById('gallery-3d-trigger');
+    const goalsTrigger = document.getElementById('goals-interactive-trigger');
+
+    if (brandTrigger) new IntersectionObserver(entries => { isBrandSectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.3 }).observe(brandTrigger);
+    if (ddsTrigger) new IntersectionObserver(entries => { isDdsSectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.2 }).observe(ddsTrigger);
+    if (galleryTrigger) new IntersectionObserver(entries => { isGallerySectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.3 }).observe(galleryTrigger);
+    if (goalsTrigger) new IntersectionObserver(entries => { isGoalsSectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.3 }).observe(goalsTrigger);
+
+    // --- Products Section & Sequential Line Drawing ---
     const productsTrigger = document.getElementById('products-trigger');
     const productsLinesSvg = document.getElementById('products-lines-svg');
     const productsTitle = document.querySelector('.products-title');
@@ -561,7 +575,6 @@ document.addEventListener('DOMContentLoaded', () => {
         path.setAttribute('d', `M ${startX} ${startY} C ${startX} ${cpY}, ${ddsCenterX} ${cpY}, ${ddsCenterX} ${ddsCenterY}`);
         path.setAttribute('class', 'connecting-path widget-path');
         productsLinesSvg.appendChild(path);
-        
         const len = path.getTotalLength();
         path.style.strokeDasharray = len;
         path.style.strokeDashoffset = len;
@@ -575,7 +588,6 @@ document.addEventListener('DOMContentLoaded', () => {
       mainPath.setAttribute('d', `M ${ddsCenterX} ${ddsCenterY} C ${ddsCenterX} ${mainCpY}, ${titleCenterX} ${mainCpY}, ${titleCenterX} ${titleTopY}`);
       mainPath.setAttribute('class', 'connecting-path main-path');
       productsLinesSvg.appendChild(mainPath);
-      
       const mainLen = mainPath.getTotalLength();
       mainPath.style.strokeDasharray = mainLen;
       mainPath.style.strokeDashoffset = mainLen;
@@ -608,20 +620,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }, { root: container, threshold: 0.1 });
       productsObserver.observe(productsTrigger);
     }
-
-    // Observers for state management
-    let isBrandSectionActive = false;
-    let isDdsSectionActive = false;
-    let isGallerySectionActive = false;
-    const brandTrigger = document.getElementById('brand-trigger');
-    const ddsTrigger = document.getElementById('dds-trigger');
-    const galleryTrigger = document.getElementById('gallery-3d-trigger');
-    const goalsTrigger = document.getElementById('goals-interactive-trigger');
-
-    if (brandTrigger) new IntersectionObserver(entries => { isBrandSectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.3 }).observe(brandTrigger);
-    if (ddsTrigger) new IntersectionObserver(entries => { isDdsSectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.2 }).observe(ddsTrigger);
-    if (galleryTrigger) new IntersectionObserver(entries => { isGallerySectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.3 }).observe(galleryTrigger);
-    if (goalsTrigger) new IntersectionObserver(entries => { isGoalsSectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.3 }).observe(goalsTrigger);
 
     // Global Keyboard Listener for detail view
     const handleKeyDown = (e) => {
@@ -671,12 +669,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const currentScroll = container.scrollTop;
       const sectionHeight = window.innerHeight;
       let targetSectionIndex = Math.round(currentScroll / sectionHeight);
-      if (e.key === 'ArrowDown' && !e.repeat && targetSectionIndex < sections.length - 1) {
+      if (e.key === 'ArrowDown' && !e.repeat && targetSectionIndex < sectionsLocal.length - 1) {
         e.preventDefault();
-        sections[targetSectionIndex + 1].scrollIntoView({ behavior: 'smooth' });
+        sectionsLocal[targetSectionIndex + 1].scrollIntoView({ behavior: 'smooth' });
       } else if (e.key === 'ArrowUp' && !e.repeat && targetSectionIndex > 0) {
         e.preventDefault();
-        sections[targetSectionIndex - 1].scrollIntoView({ behavior: 'smooth' });
+        sectionsLocal[targetSectionIndex - 1].scrollIntoView({ behavior: 'smooth' });
       }
     };
     window.addEventListener('keydown', handleKeyDown);
