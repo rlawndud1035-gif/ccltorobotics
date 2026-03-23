@@ -540,7 +540,56 @@
     justify-content: center;
     position: relative;
     overflow: hidden;
+    perspective: 1500px;
   }
+
+  .dds-background {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.2;
+    transition: all 3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .dds-section.active-dds .dds-background {
+    opacity: 0.5;
+    transform: scale(1.05);
+  }
+
+  .ds-img {
+    position: absolute;
+    width: clamp(200px, 20vw, 400px);
+    height: auto;
+    filter: blur(10px) grayscale(0.8);
+    transition: all 3s cubic-bezier(0.23, 1, 0.32, 1);
+    opacity: 0;
+    will-change: transform, opacity, filter;
+  }
+
+  .dds-section.active-dds .ds-img {
+    filter: blur(2px) grayscale(0.2);
+    opacity: 1;
+  }
+
+  /* Diverse starting positions and rotations */
+  .ds1 { top: 5%; left: 5%; transform: translate3d(-50px, -50px, -800px) rotate(-15deg); }
+  .ds2 { top: 10%; right: 8%; transform: translate3d(60px, -40px, -1200px) rotate(20deg); }
+  .ds3 { bottom: 8%; left: 10%; transform: translate3d(-40px, 70px, -1000px) rotate(10deg); }
+  .ds4 { bottom: 12%; right: 5%; transform: translate3d(80px, 50px, -1500px) rotate(-25deg); }
+  .ds5 { top: 45%; left: 15%; transform: translate3d(-100px, -20px, -600px) rotate(12deg); }
+  .ds6 { bottom: 40%; right: 18%; transform: translate3d(120px, 30px, -900px) rotate(-18deg); }
+
+  /* Active states: shift into clearer, more forward positions */
+  .dds-section.active-dds .ds1 { transform: translate3d(0, 0, -200px) rotate(-5deg); }
+  .dds-section.active-dds .ds2 { transform: translate3d(0, 0, -400px) rotate(10deg); }
+  .dds-section.active-dds .ds3 { transform: translate3d(0, 0, -300px) rotate(5deg); }
+  .dds-section.active-dds .ds4 { transform: translate3d(0, 0, -500px) rotate(-10deg); }
+  .dds-section.active-dds .ds5 { transform: translate3d(0, 0, -100px) rotate(6deg); }
+  .dds-section.active-dds .ds6 { transform: translate3d(0, 0, -150px) rotate(-8deg); }
 
   .dds-title {
     font-size: clamp(2rem, 5vw, 5rem);
@@ -549,6 +598,8 @@
     display: flex;
     gap: 0.4em;
     transition: all 2.5s cubic-bezier(0.23, 1, 0.32, 1);
+    z-index: 2;
+    position: relative;
   }
 
   .dds-word {
@@ -1435,6 +1486,14 @@
 
   <!-- DDS Section -->
   <section class="dds-section" id="dds-trigger">
+    <div class="dds-background">
+      <img src="images/robotics/DS1.png" class="ds-img ds1" alt="">
+      <img src="images/robotics/DS2.png" class="ds-img ds2" alt="">
+      <img src="images/robotics/DS3.png" class="ds-img ds3" alt="">
+      <img src="images/robotics/DS4.png" class="ds-img ds4" alt="">
+      <img src="images/robotics/DS5.png" class="ds-img ds5" alt="">
+      <img src="images/robotics/DS6.png" class="ds-img ds6" alt="">
+    </div>
     <h2 class="dds-title" id="dds-title">
       <span class="dds-word">D<span class="dds-rest">ashboard</span></span>
       <span class="dds-word">D<span class="dds-rest">esign</span></span>

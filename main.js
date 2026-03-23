@@ -536,7 +536,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const coreElementsTrigger = document.getElementById('core-elements-trigger');
 
     if (brandTrigger) new IntersectionObserver(entries => { isBrandSectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.3 }).observe(brandTrigger);
-    if (ddsTrigger) new IntersectionObserver(entries => { isDdsSectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.2 }).observe(ddsTrigger);
+    if (ddsTrigger) {
+      new IntersectionObserver(entries => {
+        isDdsSectionActive = entries[0].isIntersecting;
+        if (entries[0].isIntersecting) {
+          // Trigger the transition automatically when scrolling in
+          setTimeout(() => {
+            ddsTrigger.classList.add('active-dds');
+          }, 500);
+        } else {
+          // Optional: reset if scrolled away
+          ddsTrigger.classList.remove('active-dds');
+        }
+      }, { root: container, threshold: 0.4 }).observe(ddsTrigger);
+    }
+
     if (galleryTrigger) new IntersectionObserver(entries => { isGallerySectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.3 }).observe(galleryTrigger);
     if (goalsTrigger) new IntersectionObserver(entries => { isGoalsSectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.3 }).observe(goalsTrigger);
     

@@ -51,7 +51,10 @@ A web-based project for CCL Robotics, now integrated with a GitHub repository fo
     - Features 10 unique widgets appearing from the background, scaling up, and converging towards the center.
     - As widgets meet at the center, they naturally transform into a large "2" image (representing a key milestone or version).
     - Uses CSS 3D transforms and Intersection Observer for scroll-triggered performance.
-- **CTA Section Removal:**
+- **Dashboard Design System (DDS) Section Background:**
+    - Integrated a dynamic background using images "DS1" through "DS6".
+    - Implemented a transition effect where background elements clarify and shift depth when the section becomes active.
+- **Robotics 3D Gallery Section:**
     - Removed the "Ready to build?" Call-To-Action (CTA) section from `robotics.html` for a cleaner, more focused page end.
 
 ## Future Plans
