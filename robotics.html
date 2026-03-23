@@ -1275,18 +1275,21 @@
     transform: translate3d(var(--x), var(--y), -400px) scale(1.1);
   }
 
-  /* Phase 2: Move slightly forward while staying scattered, then fade away */
+  /* Phase 2: Stay scattered and slowly fade away naturally */
   .widget-merge-section.active.converge .merge-widget {
-    transform: translate3d(var(--x), var(--y), 400px) scale(0.5);
+    /* Keep position similar to Phase 1, just move slightly forward for organic feel */
+    transform: translate3d(var(--x), var(--y), -200px) scale(1.0);
     opacity: 0;
-    filter: blur(20px);
-    transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: blur(10px);
+    /* Slower, more natural fade out */
+    transition: opacity 3s ease, transform 3s ease, filter 3s ease;
   }
 
-  /* Phase 2: Target image emerges */
+  /* Phase 2: Target image emerges smoothly */
   .widget-merge-section.active.converge .target-image {
     opacity: 1;
     transform: scale(1) translateZ(0);
+    transition: opacity 2.5s ease 0.5s, transform 2.5s cubic-bezier(0.23, 1, 0.32, 1) 0.5s;
   }
 </style>
 
