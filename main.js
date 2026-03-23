@@ -549,6 +549,18 @@ document.addEventListener('DOMContentLoaded', () => {
       }, { root: container, threshold: 0.4 }).observe(coreElementsTrigger);
     }
 
+    const mergeTrigger = document.getElementById('merge-trigger');
+    if (mergeTrigger) {
+      new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) {
+          entries[0].target.classList.add('active');
+          setTimeout(() => {
+            entries[0].target.classList.add('converge');
+          }, 3000);
+        }
+      }, { root: container, threshold: 0.4 }).observe(mergeTrigger);
+    }
+
     // --- Products Section & Sequential Line Drawing ---
     const productsTrigger = document.getElementById('products-trigger');
     const productsLinesSvg = document.getElementById('products-lines-svg');
