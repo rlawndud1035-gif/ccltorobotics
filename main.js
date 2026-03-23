@@ -663,18 +663,15 @@ document.addEventListener('DOMContentLoaded', () => {
       // 1. Curved Paths from Widgets to DDS Node
       widgetItems.forEach(widget => {
         const widgetRect = widget.getBoundingClientRect();
-        // Use center of widget
         const startX = (widgetRect.left + widgetRect.right) / 2 - svgRect.left;
         const startY = (widgetRect.top + widgetRect.bottom) / 2 - svgRect.top;
 
-        // Create a Bezier Curve path
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        // Control point is halfway between Y coordinates
         const cpY = (startY + ddsCenterY) / 2;
         const d = `M ${startX} ${startY} C ${startX} ${cpY}, ${ddsCenterX} ${cpY}, ${ddsCenterX} ${ddsCenterY}`;
-
+        
         path.setAttribute('d', d);
-        path.setAttribute('class', 'connecting-path');
+        path.setAttribute('class', 'connecting-path widget-path');
         productsLinesSvg.appendChild(path);
       });
 
@@ -685,11 +682,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const mainPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       const mainCpY = (ddsCenterY + titleTopY) / 2;
       const mainD = `M ${ddsCenterX} ${ddsCenterY} C ${ddsCenterX} ${mainCpY}, ${titleCenterX} ${mainCpY}, ${titleCenterX} ${titleTopY}`;
-
+      
       mainPath.setAttribute('d', mainD);
-      mainPath.setAttribute('class', 'connecting-path');
-      mainPath.style.strokeWidth = "4"; // Thicker main line
-      mainPath.style.opacity = "1";
+      mainPath.setAttribute('class', 'connecting-path main-path');
       productsLinesSvg.appendChild(mainPath);
     }
 

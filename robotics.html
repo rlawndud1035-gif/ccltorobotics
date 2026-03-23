@@ -1053,12 +1053,24 @@
 
   .connecting-path {
     stroke: url(#line-gradient);
-    stroke-width: 2.5; /* Increased for better visibility */
+    stroke-width: 2;
     fill: none;
     stroke-dasharray: 1000;
     stroke-dashoffset: 1000;
-    transition: stroke-dashoffset 2.5s cubic-bezier(0.45, 0, 0.55, 1) 0.8s;
-    opacity: 0.8; /* Increased opacity */
+    opacity: 0.8;
+    transition: stroke-dashoffset 2s cubic-bezier(0.45, 0, 0.55, 1);
+  }
+
+  /* Sequence 1: Widgets to DDS */
+  .widget-path {
+    transition-delay: 0.8s;
+  }
+
+  /* Sequence 2: DDS to Title (Heavier & Later) */
+  .main-path {
+    stroke-width: 4;
+    opacity: 1;
+    transition-delay: 2.2s; /* Starts after widget paths are mostly drawn */
   }
 
   .products-section.active-products .connecting-path {
