@@ -540,7 +540,7 @@
     justify-content: center;
     position: relative;
     overflow: hidden;
-    perspective: 1500px;
+    perspective: 2000px;
   }
 
   .dds-background {
@@ -548,48 +548,57 @@
     inset: 0;
     pointer-events: none;
     z-index: 0;
-    opacity: 0.2;
-    transition: all 3s ease;
+    opacity: 0.15;
+    transition: all 4s ease;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
+  /* Atmospheric gradient overlay */
+  .dds-background::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 20%, #000 90%);
+    z-index: 1;
+  }
+
   .dds-section.active-dds .dds-background {
-    opacity: 0.5;
-    transform: scale(1.05);
+    opacity: 0.6;
+    transform: scale(1.1);
   }
 
   .ds-img {
     position: absolute;
-    width: clamp(200px, 20vw, 400px);
+    width: clamp(400px, 45vw, 800px); /* Larger images to fill screen */
     height: auto;
-    filter: blur(10px) grayscale(0.8);
-    transition: all 3s cubic-bezier(0.23, 1, 0.32, 1);
+    filter: blur(40px) grayscale(1) brightness(0.5); /* Much blurrier initially */
+    transition: all 4s cubic-bezier(0.23, 1, 0.32, 1);
     opacity: 0;
     will-change: transform, opacity, filter;
   }
 
   .dds-section.active-dds .ds-img {
-    filter: blur(2px) grayscale(0.2);
+    filter: blur(15px) grayscale(0.2) brightness(0.8); /* Still artistic/faded when active */
     opacity: 1;
   }
 
-  /* Diverse starting positions and rotations */
-  .ds1 { top: 5%; left: 5%; transform: translate3d(-50px, -50px, -800px) rotate(-15deg); }
-  .ds2 { top: 10%; right: 8%; transform: translate3d(60px, -40px, -1200px) rotate(20deg); }
-  .ds3 { bottom: 8%; left: 10%; transform: translate3d(-40px, 70px, -1000px) rotate(10deg); }
-  .ds4 { bottom: 12%; right: 5%; transform: translate3d(80px, 50px, -1500px) rotate(-25deg); }
-  .ds5 { top: 45%; left: 15%; transform: translate3d(-100px, -20px, -600px) rotate(12deg); }
-  .ds6 { bottom: 40%; right: 18%; transform: translate3d(120px, 30px, -900px) rotate(-18deg); }
+  /* Strategic screen-filling positions */
+  .ds1 { top: -10%; left: -5%; transform: translate3d(-100px, -50px, -1000px) rotate(-10deg); }
+  .ds2 { top: -5%; right: -10%; transform: translate3d(120px, -80px, -1500px) rotate(15deg); }
+  .ds3 { bottom: -15%; left: -8%; transform: translate3d(-80px, 100px, -1200px) rotate(8deg); }
+  .ds4 { bottom: -10%; right: -5%; transform: translate3d(150px, 60px, -1800px) rotate(-20deg); }
+  .ds5 { top: 25%; left: -15%; transform: translate3d(-150px, 0, -800px) rotate(5deg); }
+  .ds6 { bottom: 20%; right: -12%; transform: translate3d(180px, 20px, -1100px) rotate(-12deg); }
 
-  /* Active states: shift into clearer, more forward positions */
+  /* Smooth forward drift when active */
   .dds-section.active-dds .ds1 { transform: translate3d(0, 0, -200px) rotate(-5deg); }
   .dds-section.active-dds .ds2 { transform: translate3d(0, 0, -400px) rotate(10deg); }
   .dds-section.active-dds .ds3 { transform: translate3d(0, 0, -300px) rotate(5deg); }
   .dds-section.active-dds .ds4 { transform: translate3d(0, 0, -500px) rotate(-10deg); }
-  .dds-section.active-dds .ds5 { transform: translate3d(0, 0, -100px) rotate(6deg); }
-  .dds-section.active-dds .ds6 { transform: translate3d(0, 0, -150px) rotate(-8deg); }
+  .dds-section.active-dds .ds5 { transform: translate3d(0, 0, -100px) rotate(2deg); }
+  .dds-section.active-dds .ds6 { transform: translate3d(0, 0, -150px) rotate(-6deg); }
 
   .dds-title {
     font-size: clamp(2rem, 5vw, 5rem);

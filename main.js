@@ -539,15 +539,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (ddsTrigger) {
       new IntersectionObserver(entries => {
         isDdsSectionActive = entries[0].isIntersecting;
-        if (entries[0].isIntersecting) {
-          // Trigger the transition automatically when scrolling in
-          setTimeout(() => {
-            ddsTrigger.classList.add('active-dds');
-          }, 500);
-        } else {
-          // Optional: reset if scrolled away
-          ddsTrigger.classList.remove('active-dds');
-        }
+        // Removed automatic class addition - will now rely on keydown listener below
       }, { root: container, threshold: 0.4 }).observe(ddsTrigger);
     }
 
