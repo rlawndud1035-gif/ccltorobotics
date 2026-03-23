@@ -497,17 +497,47 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Robotics 3D Gallery ---
     const galleryItems = document.querySelectorAll('.gallery-3d-item');
     let activeGalleryIndex = 0;
+    let galleryInterval = null;
+
     const updateGallery3D = (index) => {
+      const total = galleryItems.length;
+      activeGalleryIndex = (index + total) % total; // Ensure index is within bounds for infinite loop
+
       galleryItems.forEach((item, i) => {
         item.className = 'gallery-3d-item';
-        if (i === index) item.classList.add('active');
-        else if (i === index - 1) item.classList.add('prev');
-        else if (i === index + 1) item.classList.add('next');
-        else if (i < index) item.classList.add('hidden-left');
-        else item.classList.add('hidden-right');
+        if (i === activeGalleryIndex) {
+          item.classList.add('active');
+        } else if (i === (activeGalleryIndex - 1 + total) % total) {
+          item.classList.add('prev');
+        } else if (i === (activeGalleryIndex + 1) % total) {
+          item.classList.add('next');
+        } else {
+          // Logic for hidden items in infinite loop
+          const dist = (i - activeGalleryIndex + total) % total;
+          if (dist > total / 2) {
+            item.classList.add('hidden-left');
+          } else {
+            item.classList.add('hidden-right');
+          }
+        }
       });
     };
-    if (galleryItems.length > 0) updateGallery3D(0);
+
+    const startGalleryAutoScroll = () => {
+      if (galleryInterval) clearInterval(galleryInterval);
+      galleryInterval = setInterval(() => {
+        updateGallery3D(activeGalleryIndex + 1);
+      }, 2500);
+    };
+
+    const stopGalleryAutoScroll = () => {
+      if (galleryInterval) clearInterval(galleryInterval);
+      galleryInterval = null;
+    };
+
+    if (galleryItems.length > 0) {
+      updateGallery3D(0);
+    }
 
     // --- Question Section ---
     const questionTrigger = document.getElementById('question-trigger');
@@ -543,7 +573,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }, { root: container, threshold: 0.4 }).observe(ddsTrigger);
     }
 
-    if (galleryTrigger) new IntersectionObserver(entries => { isGallerySectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.3 }).observe(galleryTrigger);
+    if (galleryTrigger) new IntersectionObserver(entries => { 
+      isGallerySectionActive = entries[0].isIntersecting; 
+      if (isGallerySectionActive) startGalleryAutoScroll();
+      else stopGalleryAutoScroll();
+    }, { root: container, threshold: 0.3 }).observe(galleryTrigger);
     if (goalsTrigger) new IntersectionObserver(entries => { isGoalsSectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.3 }).observe(goalsTrigger);
     
     if (coreElementsTrigger) {
