@@ -419,18 +419,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Wheel Event
+  // Wheel Event - Removed preventDefault to allow CSS Scroll Snap to work naturally
   window.addEventListener('wheel', (e) => {
     if (isDetailViewActive) return;
-    e.preventDefault();
-    if (isScrolling) return;
-    
-    if (e.deltaY > 0) {
-      scrollToSection(currentSectionIndex + 1);
-    } else if (e.deltaY < 0) {
-      scrollToSection(currentSectionIndex - 1);
+    // e.preventDefault(); // Removed for natural feel
+  }, { passive: true });
+
+  // Update index on scroll
+  window.addEventListener('scroll', () => {
+    if (!isScrolling && !isDetailViewActive) {
+      updateCurrentIndex();
     }
-  }, { passive: false });
+  }, { passive: true });
 
   // Touch Support
   let touchStartY = 0;
