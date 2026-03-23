@@ -1122,13 +1122,17 @@
 
   .orbit-path {
     position: absolute;
-    inset: 0;
-    border: 1px dashed rgba(122, 40, 255, 0.3);
+    width: 560px; /* Orbit diameter */
+    height: 560px;
+    border: 1px dashed rgba(122, 40, 255, 0.4);
     border-radius: 50%;
-    animation: rotate 20s linear infinite;
+    animation: rotate 25s linear infinite;
     pointer-events: none;
     opacity: 0;
     transition: opacity 1s ease 1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .dds-core-elements.active .orbit-path {
@@ -1137,6 +1141,8 @@
 
   .satellite {
     position: absolute;
+    top: 50%;
+    left: 50%;
     width: auto;
     height: auto;
     background: none !important;
@@ -1145,23 +1151,24 @@
     align-items: center;
     justify-content: center;
     color: #fff;
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     font-weight: 800;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     pointer-events: none;
     box-shadow: none !important;
-    --orbit-radius: 280px;
+    margin-top: -0.75rem; /* Centering text vertically */
+    --orbit-dist: 280px; /* Half of orbit diameter */
   }
 
   .satellite span {
     display: block;
     text-shadow: 
       0 0 10px rgba(122, 40, 255, 1),
-      0 0 20px rgba(122, 40, 255, 0.8),
-      0 0 40px rgba(122, 40, 255, 0.6);
+      0 0 20px rgba(122, 40, 255, 0.8);
     white-space: nowrap;
-    animation: counter-rotate 20s linear infinite;
+    /* Exactly match parent rotation speed in reverse */
+    animation: counter-rotate 25s linear infinite;
   }
 
   @keyframes counter-rotate {
@@ -1169,40 +1176,12 @@
     to { transform: rotate(-360deg); }
   }
 
-  .s1 { transform: rotate(0deg) translate(var(--orbit-radius)); }
-  .s2 { transform: rotate(72deg) translate(var(--orbit-radius)); }
-  .s3 { transform: rotate(144deg) translate(var(--orbit-radius)); }
-  .s4 { transform: rotate(216deg) translate(var(--orbit-radius)); }
-  .s5 { transform: rotate(288deg) translate(var(--orbit-radius)); }
-    text-transform: uppercase;
-    pointer-events: none;
-    box-shadow: none !important;
-    /* Radius for satellites to orbit */
-    --orbit-radius: 280px;
-  }
-
-  .satellite span {
-    display: block;
-    text-shadow: 
-      0 0 10px rgba(122, 40, 255, 1),
-      0 0 20px rgba(122, 40, 255, 0.8),
-      0 0 40px rgba(122, 40, 255, 0.6);
-    white-space: nowrap;
-    /* Counter-rotate text so it stays upright */
-    animation: counter-rotate 20s linear infinite;
-  }
-
-  @keyframes counter-rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(-360deg); }
-  }
-
-  /* Distribute satellites along the orbit */
-  .s1 { transform: rotate(0deg) translate(var(--orbit-radius)); }
-  .s2 { transform: rotate(72deg) translate(var(--orbit-radius)); }
-  .s3 { transform: rotate(144deg) translate(var(--orbit-radius)); }
-  .s4 { transform: rotate(216deg) translate(var(--orbit-radius)); }
-  .s5 { transform: rotate(288deg) translate(var(--orbit-radius)); }
+  /* Distribute satellites along the orbit path */
+  .s1 { transform: translate(-50%, -50%) rotate(0deg) translate(var(--orbit-dist)); }
+  .s2 { transform: translate(-50%, -50%) rotate(72deg) translate(var(--orbit-dist)); }
+  .s3 { transform: translate(-50%, -50%) rotate(144deg) translate(var(--orbit-dist)); }
+  .s4 { transform: translate(-50%, -50%) rotate(216deg) translate(var(--orbit-dist)); }
+  .s5 { transform: translate(-50%, -50%) rotate(288deg) translate(var(--orbit-dist)); }
 
   .dds-core-elements .geist-h1 {
     position: absolute;
