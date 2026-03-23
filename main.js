@@ -642,23 +642,18 @@ document.addEventListener('DOMContentLoaded', () => {
     function drawProductLines() {
       if (!productsLinesSvg || !productsTitle || !ddsCentralNode || widgetItems.length === 0) return;
 
-      // Clear existing lines and setup gradient
-      productsLinesSvg.innerHTML = `
-        <defs>
-          <linearGradient id="line-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" style="stop-color:rgba(122, 40, 255, 1);stop-opacity:1" />
-            <stop offset="100%" style="stop-color:rgba(122, 40, 255, 0.4);stop-opacity:0.8" />
-          </linearGradient>
-        </defs>
-      `;
+      // Clear only existing paths, keeping the <defs> from HTML
+      const existingPaths = productsLinesSvg.querySelectorAll('path');
+      existingPaths.forEach(p => p.remove());
 
       const svgRect = productsLinesSvg.getBoundingClientRect();
       const ddsRect = ddsCentralNode.getBoundingClientRect();
       const titleRect = productsTitle.getBoundingClientRect();
 
-      // DDS Node Center (Relative to SVG)
       const ddsCenterX = (ddsRect.left + ddsRect.right) / 2 - svgRect.left;
       const ddsCenterY = (ddsRect.top + ddsRect.bottom) / 2 - svgRect.top;
+
+      const paths = [];
 
       // 1. Curved Paths from Widgets to DDS Node
       widgetItems.forEach(widget => {
@@ -673,6 +668,7 @@ document.addEventListener('DOMContentLoaded', () => {
         path.setAttribute('d', d);
         path.setAttribute('class', 'connecting-path widget-path');
         productsLinesSvg.appendChild(path);
+        paths.push(path);
       });
 
       // 2. Main Connection from DDS Node to Title
@@ -686,6 +682,14 @@ document.addEventListener('DOMContentLoaded', () => {
       mainPath.setAttribute('d', mainD);
       mainPath.setAttribute('class', 'connecting-path main-path');
       productsLinesSvg.appendChild(mainPath);
+      paths.push(mainPath);
+
+      // Trigger animation after a brief delay to ensure paths are in DOM
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          paths.forEach(p => p.classList.add('drawing'));
+        });
+      });
     }
 
     const productsObserver = new IntersectionObserver((entries) => {
