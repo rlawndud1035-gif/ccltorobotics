@@ -632,6 +632,55 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (brandTrigger) brandObserver.observe(brandTrigger);
 
+    // --- Products Section Logic ---
+    const productsTrigger = document.getElementById('products-trigger');
+    const productsLinesSvg = document.getElementById('products-lines-svg');
+    const productsTitle = document.querySelector('.products-title');
+    const widgetItems = document.querySelectorAll('.product-widget');
+
+    function drawProductLines() {
+      if (!productsLinesSvg || !productsTitle || widgetItems.length === 0) return;
+
+      // Clear existing lines
+      productsLinesSvg.innerHTML = '';
+
+      const svgRect = productsLinesSvg.getBoundingClientRect();
+      const titleRect = productsTitle.getBoundingClientRect();
+      
+      // Target point is the bottom center of the title
+      const targetX = (titleRect.left + titleRect.right) / 2 - svgRect.left;
+      const targetY = (titleRect.bottom) - svgRect.top;
+
+      widgetItems.forEach(widget => {
+        const widgetRect = widget.getBoundingClientRect();
+        const startX = (widgetRect.left + widgetRect.right) / 2 - svgRect.left;
+        const startY = widgetRect.top - svgRect.top;
+
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', startX);
+        line.setAttribute('y1', startY);
+        line.setAttribute('x2', targetX);
+        line.setAttribute('y2', targetY);
+        line.setAttribute('class', 'connecting-line');
+        productsLinesSvg.appendChild(line);
+      });
+    }
+
+    const productsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active-products');
+          // Delay line drawing to ensure layout is settled and animations started
+          setTimeout(drawProductLines, 100);
+        }
+      });
+    }, {
+      root: container,
+      threshold: 0.2
+    });
+
+    if (productsTrigger) productsObserver.observe(productsTrigger);
+
     // Global Keyboard Listener for detail view
     const handleKeyDown = (e) => {
       if (!isDetailViewActive || window.innerWidth <= 768) return;
