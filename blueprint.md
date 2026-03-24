@@ -18,7 +18,7 @@ A modern web project for CCL Robotics, powered by the **Vite** build system for 
 ## Current Status & Tasks
 - **Vite Migration:** Successfully migrated from a vanilla setup to a Vite build system.
 - **Asset Reorganization:** Moved all static assets to the `public/` directory for standard Vite handling.
-- **Multi-Page Support:** Configured `vite.config.js` to handle both `index.html` and `robotics.html` as entry points.
+- **Multi-Page Support:** Configured `vite.config.js` to handle `index.html`, `robotics.html`, and `3d-design.html` as entry points.
 - **Deployment Update:** Configured for Cloudflare Pages with `npm run build` and `dist` output directory.
 - **Connected to GitHub:** Successfully linked the local repository to the remote origin.
 - **Initial Push:** All existing code has been pushed to the `main` branch.
@@ -29,7 +29,10 @@ A modern web project for CCL Robotics, powered by the **Vite** build system for 
 - **Image Integration:** Replaced `images/1.avif` with `images/2.png` in the gallery.
 - **Lightbox Feature:** Implemented a site-wide image lightbox that allows users to click and expand any image for a full-screen view.
 - **Video Integration:** Added a "Simplified Navigation Flow" section with `videos/prototype_1.mov` set to autoplay and loop.
-- **Expertise Cards:** Added a row of 4 specialized service cards ("UX/UI for robotics", "UX/UI for Vision AI", "Visual Design", "3D Design") after the Scan section.
+- **Expertise Cards Expansion:**
+    - Added a row of 4 specialized service cards ("UX/UI for robotics", "UX/UI for Vision AI", "Visual Design", "3D Design").
+    - **"3D Design" Detail Page:** Created a standalone `3d-design.html` that is functionally and visually identical to the Robotics page.
+    - **Modular Logic Refactoring:** Re-engineered `main.js` to generically handle multiple detail views. It now supports dynamic loading and animation initialization for any number of expertise cards.
 - **UI Refinement:** Reduced spacing between section titles and content grids for a tighter, more cohesive landing page layout.
 - **Responsive Fixes:** Corrected typos, allowed heading wrapping, and optimized font sizes for mobile.
 - **One Scroll Experience:**
@@ -80,6 +83,7 @@ A modern web project for CCL Robotics, powered by the **Vite** build system for 
 - **2026-03-23 (v4):** Final push after Cloudflare build settings update (Build: npm run build, Output: dist).
 - **2026-03-23 (v5):** Optimized Question Section background bubbles to maintain stable positions when enlarging (using translate(-50%, -50%) and scale-based animation).
 - **2026-03-23 (v6):** Fixed DDS Core Elements satellite text orientation to remain horizontal (upright) while orbiting by applying calculated animation-delays to counter-rotation.
+- **2026-03-24:** Added "3D Design" detail page identical to "Robotics" and refactored `main.js` for modular multi-page support.
 
 ## Future Plans
 - Any further updates to the code will be automatically pushed to the GitHub repository as requested.
