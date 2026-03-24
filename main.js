@@ -372,6 +372,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let isScrolling = false;
   let currentSectionIndex = 0;
   let isDetailViewActive = false;
+  let activeDetailType = null; // 'robotics' or '3d-design'
 
   // Determine current section based on scroll position
   const updateCurrentIndex = () => {
@@ -422,7 +423,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Wheel Event - Removed preventDefault to allow CSS Scroll Snap to work naturally
   window.addEventListener('wheel', (e) => {
     if (isDetailViewActive) return;
-    // e.preventDefault(); // Removed for natural feel
   }, { passive: true });
 
   // Update index on scroll
@@ -458,24 +458,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, { passive: true });
 
-  // Modular Robotics Content Loading
-  const roboticsCard = document.querySelector('#robotics-card');
-  const roboticsDetail = document.querySelector('#robotics-detail');
-  let isContentLoaded = false;
-
-  const initRoboticsAnimations = () => {
-    const container = document.getElementById('robotics-scroll-container');
+  // Modular Content Loading & Animation Setup
+  const initDetailAnimations = (containerId) => {
+    const container = document.getElementById(containerId);
     if (!container) {
-      console.warn('Robotics container not found, retrying...');
-      setTimeout(initRoboticsAnimations, 100);
+      console.warn(`Container ${containerId} not found, retrying...`);
+      setTimeout(() => initDetailAnimations(containerId), 100);
       return;
     }
 
     const sectionsLocal = container.querySelectorAll('section');
 
     // --- Work Process Pyramid Animation ---
-    const processBlocks = document.querySelectorAll('.process-block');
-    const processTrigger = document.getElementById('process-trigger');
+    const processBlocks = container.querySelectorAll('.process-block');
+    const processTrigger = container.querySelector('#process-trigger');
     if (processTrigger && processBlocks.length > 0) {
       const processObserver = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
@@ -487,8 +483,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Project Goals Interactive ---
-    const goalColumns = document.querySelectorAll('.goal-column');
-    const goalsInstruction = document.getElementById('goals-instruction');
+    const goalColumns = container.querySelectorAll('.goal-column');
+    const goalsInstruction = container.querySelector('#goals-instruction');
     let activeGoalIndex = 0; 
     const updateGoals = (index) => {
       goalColumns.forEach((col, i) => i <= index ? col.classList.add('active') : col.classList.remove('active'));
@@ -497,13 +493,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (goalColumns.length > 0) updateGoals(0);
 
     // --- Robotics 3D Gallery ---
-    const galleryItems = document.querySelectorAll('.gallery-3d-item');
+    const galleryItems = container.querySelectorAll('.gallery-3d-item');
     let activeGalleryIndex = 0;
     let galleryInterval = null;
 
     const updateGallery3D = (index) => {
       const total = galleryItems.length;
-      activeGalleryIndex = (index + total) % total; // Ensure index is within bounds for infinite loop
+      activeGalleryIndex = (index + total) % total;
 
       galleryItems.forEach((item, i) => {
         item.className = 'gallery-3d-item';
@@ -514,7 +510,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (i === (activeGalleryIndex + 1) % total) {
           item.classList.add('next');
         } else {
-          // Logic for hidden items in infinite loop
           const dist = (i - activeGalleryIndex + total) % total;
           if (dist > total / 2) {
             item.classList.add('hidden-left');
@@ -542,12 +537,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Question Section ---
-    const questionTrigger = document.getElementById('question-trigger');
+    const questionTrigger = container.querySelector('#question-trigger');
     if (questionTrigger) {
       const questionObserver = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
           entries[0].target.classList.add('active');
-          setTimeout(() => document.querySelectorAll('.bubble-card').forEach(b => b.classList.add('floating')), 2000);
+          setTimeout(() => container.querySelectorAll('.bubble-card').forEach(b => b.classList.add('floating')), 2000);
           questionObserver.unobserve(entries[0].target);
         }
       }, { root: container, threshold: 0.3 });
@@ -561,17 +556,16 @@ document.addEventListener('DOMContentLoaded', () => {
     let isGoalsSectionActive = false;
     let isCoreElementsActive = false;
 
-    const brandTrigger = document.getElementById('brand-trigger');
-    const ddsTrigger = document.getElementById('dds-trigger');
-    const galleryTrigger = document.getElementById('gallery-3d-trigger');
-    const goalsTrigger = document.getElementById('goals-interactive-trigger');
-    const coreElementsTrigger = document.getElementById('core-elements-trigger');
+    const brandTrigger = container.querySelector('#brand-trigger');
+    const ddsTrigger = container.querySelector('#dds-trigger');
+    const galleryTrigger = container.querySelector('#gallery-3d-trigger');
+    const goalsTrigger = container.querySelector('#goals-interactive-trigger');
+    const coreElementsTrigger = container.querySelector('#core-elements-trigger');
 
     if (brandTrigger) new IntersectionObserver(entries => { isBrandSectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.3 }).observe(brandTrigger);
     if (ddsTrigger) {
       new IntersectionObserver(entries => {
         isDdsSectionActive = entries[0].isIntersecting;
-        // Removed automatic class addition - will now rely on keydown listener below
       }, { root: container, threshold: 0.4 }).observe(ddsTrigger);
     }
 
@@ -581,7 +575,7 @@ document.addEventListener('DOMContentLoaded', () => {
       else stopGalleryAutoScroll();
     }, { root: container, threshold: 0.3 }).observe(galleryTrigger);
 
-    const dashVideoTrigger = document.getElementById('dashboard-video-trigger');
+    const dashVideoTrigger = container.querySelector('#dashboard-video-trigger');
     if (dashVideoTrigger) {
       new IntersectionObserver(entries => {
         if (entries[0].isIntersecting) {
@@ -601,12 +595,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }, { root: container, threshold: 0.4 }).observe(coreElementsTrigger);
     }
 
-    const mergeTrigger = document.getElementById('merge-trigger');
+    const mergeTrigger = container.querySelector('#merge-trigger');
     if (mergeTrigger) {
       new IntersectionObserver(entries => {
         if (entries[0].isIntersecting) {
           entries[0].target.classList.add('active');
-          // Wait longer for full emergence before merging
           setTimeout(() => {
             entries[0].target.classList.add('converge');
           }, 4000); 
@@ -615,17 +608,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Products Section & Sequential Line Drawing ---
-    const productsTrigger = document.getElementById('products-trigger');
-    const productsLinesSvg = document.getElementById('products-lines-svg');
-    const productsTitle = document.querySelector('.products-title');
-    const ddsCentralNode = document.getElementById('dds-central-node');
+    const productsTrigger = container.querySelector('#products-trigger');
+    const productsLinesSvg = container.querySelector('#products-lines-svg');
+    const productsTitle = container.querySelector('.products-title');
+    const ddsCentralNode = container.querySelector('#dds-central-node');
 
     function drawProductLines() {
       if (!productsLinesSvg || !productsTitle || !ddsCentralNode) return;
-      const widgetItemsCurrent = document.querySelectorAll('.product-widget');
+      const widgetItemsCurrent = container.querySelectorAll('.product-widget');
       if (widgetItemsCurrent.length === 0) return;
 
-      // Clear SVG paths
       const existingPaths = productsLinesSvg.querySelectorAll('path');
       existingPaths.forEach(p => p.remove());
 
@@ -668,7 +660,6 @@ document.addEventListener('DOMContentLoaded', () => {
       mainPath.style.strokeDasharray = mainLen;
       mainPath.style.strokeDashoffset = mainLen;
 
-      // Force Reflow
       productsLinesSvg.getBoundingClientRect();
 
       requestAnimationFrame(() => {
@@ -677,14 +668,12 @@ document.addEventListener('DOMContentLoaded', () => {
             p.style.transition = "stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease";
             p.style.strokeDashoffset = "0";
             p.style.opacity = "0.8";
-            // Add flow class after initial drawing
             setTimeout(() => p.classList.add('flow-active'), 1500);
           });
           setTimeout(() => {
             mainPath.style.transition = "stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease";
             mainPath.style.strokeDashoffset = "0";
             mainPath.style.opacity = "1";
-            // Add flow class to main path too
             setTimeout(() => mainPath.classList.add('flow-active'), 1500);
           }, 800);
         });
@@ -701,9 +690,10 @@ document.addEventListener('DOMContentLoaded', () => {
       productsObserver.observe(productsTrigger);
     }
 
-    // Global Keyboard Listener for detail view
+    // Keyboard Listener for detail view
     const handleKeyDown = (e) => {
       if (!isDetailViewActive || window.innerWidth <= 768) return;
+      if (activeDetailType && !containerId.includes(activeDetailType)) return;
 
       if (isBrandSectionActive) {
         if (e.key === 'ArrowRight') brandTrigger.classList.add('blue-state');
@@ -720,7 +710,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      const productsSection = document.getElementById('products-trigger');
+      const productsSection = container.querySelector('#products-trigger');
       if (productsSection && Math.abs(container.scrollTop - productsSection.offsetTop) < 10) {
         const hasCollab = productsSection.classList.contains('collab-mode');
         const hasGlow = productsSection.classList.contains('dds-glow-mode');
@@ -760,67 +750,94 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('keydown', handleKeyDown);
   };
 
-  const loadRoboticsContent = async () => {
-    if (isContentLoaded) return;
+  const loadedContents = new Set();
+  const loadContent = async (type, url, detailEl, containerId) => {
+    if (loadedContents.has(type)) return;
     try {
-      const response = await fetch('robotics.html');
+      const response = await fetch(url);
       const html = await response.text();
-      roboticsDetail.innerHTML = html;
-      isContentLoaded = true;
-      initRoboticsAnimations();
-      const backBtn = roboticsDetail.querySelector('.back-btn');
+      detailEl.innerHTML = html;
+      loadedContents.add(type);
+      initDetailAnimations(containerId);
+      const backBtn = detailEl.querySelector('.back-btn');
       if (backBtn) backBtn.addEventListener('click', () => history.back());
     } catch (err) {
-      console.error('Failed to load robotics content:', err);
+      console.error(`Failed to load ${type} content:`, err);
     }
   };
 
-  loadRoboticsContent();
-
-  const openRobotics = () => {
+  const openDetail = (type, cardEl, detailEl, containerId) => {
     if (isDetailViewActive) return;
     isDetailViewActive = true;
-    const rect = roboticsCard.getBoundingClientRect();
-    roboticsCard.style.top = `${rect.top}px`;
-    roboticsCard.style.left = `${rect.left}px`;
-    roboticsCard.style.width = `${rect.width}px`;
-    roboticsCard.style.height = `${rect.height}px`;
-    roboticsCard.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
-    roboticsCard.classList.add('expanding');
+    activeDetailType = type;
+    
+    const rect = cardEl.getBoundingClientRect();
+    cardEl.style.top = `${rect.top}px`;
+    cardEl.style.left = `${rect.left}px`;
+    cardEl.style.width = `${rect.width}px`;
+    cardEl.style.height = `${rect.height}px`;
+    cardEl.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+    cardEl.classList.add('expanding');
+    
     requestAnimationFrame(() => {
-      roboticsCard.style.top = '0';
-      roboticsCard.style.left = '0';
-      roboticsCard.style.width = '100vw';
-      roboticsCard.style.height = '100vh';
-      roboticsCard.style.backgroundColor = '#000';
+      cardEl.style.top = '0';
+      cardEl.style.left = '0';
+      cardEl.style.width = '100vw';
+      cardEl.style.height = '100vh';
+      cardEl.style.backgroundColor = '#000';
     });
+    
     setTimeout(() => {
-      roboticsDetail.classList.add('active');
-      history.pushState({ view: 'robotics' }, 'Robotics');
+      detailEl.classList.add('active');
+      history.pushState({ view: type }, type.charAt(0).toUpperCase() + type.slice(1));
     }, 400);
   };
 
-  const closeRobotics = () => {
+  const closeDetail = (type, cardEl, detailEl) => {
     if (!isDetailViewActive) return;
-    roboticsDetail.classList.remove('active');
+    detailEl.classList.remove('active');
+    
     setTimeout(() => {
-      const gridItem = document.querySelector('.expertise-grid').children[0];
-      const rect = gridItem.getBoundingClientRect();
-      roboticsCard.style.top = `${rect.top}px`;
-      roboticsCard.style.left = `${rect.left}px`;
-      roboticsCard.style.width = `${rect.width}px`;
-      roboticsCard.style.height = `${rect.height}px`;
-      roboticsCard.style.backgroundColor = 'rgba(255, 255, 255, 0.02)';
+      const gridItem = cardEl; 
+      const rect = gridItem.parentNode.querySelector(`.expertise-card#${cardEl.id}`).getBoundingClientRect();
+      cardEl.style.top = `${rect.top}px`;
+      cardEl.style.left = `${rect.left}px`;
+      cardEl.style.width = `${rect.width}px`;
+      cardEl.style.height = `${rect.height}px`;
+      cardEl.style.backgroundColor = 'rgba(255, 255, 255, 0.02)';
+      
       setTimeout(() => {
-        roboticsCard.classList.remove('expanding');
-        roboticsCard.style = '';
+        cardEl.classList.remove('expanding');
+        cardEl.style = '';
         isDetailViewActive = false;
+        activeDetailType = null;
       }, 800);
     }, 100);
   };
 
-  roboticsCard.addEventListener('click', openRobotics);
-  window.addEventListener('popstate', () => { if (isDetailViewActive) closeRobotics(); });
+  // Robotics Setup
+  const roboticsCard = document.querySelector('#robotics-card');
+  const roboticsDetail = document.querySelector('#robotics-detail');
+  if (roboticsCard && roboticsDetail) {
+    loadContent('robotics', 'robotics.html', roboticsDetail, 'robotics-scroll-container');
+    roboticsCard.addEventListener('click', () => openDetail('robotics', roboticsCard, roboticsDetail, 'robotics-scroll-container'));
+  }
+
+  // 3D Design Setup
+  const designCard = document.querySelector('#3d-design-card');
+  const designDetail = document.querySelector('#3d-design-detail');
+  if (designCard && designDetail) {
+    loadContent('3d-design', '3d-design.html', designDetail, '3d-design-scroll-container');
+    designCard.addEventListener('click', () => openDetail('3d-design', designCard, designDetail, '3d-design-scroll-container'));
+  }
+
+  window.addEventListener('popstate', (e) => {
+    if (isDetailViewActive) {
+      if (activeDetailType === 'robotics') closeDetail('robotics', roboticsCard, roboticsDetail);
+      else if (activeDetailType === '3d-design') closeDetail('3d-design', designCard, designDetail);
+    }
+  });
+
   updateCurrentIndex();
 
   const images = document.querySelectorAll('.clickable-image img');
@@ -829,6 +846,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const lightboxImg = document.createElement('img');
   lightbox.appendChild(lightboxImg);
   document.body.appendChild(lightbox);
+  
   images.forEach(image => {
     image.style.cursor = 'zoom-in';
     image.addEventListener('click', () => {
@@ -837,6 +855,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.body.style.overflow = 'hidden';
     });
   });
+  
   lightbox.addEventListener('click', () => {
     lightbox.classList.remove('active');
     document.body.style.overflow = 'auto';
