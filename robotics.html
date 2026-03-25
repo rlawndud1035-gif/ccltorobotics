@@ -1523,53 +1523,17 @@
     width: 50%;
     height: 100%;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-left: 5%;
-    z-index: 2;
-    background: radial-gradient(circle at center, rgba(122, 40, 255, 0.05) 0%, transparent 70%);
-  }
-
-  .flow-image-container {
-    width: 80%;
-    aspect-ratio: 16 / 9;
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 
-      0 30px 80px rgba(0, 0, 0, 0.8), 
-      0 0 40px rgba(122, 40, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    opacity: 0;
-    transform: translateX(-50px) scale(0.95);
-    transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  .energy-flow-section.active .flow-image-container {
-    opacity: 1;
-    transform: translateX(0) scale(1);
-  }
-
-  .flow-image-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .flow-split-right {
-    width: 50%;
-    height: 100%;
-    display: flex;
     flex-direction: column;
     justify-content: center;
-    padding-left: 5%;
-    padding-right: 10%;
+    padding-left: 10%;
+    padding-right: 5%;
     z-index: 2;
   }
 
   .flow-content-wrap {
     opacity: 0;
-    transform: translateX(40px);
-    transition: all 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
+    transform: translateX(-40px);
+    transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .energy-flow-section.active .flow-content-wrap {
@@ -1584,7 +1548,7 @@
     transform-origin: left;
     transform: scaleX(0);
     margin-bottom: 2rem;
-    transition: transform 0.8s ease 0.5s;
+    transition: transform 0.8s ease 0.3s;
   }
 
   .energy-flow-section.active .flow-line {
@@ -1613,12 +1577,48 @@
     line-height: 1.8;
     opacity: 0;
     transform: translateY(15px);
-    transition: all 0.8s ease 0.8s;
+    transition: all 0.8s ease 0.6s;
   }
 
   .energy-flow-section.active .flow-desc {
     opacity: 1;
     transform: translateY(0);
+  }
+
+  .flow-split-right {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-right: 5%;
+    z-index: 2;
+    background: radial-gradient(circle at center, rgba(122, 40, 255, 0.05) 0%, transparent 70%);
+  }
+
+  .flow-image-container {
+    width: 80%;
+    aspect-ratio: 16 / 9;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 
+      0 30px 80px rgba(0, 0, 0, 0.8), 
+      0 0 40px rgba(122, 40, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    transform: translateX(50px) scale(0.95);
+    transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1) 0.2s;
+  }
+
+  .energy-flow-section.active .flow-image-container {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+
+  .flow-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
 </style>
@@ -1938,11 +1938,6 @@
   <!-- Energy Flow Section (New) -->
   <section class="energy-flow-section" id="energy-flow-trigger">
     <div class="flow-split-left">
-      <div class="flow-image-container">
-        <img src="images/robotics/DS1.png" alt="Energy Flow Visual">
-      </div>
-    </div>
-    <div class="flow-split-right">
       <div class="flow-content-wrap">
         <div class="flow-line"></div>
         <h2 class="flow-title">
@@ -1953,6 +1948,11 @@
           복잡한 데이터를 직관적인 시각 언어로 전환하여,<br>
           누구나 빠르게 의사결정할 수 있는 대시보드를 설계합니다.
         </p>
+      </div>
+    </div>
+    <div class="flow-split-right">
+      <div class="flow-image-container">
+        <img src="images/robotics/DS1.png" alt="Energy Flow Visual">
       </div>
     </div>
   </section>
