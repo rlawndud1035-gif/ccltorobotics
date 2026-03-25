@@ -74,7 +74,7 @@ A modern web project for CCL Robotics, powered by the **Vite** build system for 
 - **Dashboard Section Refinement (Robotics):**
     - Redesigned the section into a **split-screen layout**: the left side now features a large, left-aligned title while the right side contains a high-quality dashboard video (`status.mov`) inside a card UI.
     - Updated the section title to **"Simplified Navigation Flow"** for better project context.
-    - Significantly reduced the title font size to an ultra-minimal scale (`clamp(0.4rem, 0.6vw, 0.7rem)`) for a tiny, sophisticated aesthetic.
+    - Drastically reduced the title font size to an extreme minimal scale (`clamp(0.15rem, 0.3vw, 0.4rem)`) for an ultra-tiny, sophisticated aesthetic.
     - Removed the description paragraph from the left side to focus exclusively on the title.
     - Enhanced the split-view transition: the video container features a dynamic 3D perspective effect (`rotateY`, `rotateX`) that settles into place upon section activation.
     - Improved visual depth with multi-layered shadows and a subtle brand-colored radial glow behind the video card.
