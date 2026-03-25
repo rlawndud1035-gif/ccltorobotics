@@ -78,13 +78,14 @@ A modern web project for CCL Robotics, powered by the **Vite** build system for 
     - Removed the description paragraph from the left side to focus exclusively on the title.
     - Enhanced the split-view transition: the video container features a dynamic 3D perspective effect (`rotateY`, `rotateX`) that settles into place upon section activation.
     - Improved visual depth with multi-layered shadows and a subtle brand-colored radial glow behind the video card.
-- **Energy Flow Section (New - Robotics):**
-    - Added a new minimalist section below the Dashboard video section.
-    - Features a **split-screen layout**: the left side features sophisticated typography, while the right side contains a high-quality visual (`DS1.png`) in a card UI.
-    - Implemented a "stroke-text" effect for visual emphasis ("한눈에 읽다").
+- **Energy Flow Section (New - Robotics & 3D Design):**
+    - Added a new minimalist section below the Dashboard video section on both detail pages.
+    - Features a **split-screen layout**: the left side features sophisticated typography, while the right side contains a high-quality video demonstration (`prototype_1.mov`).
+    - Implemented a "stroke-text" effect for visual emphasis ("한눈에 읽다" / "한눈에 담다").
+    - Ensured **strict left-alignment** for all typography and decorative elements on the left side.
     - Integrated with the project's animation system via `IntersectionObserver`:
         - Left: Decorative line scales horizontally, followed by text reveal with a slide-in effect.
-        - Right: Image container reveals with a slide-in from the right and scale effect.
+        - Right: Video container reveals with a slide-in from the right and scale effect.
     - Uses subtle brand-colored radial glows on both sides to maintain visual depth and consistency.
 - **Section-wide Visibility & Impact Enhancements:**
     - **Question Section:** Enlarged interaction bubbles and added a hover-zoom effect with brand color highlights.

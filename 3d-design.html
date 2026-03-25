@@ -1413,8 +1413,8 @@
     transform: scale(1) translateZ(0);
     transition: opacity 3s ease 0.8s, transform 3s cubic-bezier(0.23, 1, 0.32, 1) 0.8s;
   }
-  /* --- Dashboard Video Section --- */
-  .dashboard-video-section {
+  /* --- Energy Flow Section (New) --- */
+  .energy-flow-section {
     height: 100vh;
     width: 100vw;
     display: flex;
@@ -1422,55 +1422,109 @@
     scroll-snap-align: start;
     position: relative;
     overflow: hidden;
-    z-index: 10;
   }
 
-  .dash-split-left {
-    flex: 1;
+  .flow-split-left {
+    width: 50%;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-    position: relative;
+    padding-left: 10%;
+    padding-right: 5%;
     z-index: 2;
+    text-align: left;
   }
 
-  .dash-split-right {
-    flex: 1;
+  .flow-content-wrap {
+    opacity: 0;
+    transform: translateX(-40px);
+    transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .energy-flow-section.active .flow-content-wrap {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .flow-line {
+    width: 48px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.2);
+    transform-origin: left;
+    transform: scaleX(0);
+    margin-bottom: 2rem;
+    transition: transform 0.8s ease 0.3s;
+  }
+
+  .energy-flow-section.active .flow-line {
+    transform: scaleX(1);
+  }
+
+  .flow-title {
+    color: #fff;
+    font-size: clamp(32px, 3.5vw, 48px);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin: 0;
+  }
+
+  .flow-title-stroke {
+    -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.3);
+    color: transparent;
+  }
+
+  .flow-desc {
+    color: rgba(255, 255, 255, 0.25);
+    margin-top: 2rem;
+    max-width: 24rem;
+    font-size: 15px;
+    line-height: 1.8;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: all 0.8s ease 0.6s;
+  }
+
+  .energy-flow-section.active .flow-desc {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .flow-split-right {
+    width: 50%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: radial-gradient(circle at center, rgba(122, 40, 255, 0.1) 0%, transparent 70%);
+    padding-right: 5%;
+    z-index: 2;
+    background: radial-gradient(circle at center, rgba(0, 150, 255, 0.05) 0%, transparent 70%);
   }
 
-  .dash-video-container {
+  .flow-image-container {
     width: 80%;
     aspect-ratio: 16 / 9;
     border-radius: 24px;
     overflow: hidden;
-    box-shadow: 0 20px 80px rgba(0, 0, 0, 0.5), 0 0 40px rgba(122, 40, 255, 0.2);
+    box-shadow: 
+      0 30px 80px rgba(0, 0, 0, 0.8), 
+      0 0 40px rgba(0, 150, 255, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    transform: perspective(1000px) rotateY(-5deg);
-    transition: transform 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+    opacity: 0;
+    transform: translateX(50px) scale(0.95);
+    transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1) 0.2s;
   }
 
-  .dashboard-video-section.active .dash-video-container {
-    transform: perspective(1000px) rotateY(0deg);
+  .energy-flow-section.active .flow-image-container {
+    opacity: 1;
+    transform: translateX(0) scale(1);
   }
 
-  .dash-video-container video {
+  .flow-image-container video {
     width: 100%;
     height: 100%;
     object-fit: cover;
-  }
-
-  .dashboard-v-title {
-    font-size: clamp(3rem, 10vw, 8rem) !important;
-    font-weight: 900;
-    color: #fff;
-    text-shadow: 0 0 50px rgba(122, 40, 255, 0.4);
-    text-align: center;
   }
 
 </style>
@@ -1722,6 +1776,28 @@
     <div class="dash-split-right">
       <div class="dash-video-container" style="box-shadow: 0 20px 80px rgba(0,0,0,0.5), 0 0 40px rgba(0, 150, 255, 0.2);">
         <video src="videos/prototype_1.mov" autoplay loop muted playsinline></video>
+      </div>
+    </div>
+  </section>
+
+  <!-- Energy Flow Section (New) -->
+  <section class="energy-flow-section" id="energy-flow-trigger">
+    <div class="flow-split-left">
+      <div class="flow-content-wrap">
+        <div class="flow-line"></div>
+        <h2 class="flow-title">
+          디자인의 깊이를<br>
+          <span class="flow-title-stroke">한눈에 담다</span>
+        </h2>
+        <p class="flow-desc">
+          공간의 데이터를 입체적인 시각 경험으로 전환하여,<br>
+          누구나 직관적으로 공간을 이해할 수 있는 3D 환경을 설계합니다.
+        </p>
+      </div>
+    </div>
+    <div class="flow-split-right">
+      <div class="flow-image-container">
+        <video src="videos/prototype_1.mov" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
       </div>
     </div>
   </section>
