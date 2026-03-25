@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CCL Robotics - The Future of Robotics</title>
+  <script src="https://webgazer.cs.brown.edu/webgazer.js"></script>
 </head>
 <body>
   <!-- Fixed Background Interaction -->
@@ -131,6 +132,35 @@
       </div>
     </div>
   </section>
+
+  <!-- Eye-Tracking Gaze Experience Section -->
+  <section class="content-section eye-tracking-section">
+    <div class="max-w-4xl text-center">
+      <h2 class="geist-h1">Experience Neural Tracking</h2>
+      <p class="geist-h2">Experience the precision of our eye-tracking technology in real-time. Enable your camera to interact with the interface using only your gaze.</p>
+      
+      <div class="eye-tracking-controls">
+        <button id="start-tracking-btn" class="outline-btn glow-on-hover">Enable Eye-Tracking</button>
+        <button id="stop-tracking-btn" class="outline-btn" style="display: none;">Disable Tracking</button>
+      </div>
+      
+      <div id="calibration-info" class="calibration-status" style="display: none;">
+        <p>Please click the 5 red dots to calibrate your gaze.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Calibration Points -->
+  <div id="calibration-overlay" class="calibration-overlay" style="display: none;">
+    <div class="calibration-point" data-point="1" style="top: 10%; left: 10%;"></div>
+    <div class="calibration-point" data-point="2" style="top: 10%; right: 10%;"></div>
+    <div class="calibration-point" data-point="3" style="bottom: 10%; left: 10%;"></div>
+    <div class="calibration-point" data-point="4" style="bottom: 10%; right: 10%;"></div>
+    <div class="calibration-point" data-point="5" style="top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+  </div>
+
+  <!-- Gaze Pointer -->
+  <div id="gaze-pointer" class="gaze-pointer"></div>
 
   <script type="module" src="main.js"></script>
   <!-- Deployment Trigger: 2026-03-24 -->

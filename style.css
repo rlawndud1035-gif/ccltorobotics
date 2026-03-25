@@ -476,3 +476,90 @@ section {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* -------------------------------------------------------------------------- */
+/* EYE-TRACKING EXPERIENCE                                                    */
+/* -------------------------------------------------------------------------- */
+
+.eye-tracking-section {
+    position: relative;
+    padding-bottom: 10rem !important;
+    background: radial-gradient(circle at bottom, rgba(122, 40, 255, 0.08) 0%, transparent 70%);
+}
+
+.eye-tracking-controls {
+    margin-top: 3rem;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.calibration-status {
+    margin-top: 1.5rem;
+    font-size: 1rem;
+    color: oklch(0.7 0.1 280);
+    font-weight: 500;
+    animation: pulse-eye 2s infinite;
+}
+
+.calibration-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(10px);
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.calibration-point {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background: #ff4d4d;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 25px #ff4d4d;
+    transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1), background 0.3s ease;
+}
+
+.calibration-point:hover {
+    transform: scale(1.6);
+}
+
+.calibration-point.calibrated {
+    background: #4dff4d;
+    box-shadow: 0 0 25px #4dff4d;
+    transform: scale(0.8);
+}
+
+.gaze-pointer {
+    position: fixed;
+    width: 24px;
+    height: 24px;
+    background: oklch(0.85 0.25 280);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10000;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 40px oklch(0.85 0.25 280), 0 0 10px #fff;
+    transition: opacity 0.5s ease;
+}
+
+.gaze-pointer.active {
+    opacity: 0.8;
+}
+
+@keyframes pulse-eye {
+    0% { opacity: 0.5; transform: translateY(0); }
+    50% { opacity: 1; transform: translateY(-5px); }
+    100% { opacity: 0.5; transform: translateY(0); }
+}
+
+.glow-on-hover:hover {
+    box-shadow: 0 0 30px rgba(122, 40, 255, 0.5);
+    background: rgba(122, 40, 255, 0.2);
+}

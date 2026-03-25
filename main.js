@@ -904,4 +904,145 @@ document.addEventListener('DOMContentLoaded', () => {
     lightbox.classList.remove('active');
     document.body.style.overflow = 'auto';
   });
+
+  // Eye-Tracking Experience
+  class EyeTrackingManager {
+    constructor() {
+      this.gazePointer = document.getElementById('gaze-pointer');
+      this.startBtn = document.getElementById('start-tracking-btn');
+      this.stopBtn = document.getElementById('stop-tracking-btn');
+      this.overlay = document.getElementById('calibration-overlay');
+      this.statusInfo = document.getElementById('calibration-info');
+      this.points = document.querySelectorAll('.calibration-point');
+      this.isCalibrated = false;
+      this.calibrationClicks = 0;
+      
+      if (this.startBtn) this.init();
+    }
+
+    init() {
+      this.startBtn.addEventListener('click', () => this.start());
+      this.stopBtn.addEventListener('click', () => this.stop());
+      
+      this.points.forEach(point => {
+        point.addEventListener('click', () => {
+          if (point.classList.contains('calibrated')) return;
+          point.classList.add('calibrated');
+          this.calibrationClicks++;
+          
+          if (this.calibrationClicks >= this.points.length) {
+            this.completeCalibration();
+          }
+        });
+      });
+    }
+
+    async start() {
+      if (typeof webgazer === 'undefined') {
+        alert('Eye-tracking module is still loading. Please try again in a moment.');
+        return;
+      }
+
+      this.startBtn.disabled = true;
+      this.startBtn.innerText = 'Initializing Camera...';
+
+      try {
+        await webgazer.setRegression('ridge')
+          .setTracker('TKM')
+          .setGazeListener((data, elapsedTime) => {
+            if (data == null) return;
+            this.updateGaze(data.x, data.y);
+          })
+          .saveDataAcrossSessions(true)
+          .begin();
+
+        webgazer.showVideoPreview(true)
+          .showPredictionPoints(false)
+          .applyKalmanFilter(true);
+
+        // Position and style the video preview
+        const checkVideoInterval = setInterval(() => {
+          const video = document.getElementById('webgazerVideoContainer');
+          const videoFeed = document.getElementById('webgazerVideoFeed');
+          const faceOverlay = document.getElementById('webgazerFaceOverlay');
+          const faceFeedbackBox = document.getElementById('webgazerFaceFeedbackBox');
+
+          if (video) {
+            video.style.top = '20px';
+            video.style.left = '20px';
+            video.style.width = '240px';
+            video.style.height = '180px';
+            video.style.borderRadius = '12px';
+            video.style.overflow = 'hidden';
+            video.style.zIndex = '10002';
+            video.style.border = '2px solid rgba(122, 40, 255, 0.5)';
+            video.style.boxShadow = '0 10px 30px rgba(0,0,0,0.5)';
+            
+            if (videoFeed) {
+              videoFeed.style.width = '100%';
+              videoFeed.style.height = '100%';
+              videoFeed.style.objectFit = 'cover';
+            }
+            
+            if (faceOverlay) faceOverlay.style.display = 'none';
+            if (faceFeedbackBox) faceFeedbackBox.style.border = '2px solid #4dff4d';
+
+            clearInterval(checkVideoInterval);
+          }
+        }, 100);
+
+        this.startBtn.style.display = 'none';
+        this.stopBtn.style.display = 'inline-block';
+        this.overlay.style.display = 'flex';
+        this.statusInfo.style.display = 'block';
+        
+      } catch (err) {
+        console.error('Eye tracking initialization failed:', err);
+        this.startBtn.disabled = false;
+        this.startBtn.innerText = 'Enable Eye-Tracking';
+        alert('Camera access denied or failed to initialize.');
+      }
+    }
+
+    completeCalibration() {
+      this.overlay.style.opacity = '0';
+      setTimeout(() => {
+        this.overlay.style.display = 'none';
+        this.statusInfo.innerHTML = '<p style="color: #4dff4d;">✓ Neural Tracking Active</p>';
+        this.gazePointer.classList.add('active');
+        this.isCalibrated = true;
+      }, 500);
+    }
+
+    updateGaze(x, y) {
+      if (!this.isCalibrated) return;
+      // Use requestAnimationFrame for smooth movement
+      requestAnimationFrame(() => {
+        this.gazePointer.style.left = `${x}px`;
+        this.gazePointer.style.top = `${y}px`;
+      });
+    }
+
+    stop() {
+      if (typeof webgazer !== 'undefined') {
+        webgazer.end();
+      }
+      this.isCalibrated = false;
+      this.calibrationClicks = 0;
+      this.gazePointer.classList.remove('active');
+      this.stopBtn.style.display = 'none';
+      this.startBtn.style.display = 'inline-block';
+      this.startBtn.disabled = false;
+      this.startBtn.innerText = 'Enable Eye-Tracking';
+      this.statusInfo.style.display = 'none';
+      this.overlay.style.display = 'none';
+      this.overlay.style.opacity = '1';
+      this.points.forEach(p => p.classList.remove('calibrated'));
+      
+      const video = document.getElementById('webgazerVideoContainer');
+      if (video) video.remove();
+    }
+  }
+
+  new EyeTrackingManager();
 });

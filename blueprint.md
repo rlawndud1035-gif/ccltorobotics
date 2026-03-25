@@ -99,6 +99,13 @@ A modern web project for CCL Robotics, powered by the **Vite** build system for 
     - **Products Section:** Implemented a "Data Flow" animation on connecting lines, creating a living system feel using SVG stroke-dasharray transitions.
     - **DDS Core Elements:** Scaled up satellite text elements and enhanced their glow for better readability in 3D space.
     - **Widget Merge Section:** Increased the scale of emerging widgets to 450px for a more immersive transformation experience.
+- **Eye-Tracking Gaze Experience:**
+    - Integrated **WebGazer.js** to enable real-time eye-tracking directly in the browser.
+    - Added a new interactive section at the bottom of the main page where users can calibrate and experience "Neural Tracking".
+    - Implemented a smooth, glowing **Gaze Pointer** that follows the user's eyes across the screen.
+    - Designed a futuristic **Calibration Overlay** with a 5-point calibration system to ensure tracking accuracy.
+    - Optimized the camera preview UI with a minimalist, brand-aligned style.
+    - Provided clear toggle controls (Enable/Disable) to manage privacy and resource usage.
 
 ## Deployment Log
 - **2026-03-23:** Manual push to trigger Cloudflare Pages deployment (Simplified Dashboard Section).
@@ -109,6 +116,7 @@ A modern web project for CCL Robotics, powered by the **Vite** build system for 
 - **2026-03-23 (v6):** Fixed DDS Core Elements satellite text orientation to remain horizontal (upright) while orbiting by applying calculated animation-delays to counter-rotation.
 - **2026-03-24:** Added "3D Design" detail page identical to "Robotics" and refactored `main.js` for modular multi-page support.
 - **2026-03-24 (v2):** Fixed 3D Design routing issues by refactoring modular loading logic and ensuring card click reliability.
+- **2026-03-25:** Implemented "Experience Neural Tracking" (Eye-Tracking) feature on the main page using WebGazer.js.
 
 ## Future Plans
 - Any further updates to the code will be automatically pushed to the GitHub repository as requested.
