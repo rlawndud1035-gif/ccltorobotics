@@ -1,4 +1,5 @@
 import './style.css';
+import { HandGestureManager } from './hand-gesture.js';
 
 class IsoLevelWarp extends HTMLElement {
   constructor() {
@@ -1058,4 +1059,5 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   new EyeTrackingManager();
+  new HandGestureManager();
 });

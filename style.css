@@ -559,7 +559,71 @@ section {
     100% { opacity: 0.5; transform: translateY(0); }
 }
 
-.glow-on-hover:hover {
-    box-shadow: 0 0 30px rgba(122, 40, 255, 0.5);
-    background: rgba(122, 40, 255, 0.2);
+/* -------------------------------------------------------------------------- */
+/* HAND GESTURE INTERACTION                                                   */
+/* -------------------------------------------------------------------------- */
+
+.hand-gesture-section {
+    background: radial-gradient(circle at top, rgba(0, 210, 255, 0.05) 0%, transparent 70%);
+}
+
+.hand-interaction-container {
+    margin-top: 3rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.hand-canvas-wrapper {
+    width: 100%;
+    max-width: 800px;
+    height: 500px;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 2rem;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 0 40px rgba(122, 40, 255, 0.1);
+}
+
+.hand-status-overlay {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+    padding: 1rem 2rem;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 3rem;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    pointer-events: none;
+    transition: all 0.5s ease;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.hand-status-overlay.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.hand-status-overlay.detected {
+    border-color: #4dff4d;
+    box-shadow: 0 0 20px rgba(77, 255, 77, 0.2);
+}
+
+.hand-controls {
+    display: flex;
+    gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .hand-canvas-wrapper {
+        height: 350px;
+    }
 }

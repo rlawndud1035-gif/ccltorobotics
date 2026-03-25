@@ -107,6 +107,16 @@ A modern web project for CCL Robotics, powered by the **Vite** build system for 
     - Designed a futuristic **Calibration Overlay** with a 5-point calibration system to ensure tracking accuracy.
     - Optimized the camera preview UI with a minimalist, brand-aligned style.
     - Provided clear toggle controls (Enable/Disable) to manage privacy and resource usage.
+- **Spatial Hand Interaction (New):**
+    - Integrated **MediaPipe Hands** for real-time, high-precision hand landmark tracking.
+    - Added a dedicated "Spatial Hand Interaction" section at the bottom of the landing page.
+    - Developed a custom Web Component `<hand-gesture-canvas>` powered by **Three.js** to render a reactive 3D Torus Knot "Hologram".
+    - Implemented mapping between hand gestures and 3D object properties:
+        - **Position:** Hand palm position (X, Y) controls the 3D object's position in space.
+        - **Pinch Gesture:** Distance between thumb and index finger controls the object's **Scale** and **Color shift** (transitioning from purple to vibrant cyan).
+        - **Open/Close Hand:** Hand span controls the **Rotation speed** and wireframe complexity of the hologram.
+    - Created a sophisticated UI with a status overlay that provides real-time feedback on tracking status (e.g., "Hand Open", "Hand Closed").
+    - Optimized performance with smooth interpolation (lerp) for a fluid, lag-free experience.
 
 ## Deployment Log
 - **2026-03-23:** Manual push to trigger Cloudflare Pages deployment (Simplified Dashboard Section).

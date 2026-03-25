@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CCL Robotics - The Future of Robotics</title>
   <script src="https://webgazer.cs.brown.edu/webgazer.js"></script>
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+  <!-- MediaPipe Hands CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
 </head>
 <body>
   <!-- Fixed Background Interaction -->
@@ -146,6 +152,28 @@
       
       <div id="calibration-info" class="calibration-status" style="display: none;">
         <p>Please click the 5 red dots to calibrate your gaze.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hand Gesture Interaction Section -->
+  <section class="content-section hand-gesture-section">
+    <div class="max-w-4xl text-center">
+      <h2 class="geist-h1">Spatial Hand Interaction</h2>
+      <p class="geist-h2">Control the digital world with your hands. Our system recognizes complex gestures to provide an intuitive, touchless experience.</p>
+      
+      <div class="hand-interaction-container">
+        <div class="hand-canvas-wrapper">
+          <hand-gesture-canvas id="hand-gesture-canvas"></hand-gesture-canvas>
+          <div id="hand-status-overlay" class="hand-status-overlay">
+            <span id="hand-status-text">Waiting for camera...</span>
+          </div>
+        </div>
+        
+        <div class="hand-controls">
+          <button id="enable-hand-btn" class="outline-btn glow-on-hover">Enable Hand Recognition</button>
+          <button id="disable-hand-btn" class="outline-btn" style="display: none;">Disable Hand Recognition</button>
+        </div>
       </div>
     </div>
   </section>
