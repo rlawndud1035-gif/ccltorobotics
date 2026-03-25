@@ -29,10 +29,11 @@ A modern web project for CCL Robotics, powered by the **Vite** build system for 
 - **Image Integration:** Replaced `images/1.avif` with `images/2.png` in the gallery.
 - **Lightbox Feature:** Implemented a site-wide image lightbox that allows users to click and expand any image for a full-screen view.
 - **Video Integration:** Added a "Simplified Navigation Flow" section with `videos/prototype_1.mov` set to autoplay and loop.
-- **Expertise Cards Expansion:**
-    - Added a row of 4 specialized service cards ("UX/UI for robotics", "UX/UI for Vision AI", "Visual Design", "3D Design").
-    - **"3D Design" Detail Page:** Created a standalone `3d-design.html` that is functionally and visually identical to the Robotics page.
-    - **Modular Logic Refactoring:** Re-engineered `main.js` to generically handle multiple detail views. It now supports dynamic loading and animation initialization for any number of expertise cards.
+- **"3D Design" Detail Page Implementation:** 
+    - Created and refined `3d-design.html` with a structure identical to the Robotics page but with unique 3D-focused content.
+    - Implemented routing in `main.js` to handle navigation from the expertise section to the 3D Design view.
+    - Customized visual elements (blue accent colors, specific 3D design terminology like "Vertex", "Polygon", "Shader") to distinguish the page while maintaining brand consistency.
+- **Modular Logic Completion:** Finalized the multi-page dynamic loading system, ensuring any future expertise cards can be easily added with similar logic.
 - **UI Refinement:** Reduced spacing between section titles and content grids for a tighter, more cohesive landing page layout.
 - **Responsive Fixes:** Corrected typos, allowed heading wrapping, and optimized font sizes for mobile.
 - **One Scroll Experience:**
