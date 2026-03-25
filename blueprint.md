@@ -87,6 +87,13 @@ A modern web project for CCL Robotics, powered by the **Vite** build system for 
         - Left: Decorative line scales horizontally, followed by text reveal with a slide-in effect.
         - Right: Video container reveals with a slide-in from the right and scale effect.
     - Uses subtle brand-colored radial glows on both sides to maintain visual depth and consistency.
+- **Detail Page Scaling & Responsiveness Refinements (Robotics & 3D Design):**
+    - Increased the visual scale of the dashboard and energy flow videos in the final sections of both detail pages for maximum impact.
+    - Adjusted the split-screen ratios on desktop:
+        - **Dashboard Video Section:** Optimized left/right flex ratios to prioritize the media container.
+        - **Energy Flow Section:** Set width ratios to 35% (text) / 65% (video) to enhance visual storytelling.
+    - Set all media containers in these sections to 95% width within their respective columns for an immersive, edge-to-edge feel.
+    - **Full Mobile Responsiveness:** Implemented comprehensive media queries for these split sections, ensuring they stack vertically on smaller screens with centered typography and full-width media display.
 - **Section-wide Visibility & Impact Enhancements:**
     - **Question Section:** Enlarged interaction bubbles and added a hover-zoom effect with brand color highlights.
     - **Products Section:** Implemented a "Data Flow" animation on connecting lines, creating a living system feel using SVG stroke-dasharray transitions.
