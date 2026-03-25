@@ -71,11 +71,12 @@ A modern web project for CCL Robotics, powered by the **Vite** build system for 
     - **Title Scale Optimization:**
     - Reduced the font size of the **DDS title** and the final **Dashboard title** to ensure better visual balance and prevent them from overwhelming the layout.
     - Adjusted `clamp()` values for these titles to provide a more refined scaling experience across different screen sizes.
-- **Dashboard Video Section Refinement (Robotics):**
-    - Redesigned the section into a **split-screen layout**: the left side now features a large, left-aligned title while the right side contains the interactive video container.
+- **Dashboard Section Refinement (Robotics):**
+    - Redesigned the section into a **split-screen layout**: the left side now features a large, left-aligned title while the right side contains a high-quality dashboard preview image (`DDS1.png`).
     - Updated the section title to **"Simplified Navigation Flow"** for better project context.
     - Optimized title typography with `clamp()` and adjusted text alignment for a more modern, balanced appearance.
-    - Enhanced the split-view transition, ensuring the video container maintains its 3D rotation effect upon activation.
+    - Enhanced the split-view transition: the image container now features a dynamic 3D perspective effect (`rotateY`, `rotateX`) that settles into place upon section activation.
+    - Improved visual depth with multi-layered shadows and a subtle brand-colored radial glow behind the image.
 - **Section-wide Visibility & Impact Enhancements:**
     - **Question Section:** Enlarged interaction bubbles and added a hover-zoom effect with brand color highlights.
     - **Products Section:** Implemented a "Data Flow" animation on connecting lines, creating a living system feel using SVG stroke-dasharray transitions.

@@ -1413,7 +1413,7 @@
     transform: scale(1) translateZ(0);
     transition: opacity 3s ease 0.8s, transform 3s cubic-bezier(0.23, 1, 0.32, 1) 0.8s;
   }
-  /* --- Dashboard Video Section --- */
+  /* --- Dashboard Section (Refined Split) --- */
   .dashboard-video-section {
     height: 100vh;
     width: 100vw;
@@ -1429,51 +1429,73 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start; /* Left aligned */
     justify-content: center;
     border-right: 1px solid rgba(255, 255, 255, 0.1);
     position: relative;
     z-index: 2;
+    padding-left: 10%; /* More breathing room */
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1);
   }
 
   .dash-split-right {
-    flex: 1;
+    flex: 1.2; /* Slightly wider right side for visual weight */
     display: flex;
     align-items: center;
     justify-content: center;
-    background: radial-gradient(circle at center, rgba(122, 40, 255, 0.1) 0%, transparent 70%);
+    background: radial-gradient(circle at center, rgba(122, 40, 255, 0.15) 0%, transparent 80%);
+    opacity: 0;
+    transform: translateX(50px);
+    transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1) 0.2s;
   }
 
-  .dash-video-container {
-    width: 80%;
+  /* Active state transitions */
+  .dashboard-video-section.active .dash-split-left,
+  .dashboard-video-section.active .dash-split-right {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .dash-image-container {
+    width: 85%;
     aspect-ratio: 16 / 9;
-    border-radius: 24px;
+    border-radius: 32px;
     overflow: hidden;
-    box-shadow: 0 20px 80px rgba(0, 0, 0, 0.5), 0 0 40px rgba(122, 40, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transform: perspective(1000px) rotateY(-5deg);
-    transition: transform 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow: 
+      0 40px 100px rgba(0, 0, 0, 0.8), 
+      0 0 60px rgba(122, 40, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    transform: perspective(1500px) rotateY(-8deg) rotateX(2deg);
+    transition: transform 2s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
   }
 
-  .dashboard-video-section.active .dash-video-container {
-    transform: perspective(1000px) rotateY(0deg);
+  .dashboard-video-section.active .dash-image-container {
+    transform: perspective(1500px) rotateY(-2deg) rotateX(0deg);
   }
 
-  .dash-video-container video {
+  .dash-image-container img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 10s ease;
+  }
+
+  .dashboard-video-section.active .dash-image-container:hover img {
+    transform: scale(1.05);
   }
 
   .dashboard-v-title {
-    font-size: clamp(2.5rem, 6vw, 5rem) !important;
+    font-size: clamp(2.5rem, 6vw, 5.5rem) !important;
     font-weight: 900;
     color: #fff;
-    text-shadow: 0 0 50px rgba(122, 40, 255, 0.4);
+    text-shadow: 0 0 60px rgba(122, 40, 255, 0.5);
     text-align: left;
-    padding-left: 10%;
-    line-height: 1.1;
-    max-width: 90%;
+    line-height: 1.05;
+    max-width: 85%;
+    letter-spacing: -0.04em;
   }
 
 </style>
@@ -1784,8 +1806,8 @@
       <h2 class="geist-h1 dashboard-v-title">Simplified Navigation Flow</h2>
     </div>
     <div class="dash-split-right">
-      <div class="dash-video-container">
-        <video src="videos/prototype_1.mov" autoplay loop muted playsinline></video>
+      <div class="dash-image-container">
+        <img src="images/robotics/DDS1.png" alt="Dashboard Preview">
       </div>
     </div>
   </section>
