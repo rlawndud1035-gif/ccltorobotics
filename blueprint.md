@@ -99,10 +99,11 @@ A modern web project for CCL Robotics, powered by the **Vite** build system for 
     - **Products Section:** Implemented a "Data Flow" animation on connecting lines, creating a living system feel using SVG stroke-dasharray transitions.
     - **DDS Core Elements:** Scaled up satellite text elements and enhanced their glow for better readability in 3D space.
     - **Widget Merge Section:** Increased the scale of emerging widgets to 450px for a more immersive transformation experience.
-- **Eye-Tracking Gaze Experience:**
+    - **Eye-Tracking Gaze Experience:**
     - Integrated **WebGazer.js** to enable real-time eye-tracking directly in the browser.
     - Added a new interactive section at the bottom of the main page where users can calibrate and experience "Neural Tracking".
     - Implemented a smooth, glowing **Gaze Pointer** that follows the user's eyes across the screen.
+    - **Dynamic Background Interaction:** Connected the `neural-vortex` background graphics to the eye-tracking system, allowing the entire page's background to ripple and react to the user's gaze and face movements in real-time.
     - Designed a futuristic **Calibration Overlay** with a 5-point calibration system to ensure tracking accuracy.
     - Optimized the camera preview UI with a minimalist, brand-aligned style.
     - Provided clear toggle controls (Enable/Disable) to manage privacy and resource usage.

@@ -76,6 +76,12 @@ class IsoLevelWarp extends HTMLElement {
     this.mouse.targetY = e.clientY - rect.top;
   }
 
+  updateTarget(x, y) {
+    const rect = this.getBoundingClientRect();
+    this.mouse.targetX = x - rect.left;
+    this.mouse.targetY = y - rect.top;
+  }
+
   smoothMix(a, b, t) {
     return a + (b - a) * t;
   }
@@ -1016,7 +1022,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateGaze(x, y) {
       if (!this.isCalibrated) return;
-      // Use requestAnimationFrame for smooth movement
+      
+      // Update background graphics
+      const background = document.querySelector('neural-vortex');
+      if (background) {
+        background.updateTarget(x, y);
+      }
+
+      // Update gaze pointer position
       requestAnimationFrame(() => {
         this.gazePointer.style.left = `${x}px`;
         this.gazePointer.style.top = `${y}px`;
