@@ -1524,15 +1524,52 @@
     height: 100%;
     display: flex;
     align-items: center;
-    padding-left: 8%; /* Adjusting for standard project padding */
-    padding-right: 5%;
+    justify-content: center;
+    padding-left: 5%;
+    z-index: 2;
+    background: radial-gradient(circle at center, rgba(122, 40, 255, 0.05) 0%, transparent 70%);
+  }
+
+  .flow-image-container {
+    width: 80%;
+    aspect-ratio: 16 / 9;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 
+      0 30px 80px rgba(0, 0, 0, 0.8), 
+      0 0 40px rgba(122, 40, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    transform: translateX(-50px) scale(0.95);
+    transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .energy-flow-section.active .flow-image-container {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+
+  .flow-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .flow-split-right {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 5%;
+    padding-right: 10%;
     z-index: 2;
   }
 
   .flow-content-wrap {
     opacity: 0;
-    transform: translateX(-40px);
-    transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateX(40px);
+    transition: all 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
   }
 
   .energy-flow-section.active .flow-content-wrap {
@@ -1547,7 +1584,7 @@
     transform-origin: left;
     transform: scaleX(0);
     margin-bottom: 2rem;
-    transition: transform 0.8s ease 0.3s;
+    transition: transform 0.8s ease 0.5s;
   }
 
   .energy-flow-section.active .flow-line {
@@ -1556,7 +1593,7 @@
 
   .flow-title {
     color: #fff;
-    font-size: clamp(36px, 4vw, 56px);
+    font-size: clamp(32px, 3.5vw, 48px);
     font-weight: 800;
     line-height: 1.15;
     letter-spacing: -0.03em;
@@ -1576,18 +1613,12 @@
     line-height: 1.8;
     opacity: 0;
     transform: translateY(15px);
-    transition: all 0.8s ease 0.6s;
+    transition: all 0.8s ease 0.8s;
   }
 
   .energy-flow-section.active .flow-desc {
     opacity: 1;
     transform: translateY(0);
-  }
-
-  .flow-split-right {
-    width: 50%;
-    height: 100%;
-    background: radial-gradient(circle at center, rgba(122, 40, 255, 0.05) 0%, transparent 70%);
   }
 
 </style>
@@ -1907,6 +1938,11 @@
   <!-- Energy Flow Section (New) -->
   <section class="energy-flow-section" id="energy-flow-trigger">
     <div class="flow-split-left">
+      <div class="flow-image-container">
+        <img src="images/robotics/DS1.png" alt="Energy Flow Visual">
+      </div>
+    </div>
+    <div class="flow-split-right">
       <div class="flow-content-wrap">
         <div class="flow-line"></div>
         <h2 class="flow-title">
@@ -1919,6 +1955,5 @@
         </p>
       </div>
     </div>
-    <div class="flow-split-right"></div>
   </section>
 </div>

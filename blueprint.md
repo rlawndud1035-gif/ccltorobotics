@@ -80,10 +80,12 @@ A modern web project for CCL Robotics, powered by the **Vite** build system for 
     - Improved visual depth with multi-layered shadows and a subtle brand-colored radial glow behind the video card.
 - **Energy Flow Section (New - Robotics):**
     - Added a new minimalist section below the Dashboard video section.
-    - Features a sophisticated typography-driven design with a decorative animated line and "Energy Flow" themed text.
+    - Features a **split-screen layout**: the left side contains a high-quality visual (`DS1.png`) in a card UI, while the right side features sophisticated typography.
     - Implemented a "stroke-text" effect for visual emphasis ("한눈에 읽다").
-    - Integrated with the project's animation system via `IntersectionObserver` for smooth reveal transitions (line scaling, text fade-in).
-    - Uses a split-screen layout with a subtle brand-colored radial glow on the right side to maintain visual consistency.
+    - Integrated with the project's animation system via `IntersectionObserver`:
+        - Left: Image container reveals with a slide-in and scale effect.
+        - Right: Decorative line scales horizontally, followed by text fade-in and slide-up.
+    - Uses subtle brand-colored radial glows on both sides to maintain visual depth and consistency.
 - **Section-wide Visibility & Impact Enhancements:**
     - **Question Section:** Enlarged interaction bubbles and added a hover-zoom effect with brand color highlights.
     - **Products Section:** Implemented a "Data Flow" animation on connecting lines, creating a living system feel using SVG stroke-dasharray transitions.
