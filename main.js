@@ -581,7 +581,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (entries[0].isIntersecting) {
           entries[0].target.classList.add('active');
         }
-      }, { root: container, threshold: 0.4 }).observe(dashVideoTrigger);
+      }, { root: container, threshold: 0.1 }).observe(dashVideoTrigger);
     }
 
     if (goalsTrigger) new IntersectionObserver(entries => { isGoalsSectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.3 }).observe(goalsTrigger);
