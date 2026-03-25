@@ -584,6 +584,15 @@ document.addEventListener('DOMContentLoaded', () => {
       }, { root: container, threshold: 0.1 }).observe(dashVideoTrigger);
     }
 
+    const energyFlowTrigger = container.querySelector('#energy-flow-trigger');
+    if (energyFlowTrigger) {
+      new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) {
+          entries[0].target.classList.add('active');
+        }
+      }, { root: container, threshold: 0.2 }).observe(energyFlowTrigger);
+    }
+
     if (goalsTrigger) new IntersectionObserver(entries => { isGoalsSectionActive = entries[0].isIntersecting; }, { root: container, threshold: 0.3 }).observe(goalsTrigger);
     
     if (coreElementsTrigger) {

@@ -1508,6 +1508,88 @@
     margin-bottom: 1.5rem;
   }
 
+  /* --- Energy Flow Section (New) --- */
+  .energy-flow-section {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    background: #000;
+    scroll-snap-align: start;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .flow-split-left {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 8%; /* Adjusting for standard project padding */
+    padding-right: 5%;
+    z-index: 2;
+  }
+
+  .flow-content-wrap {
+    opacity: 0;
+    transform: translateX(-40px);
+    transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .energy-flow-section.active .flow-content-wrap {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .flow-line {
+    width: 48px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.2);
+    transform-origin: left;
+    transform: scaleX(0);
+    margin-bottom: 2rem;
+    transition: transform 0.8s ease 0.3s;
+  }
+
+  .energy-flow-section.active .flow-line {
+    transform: scaleX(1);
+  }
+
+  .flow-title {
+    color: #fff;
+    font-size: clamp(36px, 4vw, 56px);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin: 0;
+  }
+
+  .flow-title-stroke {
+    -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.3);
+    color: transparent;
+  }
+
+  .flow-desc {
+    color: rgba(255, 255, 255, 0.25);
+    margin-top: 2rem;
+    max-width: 24rem;
+    font-size: 15px;
+    line-height: 1.8;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: all 0.8s ease 0.6s;
+  }
+
+  .energy-flow-section.active .flow-desc {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .flow-split-right {
+    width: 50%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(122, 40, 255, 0.05) 0%, transparent 70%);
+  }
+
 </style>
 
 <div class="detail-content" id="robotics-scroll-container">
@@ -1820,5 +1902,23 @@
         <video src="images/robotics/status.mov" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
       </div>
     </div>
+  </section>
+
+  <!-- Energy Flow Section (New) -->
+  <section class="energy-flow-section" id="energy-flow-trigger">
+    <div class="flow-split-left">
+      <div class="flow-content-wrap">
+        <div class="flow-line"></div>
+        <h2 class="flow-title">
+          에너지의 흐름을<br>
+          <span class="flow-title-stroke">한눈에 읽다</span>
+        </h2>
+        <p class="flow-desc">
+          복잡한 데이터를 직관적인 시각 언어로 전환하여,<br>
+          누구나 빠르게 의사결정할 수 있는 대시보드를 설계합니다.
+        </p>
+      </div>
+    </div>
+    <div class="flow-split-right"></div>
   </section>
 </div>
