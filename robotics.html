@@ -1804,6 +1804,9 @@
   <section class="dashboard-video-section" id="dashboard-video-trigger">
     <div class="dash-split-left">
       <h2 class="geist-h1 dashboard-v-title">Simplified Navigation Flow</h2>
+      <p class="geist-h2" style="max-width: 80%; opacity: 0; transform: translateY(20px); transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1) 0.4s;">
+        The system provides a seamless navigation experience that allows users to monitor and control complex robotic operations with precision. Designed for efficiency and clarity.
+      </p>
     </div>
     <div class="dash-split-right">
       <div class="dash-image-container">
@@ -1812,4 +1815,23 @@
     </div>
   </section>
 </div>
+
+<script>
+  // Script for dashboard paragraph animation
+  document.addEventListener('DOMContentLoaded', () => {
+    const dashTrigger = document.getElementById('dashboard-video-trigger');
+    if (dashTrigger) {
+      const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          const p = dashTrigger.querySelector('p');
+          if (p) {
+            p.style.opacity = '1';
+            p.style.transform = 'translateY(0)';
+          }
+        }
+      }, { threshold: 0.4 });
+      observer.observe(dashTrigger);
+    }
+  });
+</script>
 
