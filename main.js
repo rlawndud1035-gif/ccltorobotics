@@ -750,26 +750,45 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('keydown', handleKeyDown);
   };
 
+  // --- Modular Content Loading & Animation Setup ---
   const loadedContents = new Set();
+  
   const loadContent = async (type, url, detailEl, containerId) => {
-    if (loadedContents.has(type)) return;
+    if (loadedContents.has(type)) return true;
     try {
+      console.log(`Loading content for ${type} from ${url}...`);
       const response = await fetch(url);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       const html = await response.text();
       detailEl.innerHTML = html;
       loadedContents.add(type);
-      initDetailAnimations(containerId);
+      
+      // Initialize animations after a short delay to ensure DOM is ready
+      setTimeout(() => initDetailAnimations(containerId), 50);
+      
       const backBtn = detailEl.querySelector('.back-btn');
-      if (backBtn) backBtn.addEventListener('click', () => history.back());
+      if (backBtn) {
+        backBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          history.back();
+        });
+      }
+      return true;
     } catch (err) {
       console.error(`Failed to load ${type} content:`, err);
+      detailEl.innerHTML = `<div class="detail-content"><button class="back-btn" onclick="history.back()">← Back</button><h1 class="geist-h1">Error</h1><p class="geist-h2">Failed to load content. Please try again.</p></div>`;
+      return false;
     }
   };
 
-  const openDetail = (type, cardEl, detailEl, containerId) => {
+  const openDetail = async (type, cardEl, detailEl, containerId) => {
     if (isDetailViewActive) return;
     isDetailViewActive = true;
     activeDetailType = type;
+    
+    // Ensure content is loaded
+    const url = type === 'robotics' ? 'robotics.html' : '3d-design.html';
+    await loadContent(type, url, detailEl, containerId);
     
     const rect = cardEl.getBoundingClientRect();
     cardEl.style.top = `${rect.top}px`;
@@ -779,6 +798,7 @@ document.addEventListener('DOMContentLoaded', () => {
     cardEl.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
     cardEl.classList.add('expanding');
     
+    // Start expansion animation
     requestAnimationFrame(() => {
       cardEl.style.top = '0';
       cardEl.style.left = '0';
@@ -787,6 +807,7 @@ document.addEventListener('DOMContentLoaded', () => {
       cardEl.style.backgroundColor = '#000';
     });
     
+    // Show detail content
     setTimeout(() => {
       detailEl.classList.add('active');
       history.pushState({ view: type }, type.charAt(0).toUpperCase() + type.slice(1));
@@ -798,12 +819,18 @@ document.addEventListener('DOMContentLoaded', () => {
     detailEl.classList.remove('active');
     
     setTimeout(() => {
-      const gridItem = cardEl; 
-      const rect = gridItem.parentNode.querySelector(`.expertise-card#${cardEl.id}`).getBoundingClientRect();
-      cardEl.style.top = `${rect.top}px`;
-      cardEl.style.left = `${rect.left}px`;
-      cardEl.style.width = `${rect.width}px`;
-      cardEl.style.height = `${rect.height}px`;
+      // Find the card's original position in the grid
+      const rect = document.querySelector(`.expertise-card[id="${cardEl.id}"]`).parentElement.getBoundingClientRect();
+      // Since it's a 4-column grid, we need to be more precise if possible
+      // But using the current rect from the hidden placeholder/original position is better
+      const originalCard = document.getElementById(cardEl.id);
+      originalCard.classList.remove('expanding');
+      const targetRect = originalCard.getBoundingClientRect();
+      
+      cardEl.style.top = `${targetRect.top}px`;
+      cardEl.style.left = `${targetRect.left}px`;
+      cardEl.style.width = `${targetRect.width}px`;
+      cardEl.style.height = `${targetRect.height}px`;
       cardEl.style.backgroundColor = 'rgba(255, 255, 255, 0.02)';
       
       setTimeout(() => {
@@ -815,26 +842,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 100);
   };
 
-  // Robotics Setup
-  const roboticsCard = document.querySelector('#robotics-card');
-  const roboticsDetail = document.querySelector('#robotics-detail');
-  if (roboticsCard && roboticsDetail) {
-    loadContent('robotics', 'robotics.html', roboticsDetail, 'robotics-scroll-container');
-    roboticsCard.addEventListener('click', () => openDetail('robotics', roboticsCard, roboticsDetail, 'robotics-scroll-container'));
-  }
+  // Expertise Cards Setup
+  const setupExpertiseCards = () => {
+    const cards = [
+      { id: 'robotics-card', type: 'robotics', detailId: 'robotics-detail', containerId: 'robotics-scroll-container' },
+      { id: '3d-design-card', type: '3d-design', detailId: '3d-design-detail', containerId: '3d-design-scroll-container' }
+    ];
 
-  // 3D Design Setup
-  const designCard = document.querySelector('#3d-design-card');
-  const designDetail = document.querySelector('#3d-design-detail');
-  if (designCard && designDetail) {
-    loadContent('3d-design', '3d-design.html', designDetail, '3d-design-scroll-container');
-    designCard.addEventListener('click', () => openDetail('3d-design', designCard, designDetail, '3d-design-scroll-container'));
-  }
+    cards.forEach(config => {
+      const card = document.getElementById(config.id);
+      const detail = document.getElementById(config.detailId);
+      if (card && detail) {
+        // Preload content
+        loadContent(config.type, `${config.type}.html`, detail, config.containerId);
+        
+        card.addEventListener('click', () => {
+          openDetail(config.type, card, detail, config.containerId);
+        });
+      }
+    });
+  };
+
+  setupExpertiseCards();
 
   window.addEventListener('popstate', (e) => {
     if (isDetailViewActive) {
-      if (activeDetailType === 'robotics') closeDetail('robotics', roboticsCard, roboticsDetail);
-      else if (activeDetailType === '3d-design') closeDetail('3d-design', designCard, designDetail);
+      const card = activeDetailType === 'robotics' ? document.getElementById('robotics-card') : document.getElementById('3d-design-card');
+      const detail = activeDetailType === 'robotics' ? document.getElementById('robotics-detail') : document.getElementById('3d-design-detail');
+      if (card && detail) closeDetail(activeDetailType, card, detail);
     }
   });
 

@@ -29,11 +29,11 @@ A modern web project for CCL Robotics, powered by the **Vite** build system for 
 - **Image Integration:** Replaced `images/1.avif` with `images/2.png` in the gallery.
 - **Lightbox Feature:** Implemented a site-wide image lightbox that allows users to click and expand any image for a full-screen view.
 - **Video Integration:** Added a "Simplified Navigation Flow" section with `videos/prototype_1.mov` set to autoplay and loop.
-- **"3D Design" Detail Page Implementation:** 
+- **"3D Design" Detail Page Implementation & Fixes:** 
     - Created and refined `3d-design.html` with a structure identical to the Robotics page but with unique 3D-focused content.
-    - Implemented routing in `main.js` to handle navigation from the expertise section to the 3D Design view.
+    - **Routing Reliability Fix:** Refactored `main.js` to use a more robust modular loading system that preloads content and handles potential fetch errors.
+    - **Modular Setup:** Implemented `setupExpertiseCards` to generically handle all cards in the expertise grid, ensuring "3D Design" and "Robotics" work consistently.
     - Customized visual elements (blue accent colors, specific 3D design terminology like "Vertex", "Polygon", "Shader") to distinguish the page while maintaining brand consistency.
-- **Modular Logic Completion:** Finalized the multi-page dynamic loading system, ensuring any future expertise cards can be easily added with similar logic.
 - **UI Refinement:** Reduced spacing between section titles and content grids for a tighter, more cohesive landing page layout.
 - **Responsive Fixes:** Corrected typos, allowed heading wrapping, and optimized font sizes for mobile.
 - **One Scroll Experience:**
@@ -85,6 +85,7 @@ A modern web project for CCL Robotics, powered by the **Vite** build system for 
 - **2026-03-23 (v5):** Optimized Question Section background bubbles to maintain stable positions when enlarging (using translate(-50%, -50%) and scale-based animation).
 - **2026-03-23 (v6):** Fixed DDS Core Elements satellite text orientation to remain horizontal (upright) while orbiting by applying calculated animation-delays to counter-rotation.
 - **2026-03-24:** Added "3D Design" detail page identical to "Robotics" and refactored `main.js` for modular multi-page support.
+- **2026-03-24 (v2):** Fixed 3D Design routing issues by refactoring modular loading logic and ensuring card click reliability.
 
 ## Future Plans
 - Any further updates to the code will be automatically pushed to the GitHub repository as requested.
