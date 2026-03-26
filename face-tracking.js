@@ -1,6 +1,6 @@
 // face-tracking.js
 // CCL Robotics - Specialized Neural Face Synthesis Module
-// High-reliability initialization with massive scale 3D visualization
+// Ultra-high reliability version with dual-CDN failover and massive visuals
 
 class FaceTrackingCanvas extends HTMLElement {
   constructor() {
@@ -31,7 +31,7 @@ class FaceTrackingCanvas extends HTMLElement {
         .vignette {
           position: absolute;
           inset: 0;
-          background: radial-gradient(circle at center, transparent 20%, #000 100%);
+          background: radial-gradient(circle at center, transparent 10%, #000 100%);
           pointer-events: none;
           z-index: 2;
         }
@@ -54,10 +54,8 @@ class FaceTrackingCanvas extends HTMLElement {
     const height = this.canvas.clientHeight || 600;
 
     this.scene = new THREE.Scene();
-    
-    // Wide field of view for dramatic impact
     this.camera = new THREE.PerspectiveCamera(65, width / height, 0.1, 1000);
-    this.camera.position.set(0, 0, 2.2); // Closer for massive face
+    this.camera.position.set(0, 0, 2.0); // 카메라를 더 앞으로 당김 (초거대 얼굴)
 
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,
@@ -70,17 +68,15 @@ class FaceTrackingCanvas extends HTMLElement {
     this.faceGroup = new THREE.Group();
     this.scene.add(this.faceGroup);
 
-    // Neural Point Cloud Geometry
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(478 * 3);
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
-    // Neon Neural Material
     this.material = new THREE.PointsMaterial({
-      color: 0x00d2ff,
-      size: 0.065, // Very large points
+      color: 0xffffff,
+      size: 0.075, // 점 크기 확대
       transparent: true,
-      opacity: 0.9,
+      opacity: 0.95,
       blending: THREE.AdditiveBlending,
       depthWrite: false
     });
@@ -88,17 +84,16 @@ class FaceTrackingCanvas extends HTMLElement {
     this.facePoints = new THREE.Points(geometry, this.material);
     this.faceGroup.add(this.facePoints);
 
-    // Dramatic Lighting
-    const ambient = new THREE.AmbientLight(0xffffff, 0.5);
+    const ambient = new THREE.AmbientLight(0xffffff, 0.6);
     this.scene.add(ambient);
 
-    const purpleLight = new THREE.PointLight(0x7a28ff, 5, 10);
-    purpleLight.position.set(-2, 2, 2);
-    this.scene.add(purpleLight);
+    const p1 = new THREE.PointLight(0x7a28ff, 10, 20);
+    p1.position.set(-2, 2, 5);
+    this.scene.add(p1);
 
-    const blueLight = new THREE.PointLight(0x00d2ff, 5, 10);
-    blueLight.position.set(2, -2, 2);
-    this.scene.add(blueLight);
+    const p2 = new THREE.PointLight(0x00d2ff, 10, 20);
+    p2.position.set(2, -2, 5);
+    this.scene.add(p2);
 
     this.isInitialized = true;
     this.render();
@@ -124,22 +119,16 @@ class FaceTrackingCanvas extends HTMLElement {
 
     if (this.faceData) {
       const positions = this.facePoints.geometry.attributes.position.array;
-      
       for (let i = 0; i < this.faceData.length; i++) {
         const landmark = this.faceData[i];
-        // MASSIVE SCALE: 9.0x width/height, 12.0x depth
-        // Centering and flipping X for natural mirror view
-        positions[i * 3] = (0.5 - landmark.x) * 9.5; 
-        positions[i * 3 + 1] = (0.5 - landmark.y) * 9.5;
-        positions[i * 3 + 2] = -landmark.z * 12.0; 
+        // 압도적 스케일: 가로세로 10.5배, 깊이 15.0배
+        positions[i * 3] = (0.5 - landmark.x) * 10.5; 
+        positions[i * 3 + 1] = (0.5 - landmark.y) * 10.5;
+        positions[i * 3 + 2] = -landmark.z * 15.0; 
       }
       this.facePoints.geometry.attributes.position.needsUpdate = true;
-      
-      // Auto-hover rotation
-      this.faceGroup.rotation.y = Math.sin(Date.now() * 0.001) * 0.15;
-      
-      // Color cycle for neural effect
-      this.material.color.setHSL((Date.now() * 0.0001) % 1, 0.8, 0.6);
+      this.faceGroup.rotation.y = Math.sin(Date.now() * 0.001) * 0.2;
+      this.material.color.setHSL((Date.now() * 0.0001) % 1, 0.9, 0.7);
     }
 
     this.renderer.render(this.scene, this.camera);
@@ -156,12 +145,9 @@ export class FaceTrackingManager {
     this.disableBtn = document.getElementById('disable-face-btn');
     this.statusText = document.getElementById('face-status-text');
     this.statusOverlay = document.getElementById('face-status-overlay');
-    
     this.faceLandmarker = null;
     this.video = null;
     this.isActive = false;
-    this.lastVideoTime = -1;
-
     if (this.enableBtn) this.init();
   }
 
@@ -170,60 +156,59 @@ export class FaceTrackingManager {
     this.disableBtn.addEventListener('click', () => this.stop());
   }
 
-  /**
-   * Fail-safe Library Loader
-   * Dynamically loads the MediaPipe vision bundle if not present
-   */
   async ensureLibraries() {
-    const VISION_URL = "https://cdn.jsdelivr.net/npm/@google/mediapipe_tasks_vision@0.10.3/vision_bundle.js";
-    
-    // Check multiple potential namespaces
-    const getLib = () => {
+    const urls = [
+      "https://cdn.jsdelivr.net/npm/@google/mediapipe_tasks_vision@0.10.3/vision_bundle.js",
+      "https://unpkg.com/@google/mediapipe_tasks_vision@0.10.3/vision_bundle.js"
+    ];
+
+    const checkGlobal = () => {
       if (window.FaceLandmarker && window.FilesetResolver) return { FaceLandmarker: window.FaceLandmarker, FilesetResolver: window.FilesetResolver };
-      if (window.mediapipe?.tasks?.vision) return window.mediapipe.tasks.vision;
-      if (window.tasksVision) return window.tasksVision;
+      const vision = window.mediapipe?.tasks?.vision || window.tasksVision;
+      if (vision?.FaceLandmarker && vision?.FilesetResolver) return vision;
       return null;
     };
 
-    let lib = getLib();
+    let lib = checkGlobal();
     if (lib) return lib;
 
-    // Not found, inject script manually to be sure
-    console.log("Neural AI library not found in global scope. Injecting dynamically...");
-    return new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = VISION_URL;
-      script.crossOrigin = "anonymous";
-      script.onload = async () => {
-        // Wait a bit for execution
-        for (let i = 0; i < 10; i++) {
-          lib = getLib();
-          if (lib) {
-            console.log("Neural AI library successfully initialized.");
-            resolve(lib);
-            return;
-          }
-          await new Promise(r => setTimeout(resolve, 200));
+    for (const url of urls) {
+      try {
+        console.log(`Attempting to load Neural AI from: ${url}`);
+        await this.loadScript(url);
+        // Script loaded, now wait for it to initialize globals
+        for (let i = 0; i < 20; i++) {
+          lib = checkGlobal();
+          if (lib) return lib;
+          await new Promise(r => setTimeout(r, 150));
         }
-        reject(new Error("Neural AI libraries failed to initialize after dynamic injection."));
-      };
-      script.onerror = () => reject(new Error("Failed to download Neural AI libraries. Check your internet connection."));
-      document.head.appendChild(script);
+      } catch (e) {
+        console.warn(`Failed to load from ${url}, trying next...`);
+      }
+    }
+    throw new Error("Could not load Neural AI libraries from any source.");
+  }
+
+  loadScript(url) {
+    return new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = url;
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
     });
   }
 
   async start() {
     if (this.isActive) return;
-    
     this.enableBtn.disabled = true;
-    this.enableBtn.innerText = 'INITIALIZING...';
-    this.statusText.innerText = 'Synchronizing Neural Libraries...';
+    this.statusText.innerText = 'Initializing Neural Fail-safe...';
 
     try {
-      const { FaceLandmarker, FilesetResolver } = await this.ensureLibraries();
+      const lib = await this.ensureLibraries();
+      const { FaceLandmarker, FilesetResolver } = lib;
 
-      this.statusText.innerText = 'Downloading Pre-trained Weights...';
-
+      this.statusText.innerText = 'Loading Neural Weights...';
       const filesetResolver = await FilesetResolver.forVisionTasks(
         "https://cdn.jsdelivr.net/npm/@google/mediapipe_tasks_vision@0.10.3/wasm"
       );
@@ -238,91 +223,70 @@ export class FaceTrackingManager {
         numFaces: 1
       });
 
-      this.statusText.innerText = 'Awakening Visual Cortex...';
+      this.statusText.innerText = 'Booting Optical Sensors...';
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: 1280, height: 720, facingMode: 'user' }
+      });
 
-      const videoElement = document.createElement('video');
-      videoElement.autoplay = true;
-      videoElement.playsInline = true;
-      videoElement.muted = true;
-      videoElement.style.cssText = `
-        position: absolute;
-        top: 2rem;
-        left: 2rem;
-        width: 200px;
-        height: 150px;
-        border-radius: 1.5rem;
-        border: 2px solid #00d2ff;
-        object-fit: cover;
-        z-index: 100;
-        box-shadow: 0 0 30px rgba(0, 210, 255, 0.5);
-        transform: scaleX(-1);
+      this.video = document.createElement('video');
+      this.video.srcObject = stream;
+      this.video.autoplay = true;
+      this.video.playsInline = true;
+      this.video.muted = true;
+      this.video.style.cssText = `
+        position: absolute; top: 1.5rem; left: 1.5rem; width: 220px; height: 165px;
+        border-radius: 1rem; border: 3px solid #7a28ff; object-fit: cover;
+        z-index: 100; box-shadow: 0 0 40px rgba(122, 40, 255, 0.6); transform: scaleX(-1);
       `;
 
       const container = document.querySelector('.face-canvas-wrapper');
-      if (container) container.appendChild(videoElement);
-      else document.body.appendChild(videoElement);
-      
-      this.video = videoElement;
+      if (container) container.appendChild(this.video);
+      else document.body.appendChild(this.video);
 
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'user' }
-      });
-      videoElement.srcObject = stream;
-
-      videoElement.onloadedmetadata = () => {
-        videoElement.play();
+      this.video.onloadedmetadata = () => {
         this.isActive = true;
         this.enableBtn.style.display = 'none';
         this.disableBtn.style.display = 'inline-block';
-        this.statusText.innerText = 'NEURAL LINK: ACTIVE';
+        this.statusText.innerText = 'NEURAL LINK: ESTABLISHED';
         this.statusOverlay.classList.add('active');
-        this.predictWebcam();
+        this.predict();
       };
-
     } catch (err) {
-      console.error('Neural system failure:', err);
+      console.error(err);
       this.enableBtn.disabled = false;
-      this.enableBtn.innerText = 'RETRY CONNECTION';
-      this.statusText.innerText = `ERR: ${err.message}`;
-      alert(`Critical System Failure: ${err.message}`);
+      this.statusText.innerText = 'Neural Failure. Please refresh.';
+      alert(`Critical: ${err.message}`);
     }
   }
 
-  async predictWebcam() {
+  predict() {
     if (!this.isActive || !this.faceLandmarker || !this.video) return;
-
-    let startTimeMs = performance.now();
-    if (this.video.currentTime > 0 && this.lastVideoTime !== this.video.currentTime) {
-      this.lastVideoTime = this.video.currentTime;
-      const results = this.faceLandmarker.detectForVideo(this.video, startTimeMs);
-
-      if (results.faceLandmarks && results.faceLandmarks.length > 0) {
+    const now = performance.now();
+    if (this.video.currentTime > 0) {
+      const results = this.faceLandmarker.detectForVideo(this.video, now);
+      if (results.faceLandmarks?.length > 0) {
         if (this.canvasComp) this.canvasComp.updateFace(results.faceLandmarks);
         this.statusOverlay.classList.add('detected');
-        this.statusText.innerText = 'TARGET ACQUIRED: SYNCED';
+        this.statusText.innerText = 'SYNCED';
       } else {
         this.statusOverlay.classList.remove('detected');
-        this.statusText.innerText = 'SCANNING FOR BIOMETRIC DATA...';
+        this.statusText.innerText = 'SCANNING...';
       }
     }
-
-    if (this.isActive) {
-      window.requestAnimationFrame(() => this.predictWebcam());
-    }
+    requestAnimationFrame(() => this.predict());
   }
 
   stop() {
     this.isActive = false;
     if (this.video) {
-      if (this.video.srcObject) this.video.srcObject.getTracks().forEach(t => t.stop());
+      this.video.srcObject?.getTracks().forEach(t => t.stop());
       this.video.remove();
       this.video = null;
     }
     this.disableBtn.style.display = 'none';
     this.enableBtn.style.display = 'inline-block';
     this.enableBtn.disabled = false;
-    this.enableBtn.innerText = 'Enable Face Tracking';
     this.statusOverlay.classList.remove('active', 'detected');
-    this.statusText.innerText = 'SYSTEM OFFLINE';
+    this.statusText.innerText = 'OFFLINE';
   }
 }
