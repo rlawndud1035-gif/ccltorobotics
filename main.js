@@ -1,5 +1,6 @@
 import './style.css';
 import { HandGestureManager } from './hand-gesture.js';
+import { FaceTrackingManager } from './face-tracking.js';
 
 class IsoLevelWarp extends HTMLElement {
   constructor() {

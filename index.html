@@ -11,6 +11,8 @@
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+  <!-- MediaPipe Face Landmarker CDN (Tasks Vision) -->
+  <script src="https://cdn.jsdelivr.net/npm/@google/mediapipe_tasks_vision@0.10.3/vision_bundle.js"></script>
 </head>
 <body>
   <!-- Fixed Background Interaction -->
@@ -173,6 +175,28 @@
         <div class="hand-controls">
           <button id="enable-hand-btn" class="outline-btn glow-on-hover">Enable Hand Recognition</button>
           <button id="disable-hand-btn" class="outline-btn" style="display: none;">Disable Hand Recognition</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Face Tracking 3D Model Section -->
+  <section class="content-section face-tracking-section">
+    <div class="max-w-4xl text-center">
+      <h2 class="geist-h1">Neural Face Synthesis</h2>
+      <p class="geist-h2">Experience advanced facial expression mapping. Our AI captures your subtle movements and projects them onto a high-fidelity 3D digital twin.</p>
+      
+      <div class="face-interaction-container">
+        <div class="face-canvas-wrapper">
+          <face-tracking-canvas id="face-tracking-canvas"></face-tracking-canvas>
+          <div id="face-status-overlay" class="face-status-overlay">
+            <span id="face-status-text">Waiting for camera...</span>
+          </div>
+        </div>
+        
+        <div class="face-controls">
+          <button id="enable-face-btn" class="outline-btn glow-on-hover">Enable Face Tracking</button>
+          <button id="disable-face-btn" class="outline-btn" style="display: none;">Disable Face Tracking</button>
         </div>
       </div>
     </div>

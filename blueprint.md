@@ -117,6 +117,13 @@ A modern web project for CCL Robotics, powered by the **Vite** build system for 
         - **Open/Close Hand:** Hand span controls the **Rotation speed** and wireframe complexity of the hologram.
     - Created a sophisticated UI with a status overlay that provides real-time feedback on tracking status (e.g., "Hand Open", "Hand Closed").
     - Optimized performance with smooth interpolation (lerp) for a fluid, lag-free experience.
+- **Neural Face Synthesis (New):**
+    - Integrated **MediaPipe Face Landmarker** for high-fidelity facial movement tracking.
+    - Added a "Neural Face Synthesis" section at the bottom of the landing page.
+    - Developed a custom Web Component `<face-tracking-canvas>` using **Three.js** to render a dynamic 3D face mesh.
+    - Implemented real-time landmark mapping: 478 face landmarks are captured and projected onto a 3D wireframe mesh in white, creating a "digital twin" effect.
+    - Features advanced lighting with brand-aligned blue and purple highlights to emphasize depth and contour.
+    - Designed an intuitive control interface with real-time status feedback and "detected" visual indicators.
 
 ## Deployment Log
 - **2026-03-23:** Manual push to trigger Cloudflare Pages deployment (Simplified Dashboard Section).
@@ -128,6 +135,7 @@ A modern web project for CCL Robotics, powered by the **Vite** build system for 
 - **2026-03-24:** Added "3D Design" detail page identical to "Robotics" and refactored `main.js` for modular multi-page support.
 - **2026-03-24 (v2):** Fixed 3D Design routing issues by refactoring modular loading logic and ensuring card click reliability.
 - **2026-03-25:** Implemented "Experience Neural Tracking" (Eye-Tracking) feature on the main page using WebGazer.js.
+- **2026-03-26:** Implemented "Neural Face Synthesis" (Face Tracking) feature on the main page using MediaPipe Face Landmarker and Three.js.
 
 ## Future Plans
 - Any further updates to the code will be automatically pushed to the GitHub repository as requested.
