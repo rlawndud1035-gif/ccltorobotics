@@ -75,7 +75,7 @@ class FaceTrackingCanvas extends HTMLElement {
 
     this.material = new THREE.PointsMaterial({
       color: 0xffffff,
-      size: 0.05, // Larger points
+      size: 0.05, 
       transparent: true,
       opacity: 0.9,
       blending: THREE.AdditiveBlending
@@ -124,8 +124,7 @@ class FaceTrackingCanvas extends HTMLElement {
       
       for (let i = 0; i < this.faceData.length; i++) {
         const landmark = this.faceData[i];
-        // SIGNIFICANTLY INCREASED SCALE for "really big" requirement
-        // Scaling up to 8.0x for width/height and 10.0x for depth
+        // SIGNIFICANTLY INCREASED SCALE
         positions[i * 3] = (0.5 - landmark.x) * 8.5; 
         positions[i * 3 + 1] = (0.5 - landmark.y) * 8.5;
         positions[i * 3 + 2] = -landmark.z * 10.0; 
@@ -164,32 +163,56 @@ export class FaceTrackingManager {
     this.disableBtn.addEventListener('click', () => this.stop());
   }
 
+  /**
+   * Robust detection of MediaPipe classes from global scope
+   */
+  async findMediaPipe() {
+    // Strategy 1: check standard window properties
+    if (window.FaceLandmarker && window.FilesetResolver) {
+      return { FaceLandmarker: window.FaceLandmarker, FilesetResolver: window.FilesetResolver };
+    }
+
+    // Strategy 2: check window.mediapipe.tasks.vision (common for CDN bundle)
+    const m = window.mediapipe;
+    if (m && m.tasks && m.tasks.vision) {
+      const v = m.tasks.vision;
+      if (v.FaceLandmarker && v.FilesetResolver) {
+        return { FaceLandmarker: v.FaceLandmarker, FilesetResolver: v.FilesetResolver };
+      }
+    }
+
+    // Strategy 3: check window.tasksVision
+    if (window.tasksVision && window.tasksVision.FaceLandmarker) {
+      return { FaceLandmarker: window.tasksVision.FaceLandmarker, FilesetResolver: window.tasksVision.FilesetResolver };
+    }
+
+    return null;
+  }
+
   async start() {
     if (this.isActive) return;
     
     this.enableBtn.disabled = true;
     this.enableBtn.innerText = 'Initializing...';
-    this.statusText.innerText = 'Checking Neural AI Libraries...';
+    this.statusText.innerText = 'Detecting AI Infrastructure...';
 
     try {
-      // ROBUST MediaPipe Tasks Vision object resolution
-      // Checking multiple potential global locations for maximum compatibility
-      const vision = window.FaceLandmarker ? window : 
-                     (window.mediapipe && window.mediapipe.tasks && window.mediapipe.tasks.vision ? window.mediapipe.tasks.vision : 
-                     (window.tasksVision ? window.tasksVision : null));
+      let mp = await this.findMediaPipe();
       
-      if (!vision || !vision.FaceLandmarker || !vision.FilesetResolver) {
-        console.warn('MediaPipe globals not found immediately. Retrying with alternative names...');
-        // Some bundles expose them directly on window
-        if (!window.FaceLandmarker || !window.FilesetResolver) {
-           throw new Error('Neural AI libraries not found. Ensure vision_bundle.js is loaded correctly.');
-        }
+      // Retry logic if not found immediately (script might still be parsing)
+      if (!mp) {
+        this.statusText.innerText = 'Retrying Library Detection...';
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        mp = await this.findMediaPipe();
       }
 
-      const FaceLandmarker = vision.FaceLandmarker || window.FaceLandmarker;
-      const FilesetResolver = vision.FilesetResolver || window.FilesetResolver;
+      if (!mp) {
+        throw new Error('MediaPipe Vision libraries not found in global scope. Ensure scripts are correctly loaded.');
+      }
 
-      this.statusText.innerText = 'Downloading Neural Model...';
+      const { FaceLandmarker, FilesetResolver } = mp;
+
+      this.statusText.innerText = 'Downloading Neural Weights...';
 
       const filesetResolver = await FilesetResolver.forVisionTasks(
         "https://cdn.jsdelivr.net/npm/@google/mediapipe_tasks_vision@0.10.3/wasm"
@@ -205,7 +228,7 @@ export class FaceTrackingManager {
         numFaces: 1
       });
 
-      this.statusText.innerText = 'Calibrating Optical Sensors...';
+      this.statusText.innerText = 'Activating Optical Array...';
 
       const videoElement = document.createElement('video');
       videoElement.autoplay = true;
@@ -246,17 +269,17 @@ export class FaceTrackingManager {
         this.isActive = true;
         this.enableBtn.style.display = 'none';
         this.disableBtn.style.display = 'inline-block';
-        this.statusText.innerText = 'Neural Link Established';
+        this.statusText.innerText = 'Neural Sync: ESTABLISHED';
         this.statusOverlay.classList.add('active');
         this.predictWebcam();
       };
 
     } catch (err) {
-      console.error('Face tracking link failure:', err);
+      console.error('Neural Link Error:', err);
       this.enableBtn.disabled = false;
       this.enableBtn.innerText = 'Enable Face Tracking';
-      this.statusText.innerText = 'Neural Sync Error.';
-      alert(`Neural Link Error: ${err.message}`);
+      this.statusText.innerText = 'Neural Failure.';
+      alert(`Diagnostic: ${err.message}`);
     }
   }
 
@@ -273,10 +296,10 @@ export class FaceTrackingManager {
           this.canvasComp.updateFace(results.faceLandmarks);
         }
         this.statusOverlay.classList.add('detected');
-        this.statusText.innerText = 'Neural Signal Lock: ACTIVE';
+        this.statusText.innerText = 'Neural Lock: SECURED';
       } else {
         this.statusOverlay.classList.remove('detected');
-        this.statusText.innerText = 'Scanning for Neural Signature...';
+        this.statusText.innerText = 'Scanning...';
       }
     }
 
@@ -299,6 +322,6 @@ export class FaceTrackingManager {
     this.enableBtn.disabled = false;
     this.enableBtn.innerText = 'Enable Face Tracking';
     this.statusOverlay.classList.remove('active', 'detected');
-    this.statusText.innerText = 'Standby... Waiting for input';
+    this.statusText.innerText = 'System Standby';
   }
 }
