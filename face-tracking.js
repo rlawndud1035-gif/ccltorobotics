@@ -7,6 +7,7 @@ class FaceTrackingCanvas extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this.animationRef = null;
     this.faceData = null;
+    this.isInitialized = false;
   }
 
   connectedCallback() {
@@ -15,7 +16,7 @@ class FaceTrackingCanvas extends HTMLElement {
         :host {
           display: block;
           width: 100%;
-          height: 600px;
+          height: 100%;
           position: relative;
           background: radial-gradient(circle at center, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
           border-radius: 2rem;
@@ -30,7 +31,13 @@ class FaceTrackingCanvas extends HTMLElement {
       <canvas id="face-canvas"></canvas>
     `;
     this.canvas = this.shadowRoot.querySelector('#face-canvas');
-    this.initThree();
+    
+    // Ensure THREE is available before initializing
+    if (window.THREE) {
+      this.initThree();
+    } else {
+      console.error('Three.js not found. Face tracking 3D view will not initialize.');
+    }
   }
 
   disconnectedCallback() {
@@ -41,12 +48,14 @@ class FaceTrackingCanvas extends HTMLElement {
   }
 
   initThree() {
-    const width = this.canvas.clientWidth;
-    const height = this.canvas.clientHeight;
+    const THREE = window.THREE;
+    const width = this.canvas.clientWidth || 800;
+    const height = this.canvas.clientHeight || 600;
 
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-    this.camera.position.z = 1.5;
+    // Move camera back to see the whole face
+    this.camera.position.set(0, 0, 4);
 
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,
@@ -56,50 +65,47 @@ class FaceTrackingCanvas extends HTMLElement {
     this.renderer.setSize(width, height);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    // Create a face mesh group
+    // Create a face group
     this.faceGroup = new THREE.Group();
     this.scene.add(this.faceGroup);
 
-    // Initial placeholder: A point cloud
+    // Use Points instead of Mesh for 478 landmarks (no triangulation needed)
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(478 * 3);
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
-    // We use a white wireframe material for high visibility as requested
-    this.material = new THREE.MeshPhongMaterial({
+    // Neural-style point material
+    this.material = new THREE.PointsMaterial({
       color: 0xffffff,
-      emissive: 0x888888,
-      wireframe: true,
+      size: 0.035,
       transparent: false,
       opacity: 1.0,
-      side: THREE.DoubleSide
+      blending: THREE.AdditiveBlending
     });
 
-    this.faceMesh = new THREE.Mesh(geometry, this.material);
-    this.faceGroup.add(this.faceMesh);
+    this.facePoints = new THREE.Points(geometry, this.material);
+    this.faceGroup.add(this.facePoints);
 
-    // Add lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+    // Add lighting to help with any future mesh implementation
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
     this.scene.add(ambientLight);
 
-    const mainLight = new THREE.DirectionalLight(0xffffff, 1.0);
+    const mainLight = new THREE.PointLight(0x7a28ff, 2, 20);
     mainLight.position.set(0, 0, 5);
     this.scene.add(mainLight);
 
     const blueLight = new THREE.PointLight(0x00d2ff, 1.5, 10);
-    blueLight.position.set(-2, 1, 2);
+    blueLight.position.set(-3, 2, 2);
     this.scene.add(blueLight);
 
-    const purpleLight = new THREE.PointLight(0x7a28ff, 1.5, 10);
-    purpleLight.position.set(2, -1, 2);
-    this.scene.add(purpleLight);
-
+    this.isInitialized = true;
     this.render();
     
     window.addEventListener('resize', () => this.onResize());
   }
 
   onResize() {
+    if (!this.isInitialized) return;
     const width = this.canvas.clientWidth;
     const height = this.canvas.clientHeight;
     this.camera.aspect = width / height;
@@ -109,24 +115,27 @@ class FaceTrackingCanvas extends HTMLElement {
 
   updateFace(landmarks) {
     if (!landmarks || landmarks.length === 0) return;
+    // landmarks[0] contains the array of 478 landmark points
     this.faceData = landmarks[0];
   }
 
   render = () => {
+    if (!this.isInitialized) return;
+
     if (this.faceData) {
-      const positions = this.faceMesh.geometry.attributes.position.array;
+      const positions = this.facePoints.geometry.attributes.position.array;
       
       for (let i = 0; i < this.faceData.length; i++) {
         const landmark = this.faceData[i];
-        // Normalize and scale - Increased scale for better visibility
-        positions[i * 3] = (0.5 - landmark.x) * 3.5; 
-        positions[i * 3 + 1] = (0.5 - landmark.y) * 3.5;
-        positions[i * 3 + 2] = -landmark.z * 3.5;
+        // Flip X for mirror effect, scale Z for depth perception
+        positions[i * 3] = (0.5 - landmark.x) * 4.0; 
+        positions[i * 3 + 1] = (0.5 - landmark.y) * 4.0;
+        positions[i * 3 + 2] = -landmark.z * 5.0; 
       }
-      this.faceMesh.geometry.attributes.position.needsUpdate = true;
+      this.facePoints.geometry.attributes.position.needsUpdate = true;
       
-      // Subtle automatic rotation for depth
-      this.faceGroup.rotation.y = Math.sin(Date.now() * 0.001) * 0.15;
+      // Dynamic rotation based on time
+      this.faceGroup.rotation.y = Math.sin(Date.now() * 0.0005) * 0.1;
     }
 
     this.renderer.render(this.scene, this.camera);
@@ -162,16 +171,22 @@ export class FaceTrackingManager {
     
     this.enableBtn.disabled = true;
     this.enableBtn.innerText = 'Initializing...';
-    this.statusText.innerText = 'Loading AI models...';
+    this.statusText.innerText = 'Connecting to Neural AI...';
 
     try {
-      // Access MediaPipe via the global namespace provided by the CDN bundle
-      const vision = window.mediapipe && window.mediapipe.tasks && window.mediapipe.tasks.vision;
-      const FaceLandmarker = vision ? vision.FaceLandmarker : window.FaceLandmarker;
-      const FilesetResolver = vision ? vision.FilesetResolver : window.FilesetResolver;
+      // Improved MediaPipe Tasks Vision object resolution
+      const vision = window.tasksVision || (window.mediapipe && window.mediapipe.tasks && window.mediapipe.tasks.vision);
+      
+      if (!vision) {
+        console.error('MediaPipe Tasks Vision bundle not found. Check script include.');
+        throw new Error('Neural AI libraries not loaded.');
+      }
+
+      const FaceLandmarker = vision.FaceLandmarker;
+      const FilesetResolver = vision.FilesetResolver;
 
       if (!FaceLandmarker || !FilesetResolver) {
-        throw new Error('MediaPipe Face Landmarker classes not found.');
+        throw new Error('Face Landmarker modules not found in vision bundle.');
       }
 
       const filesetResolver = await FilesetResolver.forVisionTasks(
@@ -188,24 +203,23 @@ export class FaceTrackingManager {
         numFaces: 1
       });
 
-      this.statusText.innerText = 'Initializing camera...';
+      this.statusText.innerText = 'Activating Optical Sensors...';
 
       const videoElement = document.createElement('video');
       videoElement.autoplay = true;
       videoElement.playsInline = true;
+      videoElement.muted = true;
       videoElement.style.position = 'absolute';
-      videoElement.style.top = '2rem';
-      videoElement.style.left = '2rem';
+      videoElement.style.top = '1.5rem';
+      videoElement.style.left = '1.5rem';
       videoElement.style.width = '160px';
       videoElement.style.height = '120px';
       videoElement.style.borderRadius = '1rem';
-      videoElement.style.border = '2px solid rgba(122, 40, 255, 0.5)';
+      videoElement.style.border = '2px solid rgba(122, 40, 255, 0.4)';
       videoElement.style.objectFit = 'cover';
       videoElement.style.zIndex = '10';
-      videoElement.style.boxShadow = '0 10px 30px rgba(0,0,0,0.5)';
-      
-      // Mirror the video
-      videoElement.style.transform = 'scaleX(-1)';
+      videoElement.style.boxShadow = '0 10px 40px rgba(0,0,0,0.6)';
+      videoElement.style.transform = 'scaleX(-1)'; // Mirror for user intuition
 
       const container = document.querySelector('.face-canvas-wrapper');
       if (container) {
@@ -217,25 +231,30 @@ export class FaceTrackingManager {
       this.video = videoElement;
 
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { width: 640, height: 480 }
+        video: { 
+          width: { ideal: 640 }, 
+          height: { ideal: 480 },
+          facingMode: 'user'
+        }
       });
       videoElement.srcObject = stream;
 
-      videoElement.addEventListener('loadeddata', () => {
+      videoElement.onloadedmetadata = () => {
+        videoElement.play();
         this.isActive = true;
         this.enableBtn.style.display = 'none';
         this.disableBtn.style.display = 'inline-block';
-        this.statusText.innerText = 'Face Tracking Active';
+        this.statusText.innerText = 'Neural Sync Active';
         this.statusOverlay.classList.add('active');
         this.predictWebcam();
-      });
+      };
 
     } catch (err) {
-      console.error('Face tracking initialization failed:', err);
+      console.error('Face tracking start failure:', err);
       this.enableBtn.disabled = false;
       this.enableBtn.innerText = 'Enable Face Tracking';
-      this.statusText.innerText = 'Error initializing camera.';
-      alert('Failed to access camera for face tracking.');
+      this.statusText.innerText = 'Neural Connection Failed.';
+      alert(`Error: ${err.message || 'Camera access denied.'}`);
     }
   }
 
@@ -243,7 +262,7 @@ export class FaceTrackingManager {
     if (!this.isActive || !this.faceLandmarker || !this.video) return;
 
     let startTimeMs = performance.now();
-    if (this.lastVideoTime !== this.video.currentTime) {
+    if (this.video.currentTime > 0 && this.lastVideoTime !== this.video.currentTime) {
       this.lastVideoTime = this.video.currentTime;
       const results = this.faceLandmarker.detectForVideo(this.video, startTimeMs);
 
@@ -255,7 +274,7 @@ export class FaceTrackingManager {
         this.statusText.innerText = 'Face Detected - Tracking Active';
       } else {
         this.statusOverlay.classList.remove('detected');
-        this.statusText.innerText = 'No face detected. Look at the camera.';
+        this.statusText.innerText = 'Scanning for Face...';
       }
     }
 
@@ -266,8 +285,10 @@ export class FaceTrackingManager {
 
   stop() {
     this.isActive = false;
-    if (this.video && this.video.srcObject) {
-      this.video.srcObject.getTracks().forEach(track => track.stop());
+    if (this.video) {
+      if (this.video.srcObject) {
+        this.video.srcObject.getTracks().forEach(track => track.stop());
+      }
       this.video.remove();
       this.video = null;
     }
@@ -276,6 +297,6 @@ export class FaceTrackingManager {
     this.enableBtn.disabled = false;
     this.enableBtn.innerText = 'Enable Face Tracking';
     this.statusOverlay.classList.remove('active', 'detected');
-    this.statusText.innerText = 'Waiting for camera...';
+    this.statusText.innerText = 'Waiting for sensor input...';
   }
 }
