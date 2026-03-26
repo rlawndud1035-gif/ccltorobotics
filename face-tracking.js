@@ -1,5 +1,6 @@
 // face-tracking.js
-// Specialized module for Face Tracking and 3D Model Mapping using MediaPipe Tasks Vision and Three.js
+// CCL Robotics - Specialized Neural Face Synthesis Module
+// High-reliability initialization with massive scale 3D visualization
 
 class FaceTrackingCanvas extends HTMLElement {
   constructor() {
@@ -18,7 +19,7 @@ class FaceTrackingCanvas extends HTMLElement {
           width: 100%;
           height: 100%;
           position: relative;
-          background: radial-gradient(circle at center, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+          background: #000;
           border-radius: 2rem;
           overflow: hidden;
         }
@@ -27,24 +28,24 @@ class FaceTrackingCanvas extends HTMLElement {
           height: 100%;
           display: block;
         }
+        .vignette {
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(circle at center, transparent 20%, #000 100%);
+          pointer-events: none;
+          z-index: 2;
+        }
       </style>
       <canvas id="face-canvas"></canvas>
+      <div class="vignette"></div>
     `;
     this.canvas = this.shadowRoot.querySelector('#face-canvas');
-    
-    // Check for THREE in global scope
-    if (window.THREE) {
-      this.initThree();
-    } else {
-      console.error('Three.js not found.');
-    }
+    if (window.THREE) this.initThree();
   }
 
   disconnectedCallback() {
     cancelAnimationFrame(this.animationRef);
-    if (this.renderer) {
-      this.renderer.dispose();
-    }
+    if (this.renderer) this.renderer.dispose();
   }
 
   initThree() {
@@ -54,9 +55,9 @@ class FaceTrackingCanvas extends HTMLElement {
 
     this.scene = new THREE.Scene();
     
-    // Closer camera for a "really big" face effect
-    this.camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
-    this.camera.position.set(0, 0, 2.5);
+    // Wide field of view for dramatic impact
+    this.camera = new THREE.PerspectiveCamera(65, width / height, 0.1, 1000);
+    this.camera.position.set(0, 0, 2.2); // Closer for massive face
 
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,
@@ -69,36 +70,38 @@ class FaceTrackingCanvas extends HTMLElement {
     this.faceGroup = new THREE.Group();
     this.scene.add(this.faceGroup);
 
+    // Neural Point Cloud Geometry
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(478 * 3);
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
+    // Neon Neural Material
     this.material = new THREE.PointsMaterial({
-      color: 0xffffff,
-      size: 0.05, 
+      color: 0x00d2ff,
+      size: 0.065, // Very large points
       transparent: true,
       opacity: 0.9,
-      blending: THREE.AdditiveBlending
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
     });
 
     this.facePoints = new THREE.Points(geometry, this.material);
     this.faceGroup.add(this.facePoints);
 
-    // Dynamic lights
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-    this.scene.add(ambientLight);
+    // Dramatic Lighting
+    const ambient = new THREE.AmbientLight(0xffffff, 0.5);
+    this.scene.add(ambient);
 
-    const purpleGlow = new THREE.PointLight(0x7a28ff, 3, 15);
-    purpleGlow.position.set(0, 1, 3);
-    this.scene.add(purpleGlow);
+    const purpleLight = new THREE.PointLight(0x7a28ff, 5, 10);
+    purpleLight.position.set(-2, 2, 2);
+    this.scene.add(purpleLight);
 
-    const blueGlow = new THREE.PointLight(0x00d2ff, 3, 15);
-    blueGlow.position.set(2, -1, 3);
-    this.scene.add(blueGlow);
+    const blueLight = new THREE.PointLight(0x00d2ff, 5, 10);
+    blueLight.position.set(2, -2, 2);
+    this.scene.add(blueLight);
 
     this.isInitialized = true;
     this.render();
-    
     window.addEventListener('resize', () => this.onResize());
   }
 
@@ -124,15 +127,19 @@ class FaceTrackingCanvas extends HTMLElement {
       
       for (let i = 0; i < this.faceData.length; i++) {
         const landmark = this.faceData[i];
-        // SIGNIFICANTLY INCREASED SCALE
-        positions[i * 3] = (0.5 - landmark.x) * 8.5; 
-        positions[i * 3 + 1] = (0.5 - landmark.y) * 8.5;
-        positions[i * 3 + 2] = -landmark.z * 10.0; 
+        // MASSIVE SCALE: 9.0x width/height, 12.0x depth
+        // Centering and flipping X for natural mirror view
+        positions[i * 3] = (0.5 - landmark.x) * 9.5; 
+        positions[i * 3 + 1] = (0.5 - landmark.y) * 9.5;
+        positions[i * 3 + 2] = -landmark.z * 12.0; 
       }
       this.facePoints.geometry.attributes.position.needsUpdate = true;
       
-      this.faceGroup.rotation.y = Math.sin(Date.now() * 0.0008) * 0.2;
-      this.faceGroup.rotation.x = Math.cos(Date.now() * 0.0006) * 0.1;
+      // Auto-hover rotation
+      this.faceGroup.rotation.y = Math.sin(Date.now() * 0.001) * 0.15;
+      
+      // Color cycle for neural effect
+      this.material.color.setHSL((Date.now() * 0.0001) % 1, 0.8, 0.6);
     }
 
     this.renderer.render(this.scene, this.camera);
@@ -164,55 +171,58 @@ export class FaceTrackingManager {
   }
 
   /**
-   * Robust detection of MediaPipe classes from global scope
+   * Fail-safe Library Loader
+   * Dynamically loads the MediaPipe vision bundle if not present
    */
-  async findMediaPipe() {
-    // Strategy 1: check standard window properties
-    if (window.FaceLandmarker && window.FilesetResolver) {
-      return { FaceLandmarker: window.FaceLandmarker, FilesetResolver: window.FilesetResolver };
-    }
+  async ensureLibraries() {
+    const VISION_URL = "https://cdn.jsdelivr.net/npm/@google/mediapipe_tasks_vision@0.10.3/vision_bundle.js";
+    
+    // Check multiple potential namespaces
+    const getLib = () => {
+      if (window.FaceLandmarker && window.FilesetResolver) return { FaceLandmarker: window.FaceLandmarker, FilesetResolver: window.FilesetResolver };
+      if (window.mediapipe?.tasks?.vision) return window.mediapipe.tasks.vision;
+      if (window.tasksVision) return window.tasksVision;
+      return null;
+    };
 
-    // Strategy 2: check window.mediapipe.tasks.vision (common for CDN bundle)
-    const m = window.mediapipe;
-    if (m && m.tasks && m.tasks.vision) {
-      const v = m.tasks.vision;
-      if (v.FaceLandmarker && v.FilesetResolver) {
-        return { FaceLandmarker: v.FaceLandmarker, FilesetResolver: v.FilesetResolver };
-      }
-    }
+    let lib = getLib();
+    if (lib) return lib;
 
-    // Strategy 3: check window.tasksVision
-    if (window.tasksVision && window.tasksVision.FaceLandmarker) {
-      return { FaceLandmarker: window.tasksVision.FaceLandmarker, FilesetResolver: window.tasksVision.FilesetResolver };
-    }
-
-    return null;
+    // Not found, inject script manually to be sure
+    console.log("Neural AI library not found in global scope. Injecting dynamically...");
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = VISION_URL;
+      script.crossOrigin = "anonymous";
+      script.onload = async () => {
+        // Wait a bit for execution
+        for (let i = 0; i < 10; i++) {
+          lib = getLib();
+          if (lib) {
+            console.log("Neural AI library successfully initialized.");
+            resolve(lib);
+            return;
+          }
+          await new Promise(r => setTimeout(resolve, 200));
+        }
+        reject(new Error("Neural AI libraries failed to initialize after dynamic injection."));
+      };
+      script.onerror = () => reject(new Error("Failed to download Neural AI libraries. Check your internet connection."));
+      document.head.appendChild(script);
+    });
   }
 
   async start() {
     if (this.isActive) return;
     
     this.enableBtn.disabled = true;
-    this.enableBtn.innerText = 'Initializing...';
-    this.statusText.innerText = 'Detecting AI Infrastructure...';
+    this.enableBtn.innerText = 'INITIALIZING...';
+    this.statusText.innerText = 'Synchronizing Neural Libraries...';
 
     try {
-      let mp = await this.findMediaPipe();
-      
-      // Retry logic if not found immediately (script might still be parsing)
-      if (!mp) {
-        this.statusText.innerText = 'Retrying Library Detection...';
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        mp = await this.findMediaPipe();
-      }
+      const { FaceLandmarker, FilesetResolver } = await this.ensureLibraries();
 
-      if (!mp) {
-        throw new Error('MediaPipe Vision libraries not found in global scope. Ensure scripts are correctly loaded.');
-      }
-
-      const { FaceLandmarker, FilesetResolver } = mp;
-
-      this.statusText.innerText = 'Downloading Neural Weights...';
+      this.statusText.innerText = 'Downloading Pre-trained Weights...';
 
       const filesetResolver = await FilesetResolver.forVisionTasks(
         "https://cdn.jsdelivr.net/npm/@google/mediapipe_tasks_vision@0.10.3/wasm"
@@ -228,39 +238,34 @@ export class FaceTrackingManager {
         numFaces: 1
       });
 
-      this.statusText.innerText = 'Activating Optical Array...';
+      this.statusText.innerText = 'Awakening Visual Cortex...';
 
       const videoElement = document.createElement('video');
       videoElement.autoplay = true;
       videoElement.playsInline = true;
       videoElement.muted = true;
-      videoElement.style.position = 'absolute';
-      videoElement.style.top = '1.5rem';
-      videoElement.style.left = '1.5rem';
-      videoElement.style.width = '180px';
-      videoElement.style.height = '135px';
-      videoElement.style.borderRadius = '1rem';
-      videoElement.style.border = '2px solid #7a28ff';
-      videoElement.style.objectFit = 'cover';
-      videoElement.style.zIndex = '100';
-      videoElement.style.boxShadow = '0 0 20px rgba(122, 40, 255, 0.4)';
-      videoElement.style.transform = 'scaleX(-1)'; 
+      videoElement.style.cssText = `
+        position: absolute;
+        top: 2rem;
+        left: 2rem;
+        width: 200px;
+        height: 150px;
+        border-radius: 1.5rem;
+        border: 2px solid #00d2ff;
+        object-fit: cover;
+        z-index: 100;
+        box-shadow: 0 0 30px rgba(0, 210, 255, 0.5);
+        transform: scaleX(-1);
+      `;
 
       const container = document.querySelector('.face-canvas-wrapper');
-      if (container) {
-        container.appendChild(videoElement);
-      } else {
-        document.body.appendChild(videoElement);
-      }
+      if (container) container.appendChild(videoElement);
+      else document.body.appendChild(videoElement);
       
       this.video = videoElement;
 
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { 
-          width: { ideal: 640 }, 
-          height: { ideal: 480 },
-          facingMode: 'user'
-        }
+        video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'user' }
       });
       videoElement.srcObject = stream;
 
@@ -269,17 +274,17 @@ export class FaceTrackingManager {
         this.isActive = true;
         this.enableBtn.style.display = 'none';
         this.disableBtn.style.display = 'inline-block';
-        this.statusText.innerText = 'Neural Sync: ESTABLISHED';
+        this.statusText.innerText = 'NEURAL LINK: ACTIVE';
         this.statusOverlay.classList.add('active');
         this.predictWebcam();
       };
 
     } catch (err) {
-      console.error('Neural Link Error:', err);
+      console.error('Neural system failure:', err);
       this.enableBtn.disabled = false;
-      this.enableBtn.innerText = 'Enable Face Tracking';
-      this.statusText.innerText = 'Neural Failure.';
-      alert(`Diagnostic: ${err.message}`);
+      this.enableBtn.innerText = 'RETRY CONNECTION';
+      this.statusText.innerText = `ERR: ${err.message}`;
+      alert(`Critical System Failure: ${err.message}`);
     }
   }
 
@@ -292,14 +297,12 @@ export class FaceTrackingManager {
       const results = this.faceLandmarker.detectForVideo(this.video, startTimeMs);
 
       if (results.faceLandmarks && results.faceLandmarks.length > 0) {
-        if (this.canvasComp) {
-          this.canvasComp.updateFace(results.faceLandmarks);
-        }
+        if (this.canvasComp) this.canvasComp.updateFace(results.faceLandmarks);
         this.statusOverlay.classList.add('detected');
-        this.statusText.innerText = 'Neural Lock: SECURED';
+        this.statusText.innerText = 'TARGET ACQUIRED: SYNCED';
       } else {
         this.statusOverlay.classList.remove('detected');
-        this.statusText.innerText = 'Scanning...';
+        this.statusText.innerText = 'SCANNING FOR BIOMETRIC DATA...';
       }
     }
 
@@ -311,9 +314,7 @@ export class FaceTrackingManager {
   stop() {
     this.isActive = false;
     if (this.video) {
-      if (this.video.srcObject) {
-        this.video.srcObject.getTracks().forEach(track => track.stop());
-      }
+      if (this.video.srcObject) this.video.srcObject.getTracks().forEach(t => t.stop());
       this.video.remove();
       this.video = null;
     }
@@ -322,6 +323,6 @@ export class FaceTrackingManager {
     this.enableBtn.disabled = false;
     this.enableBtn.innerText = 'Enable Face Tracking';
     this.statusOverlay.classList.remove('active', 'detected');
-    this.statusText.innerText = 'System Standby';
+    this.statusText.innerText = 'SYSTEM OFFLINE';
   }
 }
