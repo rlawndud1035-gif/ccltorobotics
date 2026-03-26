@@ -38,7 +38,7 @@ class FaceModelingSystem {
 
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 1000);
-    this.camera.position.set(0, 0, 3);
+    this.camera.position.set(0, 0, 4);
 
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,
