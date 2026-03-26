@@ -68,10 +68,10 @@ class FaceTrackingCanvas extends HTMLElement {
     // We use a white wireframe material for high visibility as requested
     this.material = new THREE.MeshPhongMaterial({
       color: 0xffffff,
-      emissive: 0x666666,
+      emissive: 0x888888,
       wireframe: true,
-      transparent: true,
-      opacity: 0.8,
+      transparent: false,
+      opacity: 1.0,
       side: THREE.DoubleSide
     });
 
@@ -79,18 +79,18 @@ class FaceTrackingCanvas extends HTMLElement {
     this.faceGroup.add(this.faceMesh);
 
     // Add lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
     this.scene.add(ambientLight);
 
-    const mainLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    const mainLight = new THREE.DirectionalLight(0xffffff, 1.0);
     mainLight.position.set(0, 0, 5);
     this.scene.add(mainLight);
 
-    const blueLight = new THREE.PointLight(0x00d2ff, 1, 10);
+    const blueLight = new THREE.PointLight(0x00d2ff, 1.5, 10);
     blueLight.position.set(-2, 1, 2);
     this.scene.add(blueLight);
 
-    const purpleLight = new THREE.PointLight(0x7a28ff, 1, 10);
+    const purpleLight = new THREE.PointLight(0x7a28ff, 1.5, 10);
     purpleLight.position.set(2, -1, 2);
     this.scene.add(purpleLight);
 
@@ -118,15 +118,15 @@ class FaceTrackingCanvas extends HTMLElement {
       
       for (let i = 0; i < this.faceData.length; i++) {
         const landmark = this.faceData[i];
-        // Normalize and scale
-        positions[i * 3] = (0.5 - landmark.x) * 2.5; 
-        positions[i * 3 + 1] = (0.5 - landmark.y) * 2.5;
-        positions[i * 3 + 2] = -landmark.z * 2.5;
+        // Normalize and scale - Increased scale for better visibility
+        positions[i * 3] = (0.5 - landmark.x) * 3.5; 
+        positions[i * 3 + 1] = (0.5 - landmark.y) * 3.5;
+        positions[i * 3 + 2] = -landmark.z * 3.5;
       }
       this.faceMesh.geometry.attributes.position.needsUpdate = true;
       
       // Subtle automatic rotation for depth
-      this.faceGroup.rotation.y = Math.sin(Date.now() * 0.001) * 0.1;
+      this.faceGroup.rotation.y = Math.sin(Date.now() * 0.001) * 0.15;
     }
 
     this.renderer.render(this.scene, this.camera);
@@ -191,10 +191,29 @@ export class FaceTrackingManager {
       this.statusText.innerText = 'Initializing camera...';
 
       const videoElement = document.createElement('video');
-      videoElement.style.display = 'none';
       videoElement.autoplay = true;
       videoElement.playsInline = true;
-      document.body.appendChild(videoElement);
+      videoElement.style.position = 'absolute';
+      videoElement.style.top = '2rem';
+      videoElement.style.left = '2rem';
+      videoElement.style.width = '160px';
+      videoElement.style.height = '120px';
+      videoElement.style.borderRadius = '1rem';
+      videoElement.style.border = '2px solid rgba(122, 40, 255, 0.5)';
+      videoElement.style.objectFit = 'cover';
+      videoElement.style.zIndex = '10';
+      videoElement.style.boxShadow = '0 10px 30px rgba(0,0,0,0.5)';
+      
+      // Mirror the video
+      videoElement.style.transform = 'scaleX(-1)';
+
+      const container = document.querySelector('.face-canvas-wrapper');
+      if (container) {
+        container.appendChild(videoElement);
+      } else {
+        document.body.appendChild(videoElement);
+      }
+      
       this.video = videoElement;
 
       const stream = await navigator.mediaDevices.getUserMedia({

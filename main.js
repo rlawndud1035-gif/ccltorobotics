@@ -1061,4 +1061,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
   new EyeTrackingManager();
   new HandGestureManager();
+  new FaceTrackingManager();
 });
