@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CCL Robotics - 3D Face Modeling</title>
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+  <!-- MediaPipe Face Landmarker (Local Hosting) -->
+  <script src="lib/mediapipe/vision_main.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      margin: 0;
+      background-color: #000;
+      color: #fff;
+      overflow: hidden;
+      font-family: 'Geist', sans-serif;
+    }
+    .modeling-container {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+    }
+    #face-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .ui-overlay {
+      position: absolute;
+      top: 2rem;
+      left: 2rem;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .ui-overlay > * {
+      pointer-events: auto;
+    }
+    .title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(to right, #fff, #999);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .status {
+      font-size: 1rem;
+      color: #00d2ff;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 2rem;
+    }
+    .controls {
+      display: flex;
+      gap: 1rem;
+    }
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #fff;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    #video-preview {
+      position: absolute;
+      bottom: 2rem;
+      right: 2rem;
+      width: 320px;
+      height: 240px;
+      border-radius: 1rem;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      background: #000;
+      transform: scaleX(-1);
+      object-fit: cover;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+    .vignette {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at center, transparent 30%, #000 100%);
+    }
+    .back-btn {
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+      z-index: 20;
+    }
+  </style>
+</head>
+<body>
+  <div class="modeling-container">
+    <canvas id="face-canvas"></canvas>
+    <div class="vignette"></div>
+    
+    <div class="ui-overlay">
+      <h1 class="title">3D Neural Modeling</h1>
+      <div id="status-text" class="status">System Standby</div>
+      
+      <div class="controls">
+        <button id="start-btn" class="btn">Initialize AI Model</button>
+        <button id="stop-btn" class="btn" style="display: none;">Terminate Link</button>
+      </div>
+    </div>
+
+    <video id="video-preview" autoplay playsinline muted></video>
+    
+    <a href="index.html" class="btn back-btn">Back to Hub</a>
+  </div>
+
+  <script type="module" src="face-modeling.js"></script>
+</body>
+</html>
