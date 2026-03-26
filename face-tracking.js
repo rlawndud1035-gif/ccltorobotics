@@ -32,11 +32,11 @@ class FaceTrackingCanvas extends HTMLElement {
     `;
     this.canvas = this.shadowRoot.querySelector('#face-canvas');
     
-    // Ensure THREE is available before initializing
+    // Check for THREE in global scope
     if (window.THREE) {
       this.initThree();
     } else {
-      console.error('Three.js not found. Face tracking 3D view will not initialize.');
+      console.error('Three.js not found.');
     }
   }
 
@@ -53,9 +53,10 @@ class FaceTrackingCanvas extends HTMLElement {
     const height = this.canvas.clientHeight || 600;
 
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-    // Move camera back to see the whole face
-    this.camera.position.set(0, 0, 4);
+    
+    // Closer camera for a "really big" face effect
+    this.camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
+    this.camera.position.set(0, 0, 2.5);
 
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,
@@ -65,38 +66,35 @@ class FaceTrackingCanvas extends HTMLElement {
     this.renderer.setSize(width, height);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    // Create a face group
     this.faceGroup = new THREE.Group();
     this.scene.add(this.faceGroup);
 
-    // Use Points instead of Mesh for 478 landmarks (no triangulation needed)
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(478 * 3);
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
-    // Neural-style point material
     this.material = new THREE.PointsMaterial({
       color: 0xffffff,
-      size: 0.035,
-      transparent: false,
-      opacity: 1.0,
+      size: 0.05, // Larger points
+      transparent: true,
+      opacity: 0.9,
       blending: THREE.AdditiveBlending
     });
 
     this.facePoints = new THREE.Points(geometry, this.material);
     this.faceGroup.add(this.facePoints);
 
-    // Add lighting to help with any future mesh implementation
+    // Dynamic lights
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
     this.scene.add(ambientLight);
 
-    const mainLight = new THREE.PointLight(0x7a28ff, 2, 20);
-    mainLight.position.set(0, 0, 5);
-    this.scene.add(mainLight);
+    const purpleGlow = new THREE.PointLight(0x7a28ff, 3, 15);
+    purpleGlow.position.set(0, 1, 3);
+    this.scene.add(purpleGlow);
 
-    const blueLight = new THREE.PointLight(0x00d2ff, 1.5, 10);
-    blueLight.position.set(-3, 2, 2);
-    this.scene.add(blueLight);
+    const blueGlow = new THREE.PointLight(0x00d2ff, 3, 15);
+    blueGlow.position.set(2, -1, 3);
+    this.scene.add(blueGlow);
 
     this.isInitialized = true;
     this.render();
@@ -115,7 +113,6 @@ class FaceTrackingCanvas extends HTMLElement {
 
   updateFace(landmarks) {
     if (!landmarks || landmarks.length === 0) return;
-    // landmarks[0] contains the array of 478 landmark points
     this.faceData = landmarks[0];
   }
 
@@ -127,15 +124,16 @@ class FaceTrackingCanvas extends HTMLElement {
       
       for (let i = 0; i < this.faceData.length; i++) {
         const landmark = this.faceData[i];
-        // Flip X for mirror effect, scale Z for depth perception
-        positions[i * 3] = (0.5 - landmark.x) * 4.0; 
-        positions[i * 3 + 1] = (0.5 - landmark.y) * 4.0;
-        positions[i * 3 + 2] = -landmark.z * 5.0; 
+        // SIGNIFICANTLY INCREASED SCALE for "really big" requirement
+        // Scaling up to 8.0x for width/height and 10.0x for depth
+        positions[i * 3] = (0.5 - landmark.x) * 8.5; 
+        positions[i * 3 + 1] = (0.5 - landmark.y) * 8.5;
+        positions[i * 3 + 2] = -landmark.z * 10.0; 
       }
       this.facePoints.geometry.attributes.position.needsUpdate = true;
       
-      // Dynamic rotation based on time
-      this.faceGroup.rotation.y = Math.sin(Date.now() * 0.0005) * 0.1;
+      this.faceGroup.rotation.y = Math.sin(Date.now() * 0.0008) * 0.2;
+      this.faceGroup.rotation.x = Math.cos(Date.now() * 0.0006) * 0.1;
     }
 
     this.renderer.render(this.scene, this.camera);
@@ -171,23 +169,27 @@ export class FaceTrackingManager {
     
     this.enableBtn.disabled = true;
     this.enableBtn.innerText = 'Initializing...';
-    this.statusText.innerText = 'Connecting to Neural AI...';
+    this.statusText.innerText = 'Checking Neural AI Libraries...';
 
     try {
-      // Improved MediaPipe Tasks Vision object resolution
-      const vision = window.tasksVision || (window.mediapipe && window.mediapipe.tasks && window.mediapipe.tasks.vision);
+      // ROBUST MediaPipe Tasks Vision object resolution
+      // Checking multiple potential global locations for maximum compatibility
+      const vision = window.FaceLandmarker ? window : 
+                     (window.mediapipe && window.mediapipe.tasks && window.mediapipe.tasks.vision ? window.mediapipe.tasks.vision : 
+                     (window.tasksVision ? window.tasksVision : null));
       
-      if (!vision) {
-        console.error('MediaPipe Tasks Vision bundle not found. Check script include.');
-        throw new Error('Neural AI libraries not loaded.');
+      if (!vision || !vision.FaceLandmarker || !vision.FilesetResolver) {
+        console.warn('MediaPipe globals not found immediately. Retrying with alternative names...');
+        // Some bundles expose them directly on window
+        if (!window.FaceLandmarker || !window.FilesetResolver) {
+           throw new Error('Neural AI libraries not found. Ensure vision_bundle.js is loaded correctly.');
+        }
       }
 
-      const FaceLandmarker = vision.FaceLandmarker;
-      const FilesetResolver = vision.FilesetResolver;
+      const FaceLandmarker = vision.FaceLandmarker || window.FaceLandmarker;
+      const FilesetResolver = vision.FilesetResolver || window.FilesetResolver;
 
-      if (!FaceLandmarker || !FilesetResolver) {
-        throw new Error('Face Landmarker modules not found in vision bundle.');
-      }
+      this.statusText.innerText = 'Downloading Neural Model...';
 
       const filesetResolver = await FilesetResolver.forVisionTasks(
         "https://cdn.jsdelivr.net/npm/@google/mediapipe_tasks_vision@0.10.3/wasm"
@@ -203,7 +205,7 @@ export class FaceTrackingManager {
         numFaces: 1
       });
 
-      this.statusText.innerText = 'Activating Optical Sensors...';
+      this.statusText.innerText = 'Calibrating Optical Sensors...';
 
       const videoElement = document.createElement('video');
       videoElement.autoplay = true;
@@ -212,14 +214,14 @@ export class FaceTrackingManager {
       videoElement.style.position = 'absolute';
       videoElement.style.top = '1.5rem';
       videoElement.style.left = '1.5rem';
-      videoElement.style.width = '160px';
-      videoElement.style.height = '120px';
+      videoElement.style.width = '180px';
+      videoElement.style.height = '135px';
       videoElement.style.borderRadius = '1rem';
-      videoElement.style.border = '2px solid rgba(122, 40, 255, 0.4)';
+      videoElement.style.border = '2px solid #7a28ff';
       videoElement.style.objectFit = 'cover';
-      videoElement.style.zIndex = '10';
-      videoElement.style.boxShadow = '0 10px 40px rgba(0,0,0,0.6)';
-      videoElement.style.transform = 'scaleX(-1)'; // Mirror for user intuition
+      videoElement.style.zIndex = '100';
+      videoElement.style.boxShadow = '0 0 20px rgba(122, 40, 255, 0.4)';
+      videoElement.style.transform = 'scaleX(-1)'; 
 
       const container = document.querySelector('.face-canvas-wrapper');
       if (container) {
@@ -244,17 +246,17 @@ export class FaceTrackingManager {
         this.isActive = true;
         this.enableBtn.style.display = 'none';
         this.disableBtn.style.display = 'inline-block';
-        this.statusText.innerText = 'Neural Sync Active';
+        this.statusText.innerText = 'Neural Link Established';
         this.statusOverlay.classList.add('active');
         this.predictWebcam();
       };
 
     } catch (err) {
-      console.error('Face tracking start failure:', err);
+      console.error('Face tracking link failure:', err);
       this.enableBtn.disabled = false;
       this.enableBtn.innerText = 'Enable Face Tracking';
-      this.statusText.innerText = 'Neural Connection Failed.';
-      alert(`Error: ${err.message || 'Camera access denied.'}`);
+      this.statusText.innerText = 'Neural Sync Error.';
+      alert(`Neural Link Error: ${err.message}`);
     }
   }
 
@@ -271,10 +273,10 @@ export class FaceTrackingManager {
           this.canvasComp.updateFace(results.faceLandmarks);
         }
         this.statusOverlay.classList.add('detected');
-        this.statusText.innerText = 'Face Detected - Tracking Active';
+        this.statusText.innerText = 'Neural Signal Lock: ACTIVE';
       } else {
         this.statusOverlay.classList.remove('detected');
-        this.statusText.innerText = 'Scanning for Face...';
+        this.statusText.innerText = 'Scanning for Neural Signature...';
       }
     }
 
@@ -297,6 +299,6 @@ export class FaceTrackingManager {
     this.enableBtn.disabled = false;
     this.enableBtn.innerText = 'Enable Face Tracking';
     this.statusOverlay.classList.remove('active', 'detected');
-    this.statusText.innerText = 'Waiting for sensor input...';
+    this.statusText.innerText = 'Standby... Waiting for input';
   }
 }
