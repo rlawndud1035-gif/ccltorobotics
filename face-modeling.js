@@ -195,9 +195,11 @@ class FaceModelingSystem {
       
       if (results.faceLandmarks && results.faceLandmarks.length > 0) {
         const landmarks = results.faceLandmarks[0];
+        const blendshapes = results.faceBlendshapes ? results.faceBlendshapes[0] : null;
+        
         this.updateMesh(landmarks);
         this.updatePupils(landmarks);
-        this.drawHeatmap(landmarks);
+        this.drawHeatmap(landmarks, blendshapes);
       }
     }
 
@@ -222,29 +224,59 @@ class FaceModelingSystem {
     this.rightPupil.position.set((0.5 - rightIris.x) * 2.5, (0.5 - rightIris.y) * 2.5, -rightIris.z * 2.5 + 0.01);
   }
 
-  drawHeatmap(landmarks) {
-    const leftIris = landmarks[468];
-    const rightIris = landmarks[473];
+  drawHeatmap(landmarks, blendshapes) {
+    if (!blendshapes) return;
+
+    // Extract blendshape scores
+    const categories = blendshapes.categories;
+    const findScore = (name) => categories.find(c => c.categoryName === name)?.score || 0;
+
+    // Gaze Estimation using Blendshapes
+    // eyeLookOutLeft: looking left (left eye)
+    // eyeLookInLeft: looking right (left eye)
+    // eyeLookInRight: looking left (right eye)
+    // eyeLookOutRight: looking right (right eye)
     
-    const avgX = (leftIris.x + rightIris.x) / 2;
-    const avgY = (leftIris.y + rightIris.y) / 2;
+    // Horizontal Gaze (-1 to 1)
+    const gazeX = (findScore('eyeLookInRight') - findScore('eyeLookOutRight') + 
+                   findScore('eyeLookOutLeft') - findScore('eyeLookInLeft')) / 2;
     
+    // Vertical Gaze (-1 to 1)
+    const gazeY = (findScore('eyeLookUpLeft') + findScore('eyeLookUpRight') - 
+                   findScore('eyeLookDownLeft') - findScore('eyeLookDownRight')) / 2;
+
+    // Base position is the center of the face in the camera frame
+    const faceX = landmarks[1].x; // Nose tip x
+    const faceY = landmarks[1].y; // Nose tip y
+
+    // Amplify the gaze offset and apply to the face position
+    // Sensitivity factor (adjust for better coverage)
+    const sensitivity = 2.0;
+    
+    const targetX = (faceX + gazeX * sensitivity);
+    const targetY = (faceY - gazeY * sensitivity);
+
+    // Clamp to 0-1 range
+    const clampedX = Math.max(0, Math.min(1, targetX));
+    const clampedY = Math.max(0, Math.min(1, targetY));
+
     // Map to canvas coordinates
-    const x = avgX * this.heatmapCanvas.width;
-    const y = avgY * this.heatmapCanvas.height;
+    const x = clampedX * this.heatmapCanvas.width;
+    const y = clampedY * this.heatmapCanvas.height;
     
     // Subtle fade effect for heatmap
     this.heatmapCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
     this.heatmapCtx.fillRect(0, 0, this.heatmapCanvas.width, this.heatmapCanvas.height);
     
     // Draw red heat point
-    const gradient = this.heatmapCtx.createRadialGradient(x, y, 0, x, y, 60);
-    gradient.addColorStop(0, 'rgba(255, 0, 0, 0.6)');
+    const gradient = this.heatmapCtx.createRadialGradient(x, y, 0, x, y, 80);
+    gradient.addColorStop(0, 'rgba(255, 0, 0, 0.8)');
+    gradient.addColorStop(0.5, 'rgba(255, 0, 0, 0.3)');
     gradient.addColorStop(1, 'rgba(255, 0, 0, 0)');
     
     this.heatmapCtx.fillStyle = gradient;
     this.heatmapCtx.beginPath();
-    this.heatmapCtx.arc(x, y, 60, 0, Math.PI * 2);
+    this.heatmapCtx.arc(x, y, 80, 0, Math.PI * 2);
     this.heatmapCtx.fill();
   }
 }
