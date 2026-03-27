@@ -87,7 +87,7 @@ A modern web project for CCL Robotics, powered by the **Vite** build system for 
         - Left: Decorative line scales horizontally, followed by text reveal with a slide-in effect.
         - Right: Video container reveals with a slide-in from the right and scale effect.
     - Uses subtle brand-colored radial glows on both sides to maintain visual depth and consistency.
-- **Detail Page Scaling & Responsiveness Refinements (Robotics & 3D Design):**
+- **Detail Page Scaling & responsiveness Refinements (Robotics & 3D Design):**
     - Increased the visual scale of the dashboard and energy flow videos in the final sections of both detail pages for maximum impact.
     - Adjusted the split-screen ratios on desktop:
         - **Dashboard Video Section:** Optimized left/right flex ratios to prioritize the media container.
@@ -126,11 +126,11 @@ A modern web project for CCL Robotics, powered by the **Vite** build system for 
     - Implemented a high-fidelity 3D face mesh in pure white, designed to mirror the user's facial movements in real-time.
     - Uses a `THREE.MeshStandardMaterial` with wireframe and points for a sophisticated "digital twin" aesthetic.
     - Integrated a direct link from the main page's Neural Face Synthesis section.
-    - **Advanced Gaze Interaction (New):**
+    - **Advanced Gaze & Behavioral Interaction (New):**
         - Integrated a background image playback system (`images/2.png`) that activates upon AI model initialization.
         - Implemented real-time **Eye-Gaze Tracking** using MediaPipe Iris landmarks (points 468-477).
-        - Developed **3D Pupil Indicators**: Two red 3D spheres are rendered directly on the face mesh, perfectly synchronized with the user's eye movements for a more immersive "Neural Gaze" experience.
-        - Optimized visualization by removing screen-space UI elements in favor of integrated 3D tracking.
+        - Developed **3D Pupil Indicators**: Two red 3D spheres are rendered directly on the face mesh, perfectly synchronized with the user's eye movements.
+        - Implemented **Eye-Gaze Heatmap Tracking**: A glowing red heatmap layer is projected onto the background image, tracking the user's focus patterns in real-time with a sophisticated fade-out trail effect.
 
 ## Deployment Log
 - **2026-03-23:** Manual push to trigger Cloudflare Pages deployment (Simplified Dashboard Section).
