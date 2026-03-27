@@ -172,7 +172,6 @@ class FaceModelingSystem {
       this.video.srcObject.getTracks().forEach(track => track.stop());
     }
     this.video.pause();
-    this.bgImage.style.display = 'none';
     this.heatmapCanvas.style.display = 'none';
     this.leftPupil.visible = false;
     this.rightPupil.visible = false;
