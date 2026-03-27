@@ -126,6 +126,10 @@ A modern web project for CCL Robotics, powered by the **Vite** build system for 
     - Implemented a high-fidelity 3D face mesh in pure white, designed to mirror the user's facial movements in real-time.
     - Uses a `THREE.MeshStandardMaterial` with wireframe and points for a sophisticated "digital twin" aesthetic.
     - Integrated a direct link from the main page's Neural Face Synthesis section.
+    - **Advanced Gaze Interaction (New):**
+        - Integrated a background video playback system (`images/Test.mov`) that activates upon AI model initialization.
+        - Implemented real-time **Eye-Gaze Tracking** using MediaPipe Iris landmarks (points 468-477).
+        - Added a dynamic **Red Gaze Dot** overlay that follows the user's pupil movements and projects them onto the background video, creating a "Neural Gaze" experience.
 
 ## Deployment Log
 - **2026-03-23:** Manual push to trigger Cloudflare Pages deployment (Simplified Dashboard Section).

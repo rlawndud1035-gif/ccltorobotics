@@ -10,6 +10,8 @@ class FaceModelingSystem {
   constructor() {
     this.canvas = document.getElementById('face-canvas');
     this.video = document.getElementById('video-preview');
+    this.testVideo = document.getElementById('test-video');
+    this.gazeDot = document.getElementById('gaze-dot');
     this.statusText = document.getElementById('status-text');
     this.startBtn = document.getElementById('start-btn');
     this.stopBtn = document.getElementById('stop-btn');
@@ -27,6 +29,7 @@ class FaceModelingSystem {
 
   async init() {
     this.initThree();
+    this.testVideo.src = 'images/Test.mov'; // Use the relative path to images directory
     this.startBtn.addEventListener('click', () => this.start());
     this.stopBtn.addEventListener('click', () => this.stop());
     window.addEventListener('resize', () => this.onResize());
@@ -75,18 +78,6 @@ class FaceModelingSystem {
       metalness: 0.5,
       side: THREE.DoubleSide
     });
-
-    // We'll use a subset of triangles for a clean "modeling" look
-    // These are standard indices for the face mesh
-    const indices = [
-      0,1,2, 1,2,3, 2,3,4, 3,4,5, 4,5,6, 5,6,7, 6,7,8, 7,8,9, 8,9,10,
-      10,11,12, 11,12,13, 12,13,14, 13,14,15, 14,15,16, 15,16,17, 16,17,18,
-      18,19,20, 19,20,21, 20,21,22, 21,22,23, 22,23,24, 23,24,25, 24,25,26,
-      26,27,28, 27,28,29, 28,29,30, 29,30,31, 30,31,32, 31,32,33, 32,33,34
-      // ... and many more for a full mesh. 
-      // For brevity and stability, we'll use a generated grid or Points+Lines if full indices aren't practical.
-      // But wait, let's use a more robust way: Points + LineSegments.
-    ];
 
     this.faceMesh = new THREE.Mesh(geometry, material);
     
@@ -140,6 +131,9 @@ class FaceModelingSystem {
       this.video.srcObject = stream;
       this.video.onloadedmetadata = () => {
         this.video.play();
+        this.testVideo.style.display = 'block';
+        this.testVideo.play();
+        this.gazeDot.style.display = 'block';
         this.isActive = true;
         this.startBtn.style.display = 'none';
         this.stopBtn.style.display = 'inline-block';
@@ -159,6 +153,9 @@ class FaceModelingSystem {
       this.video.srcObject.getTracks().forEach(track => track.stop());
     }
     this.video.pause();
+    this.testVideo.pause();
+    this.testVideo.style.display = 'none';
+    this.gazeDot.style.display = 'none';
     this.stopBtn.style.display = 'none';
     this.startBtn.style.display = 'inline-block';
     this.startBtn.disabled = false;
@@ -174,7 +171,9 @@ class FaceModelingSystem {
       const results = this.faceLandmarker.detectForVideo(this.video, performance.now());
       
       if (results.faceLandmarks && results.faceLandmarks.length > 0) {
-        this.updateMesh(results.faceLandmarks[0]);
+        const landmarks = results.faceLandmarks[0];
+        this.updateMesh(landmarks);
+        this.updateGaze(landmarks);
       }
     }
 
@@ -183,21 +182,39 @@ class FaceModelingSystem {
 
   updateMesh(landmarks) {
     const positions = this.faceMesh.geometry.attributes.position.array;
-    
-    // We center and scale the landmarks
-    // MediaPipe coordinates are 0-1, so we map them to a reasonable 3D space
     for (let i = 0; i < landmarks.length; i++) {
       const lm = landmarks[i];
-      // Mirror X, Invert Y, Scale Z for depth
       positions[i * 3] = (0.5 - lm.x) * 2.5;
       positions[i * 3 + 1] = (0.5 - lm.y) * 2.5;
       positions[i * 3 + 2] = -lm.z * 2.5;
     }
-    
     this.faceMesh.geometry.attributes.position.needsUpdate = true;
+  }
+
+  updateGaze(landmarks) {
+    // MediaPipe Iris Landmarks: 
+    // Left eye iris center: 468
+    // Right eye iris center: 473
+    const leftIris = landmarks[468];
+    const rightIris = landmarks[473];
     
-    // Subtle rotation based on average head position
-    // We can use the nose tip (index 1) and ears for better orientation
+    // Average iris position
+    const avgIrisX = (leftIris.x + rightIris.x) / 2;
+    const avgIrisY = (leftIris.y + rightIris.y) / 2;
+    
+    // Map to screen coordinates
+    // We need to account for mirroring. MediaPipe X is 0 (left) to 1 (right) of the video frame.
+    // If the video is mirrored for display, we might need to adjust.
+    // However, the red dot is on the test video which is NOT mirrored.
+    // But the user is looking at the screen. 
+    // Usually, when you look left, the iris moves left in the frame.
+    
+    const screenX = avgIrisX * window.innerWidth;
+    const screenY = avgIrisY * window.innerHeight;
+    
+    // Apply smoothing or sensitivity if needed
+    this.gazeDot.style.left = `${screenX}px`;
+    this.gazeDot.style.top = `${screenY}px`;
   }
 }
 
