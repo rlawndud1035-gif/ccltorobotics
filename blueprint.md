@@ -131,6 +131,8 @@ A modern web project for CCL Robotics, powered by the **Vite** build system for 
         - Implemented real-time **Eye-Gaze Tracking** using MediaPipe Iris landmarks (points 468-477).
         - Developed **3D Pupil Indicators**: Two red 3D spheres are rendered directly on the face mesh, perfectly synchronized with the user's eye movements.
         - Implemented **Eye-Gaze Heatmap Tracking**: A glowing red heatmap layer is projected onto the background image, tracking the user's focus patterns in real-time with a sophisticated fade-out trail effect.
+        - **Hardware Calibration:** Optimized the tracking engine for **top-mounted monitor cameras**, including vertical bias correction and inverted mirroring fixes for precise screen mapping.
+        - **UI Persistence:** Ensured the background "2" image remains visible at all times, including during and after AI model sessions, by utilizing Three.js alpha transparency.
 
 ## Deployment Log
 - **2026-03-23:** Manual push to trigger Cloudflare Pages deployment (Simplified Dashboard Section).
