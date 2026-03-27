@@ -11,7 +11,6 @@ class FaceModelingSystem {
     this.canvas = document.getElementById('face-canvas');
     this.video = document.getElementById('video-preview');
     this.bgImage = document.getElementById('bg-image');
-    this.gazeDot = document.getElementById('gaze-dot');
     this.statusText = document.getElementById('status-text');
     this.startBtn = document.getElementById('start-btn');
     this.stopBtn = document.getElementById('stop-btn');
@@ -20,6 +19,8 @@ class FaceModelingSystem {
     this.camera = null;
     this.renderer = null;
     this.faceMesh = null;
+    this.leftPupil = null;
+    this.rightPupil = null;
     this.faceLandmarker = null;
     this.isActive = false;
     this.lastVideoTime = -1;
@@ -92,6 +93,16 @@ class FaceModelingSystem {
     
     this.scene.add(this.faceMesh);
 
+    // Create Pupils (Red Spheres)
+    const pupilGeom = new THREE.SphereGeometry(0.015, 16, 16);
+    const pupilMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+    this.leftPupil = new THREE.Mesh(pupilGeom, pupilMat);
+    this.rightPupil = new THREE.Mesh(pupilGeom, pupilMat);
+    this.leftPupil.visible = false;
+    this.rightPupil.visible = false;
+    this.scene.add(this.leftPupil);
+    this.scene.add(this.rightPupil);
+
     this.animate();
   }
 
@@ -131,7 +142,8 @@ class FaceModelingSystem {
       this.video.onloadedmetadata = () => {
         this.video.play();
         this.bgImage.style.display = 'block';
-        this.gazeDot.style.display = 'block';
+        this.leftPupil.visible = true;
+        this.rightPupil.visible = true;
         this.isActive = true;
         this.startBtn.style.display = 'none';
         this.stopBtn.style.display = 'inline-block';
@@ -152,7 +164,8 @@ class FaceModelingSystem {
     }
     this.video.pause();
     this.bgImage.style.display = 'none';
-    this.gazeDot.style.display = 'none';
+    this.leftPupil.visible = false;
+    this.rightPupil.visible = false;
     this.stopBtn.style.display = 'none';
     this.startBtn.style.display = 'inline-block';
     this.startBtn.disabled = false;
@@ -170,7 +183,7 @@ class FaceModelingSystem {
       if (results.faceLandmarks && results.faceLandmarks.length > 0) {
         const landmarks = results.faceLandmarks[0];
         this.updateMesh(landmarks);
-        this.updateGaze(landmarks);
+        this.updatePupils(landmarks);
       }
     }
 
@@ -188,15 +201,24 @@ class FaceModelingSystem {
     this.faceMesh.geometry.attributes.position.needsUpdate = true;
   }
 
-  updateGaze(landmarks) {
+  updatePupils(landmarks) {
+    // Left eye iris center: 468
+    // Right eye iris center: 473
     const leftIris = landmarks[468];
     const rightIris = landmarks[473];
-    const avgIrisX = (leftIris.x + rightIris.x) / 2;
-    const avgIrisY = (leftIris.y + rightIris.y) / 2;
-    const screenX = avgIrisX * window.innerWidth;
-    const screenY = avgIrisY * window.innerHeight;
-    this.gazeDot.style.left = `${screenX}px`;
-    this.gazeDot.style.top = `${screenY}px`;
+    
+    // Position red dots on the face model
+    this.leftPupil.position.set(
+      (0.5 - leftIris.x) * 2.5,
+      (0.5 - leftIris.y) * 2.5,
+      -leftIris.z * 2.5 + 0.01 // Offset slightly forward to be visible on surface
+    );
+    
+    this.rightPupil.position.set(
+      (0.5 - rightIris.x) * 2.5,
+      (0.5 - rightIris.y) * 2.5,
+      -rightIris.z * 2.5 + 0.01 // Offset slightly forward to be visible on surface
+    );
   }
 }
 

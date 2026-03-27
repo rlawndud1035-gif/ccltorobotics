@@ -129,7 +129,8 @@ A modern web project for CCL Robotics, powered by the **Vite** build system for 
     - **Advanced Gaze Interaction (New):**
         - Integrated a background image playback system (`images/2.png`) that activates upon AI model initialization.
         - Implemented real-time **Eye-Gaze Tracking** using MediaPipe Iris landmarks (points 468-477).
-        - Added a dynamic **Red Gaze Dot** overlay that follows the user's pupil movements and projects them onto the background image, creating a "Neural Gaze" experience.
+        - Developed **3D Pupil Indicators**: Two red 3D spheres are rendered directly on the face mesh, perfectly synchronized with the user's eye movements for a more immersive "Neural Gaze" experience.
+        - Optimized visualization by removing screen-space UI elements in favor of integrated 3D tracking.
 
 ## Deployment Log
 - **2026-03-23:** Manual push to trigger Cloudflare Pages deployment (Simplified Dashboard Section).
