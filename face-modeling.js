@@ -33,6 +33,9 @@ class FaceModelingSystem {
 
   async init() {
     this.initThree();
+    // Ensure bgImage is visible from the start
+    if (this.bgImage) this.bgImage.style.display = 'block';
+    
     this.startBtn.addEventListener('click', () => this.start());
     this.stopBtn.addEventListener('click', () => this.stop());
     window.addEventListener('resize', () => this.onResize());
@@ -50,10 +53,11 @@ class FaceModelingSystem {
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,
       antialias: true,
-      alpha: true
+      alpha: true // Crucial for showing the background image
     });
     this.renderer.setSize(width, height);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer.setClearColor(0x000000, 0); // Set clear alpha to 0 (transparent)
 
     // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -149,7 +153,6 @@ class FaceModelingSystem {
       this.video.srcObject = stream;
       this.video.onloadedmetadata = () => {
         this.video.play();
-        this.bgImage.style.display = 'block';
         this.heatmapCanvas.style.display = 'block';
         this.leftPupil.visible = true;
         this.rightPupil.visible = true;
@@ -217,6 +220,7 @@ class FaceModelingSystem {
   }
 
   updatePupils(landmarks) {
+    if (!this.leftPupil || !this.rightPupil) return;
     const leftIris = landmarks[468];
     const rightIris = landmarks[473];
     this.leftPupil.position.set((0.5 - leftIris.x) * 2.5, (0.5 - leftIris.y) * 2.5, -leftIris.z * 2.5 + 0.01);
@@ -231,7 +235,6 @@ class FaceModelingSystem {
 
     // Correcting Gaze Calculation for Top-Center Camera
     // Horizontal: Invert the score difference to match mirrored view
-    // if I look LEFT, findScore('eyeLookInRight') and findScore('eyeLookOutLeft') are high
     const gazeXOffset = (findScore('eyeLookInRight') - findScore('eyeLookOutRight') + 
                          findScore('eyeLookOutLeft') - findScore('eyeLookInLeft')) / 2;
     
@@ -246,14 +249,9 @@ class FaceModelingSystem {
     const sensitivityY = 3.0; // Higher vertical sensitivity for top camera
     
     // Top Camera Correction: When looking at center, eyeLookDown is usually slightly high.
-    // We add a calibration bias to pull the center point up.
     const verticalBias = -0.15; 
 
-    // targetX calculation: 
-    // If looking LEFT (gazeXOffset is positive), we want to SUBTRACT from faceX (move towards 0)
     const targetX = faceX - (gazeXOffset * sensitivityX);
-    // targetY calculation:
-    // If looking UP (gazeYOffset is positive), we want to SUBTRACT from faceY (move towards 0)
     const targetY = faceY - (gazeYOffset * sensitivityY) - verticalBias;
 
     const x = Math.max(0, Math.min(1, targetX)) * this.heatmapCanvas.width;
