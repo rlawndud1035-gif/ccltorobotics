@@ -227,56 +227,50 @@ class FaceModelingSystem {
   drawHeatmap(landmarks, blendshapes) {
     if (!blendshapes) return;
 
-    // Extract blendshape scores
     const categories = blendshapes.categories;
     const findScore = (name) => categories.find(c => c.categoryName === name)?.score || 0;
 
-    // Gaze Estimation using Blendshapes
-    // eyeLookOutLeft: looking left (left eye)
-    // eyeLookInLeft: looking right (left eye)
-    // eyeLookInRight: looking left (right eye)
-    // eyeLookOutRight: looking right (right eye)
+    // Correcting Gaze Calculation for Top-Center Camera
+    // Horizontal: Invert the score difference to match mirrored view
+    // if I look LEFT, findScore('eyeLookInRight') and findScore('eyeLookOutLeft') are high
+    const gazeXOffset = (findScore('eyeLookInRight') - findScore('eyeLookOutRight') + 
+                         findScore('eyeLookOutLeft') - findScore('eyeLookInLeft')) / 2;
     
-    // Horizontal Gaze (-1 to 1)
-    const gazeX = (findScore('eyeLookInRight') - findScore('eyeLookOutRight') + 
-                   findScore('eyeLookOutLeft') - findScore('eyeLookInLeft')) / 2;
+    // Vertical: account for looking DOWN at the monitor from a TOP camera
+    const gazeYOffset = (findScore('eyeLookUpLeft') + findScore('eyeLookUpRight') - 
+                         findScore('eyeLookDownLeft') - findScore('eyeLookDownRight')) / 2;
+
+    const faceX = landmarks[1].x; 
+    const faceY = landmarks[1].y;
+
+    const sensitivityX = 2.5;
+    const sensitivityY = 3.0; // Higher vertical sensitivity for top camera
     
-    // Vertical Gaze (-1 to 1)
-    const gazeY = (findScore('eyeLookUpLeft') + findScore('eyeLookUpRight') - 
-                   findScore('eyeLookDownLeft') - findScore('eyeLookDownRight')) / 2;
+    // Top Camera Correction: When looking at center, eyeLookDown is usually slightly high.
+    // We add a calibration bias to pull the center point up.
+    const verticalBias = -0.15; 
 
-    // Base position is the center of the face in the camera frame
-    const faceX = landmarks[1].x; // Nose tip x
-    const faceY = landmarks[1].y; // Nose tip y
+    // targetX calculation: 
+    // If looking LEFT (gazeXOffset is positive), we want to SUBTRACT from faceX (move towards 0)
+    const targetX = faceX - (gazeXOffset * sensitivityX);
+    // targetY calculation:
+    // If looking UP (gazeYOffset is positive), we want to SUBTRACT from faceY (move towards 0)
+    const targetY = faceY - (gazeYOffset * sensitivityY) - verticalBias;
 
-    // Amplify the gaze offset and apply to the face position
-    // Sensitivity factor (adjust for better coverage)
-    const sensitivity = 2.0;
+    const x = Math.max(0, Math.min(1, targetX)) * this.heatmapCanvas.width;
+    const y = Math.max(0, Math.min(1, targetY)) * this.heatmapCanvas.height;
     
-    const targetX = (faceX + gazeX * sensitivity);
-    const targetY = (faceY - gazeY * sensitivity);
-
-    // Clamp to 0-1 range
-    const clampedX = Math.max(0, Math.min(1, targetX));
-    const clampedY = Math.max(0, Math.min(1, targetY));
-
-    // Map to canvas coordinates
-    const x = clampedX * this.heatmapCanvas.width;
-    const y = clampedY * this.heatmapCanvas.height;
-    
-    // Subtle fade effect for heatmap
     this.heatmapCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
     this.heatmapCtx.fillRect(0, 0, this.heatmapCanvas.width, this.heatmapCanvas.height);
     
-    // Draw red heat point
-    const gradient = this.heatmapCtx.createRadialGradient(x, y, 0, x, y, 80);
-    gradient.addColorStop(0, 'rgba(255, 0, 0, 0.8)');
-    gradient.addColorStop(0.5, 'rgba(255, 0, 0, 0.3)');
+    const gradient = this.heatmapCtx.createRadialGradient(x, y, 0, x, y, 85);
+    gradient.addColorStop(0, 'rgba(255, 0, 0, 0.85)');
+    gradient.addColorStop(0.5, 'rgba(255, 0, 0, 0.4)');
     gradient.addColorStop(1, 'rgba(255, 0, 0, 0)');
     
     this.heatmapCtx.fillStyle = gradient;
     this.heatmapCtx.beginPath();
-    this.heatmapCtx.arc(x, y, 80, 0, Math.PI * 2);
+    this.heatmapCtx.arc(x, y, 85, 0, Math.PI * 2);
     this.heatmapCtx.fill();
   }
 }
