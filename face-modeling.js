@@ -10,7 +10,7 @@ class FaceModelingSystem {
   constructor() {
     this.canvas = document.getElementById('face-canvas');
     this.video = document.getElementById('video-preview');
-    this.testVideo = document.getElementById('test-video');
+    this.bgImage = document.getElementById('bg-image');
     this.gazeDot = document.getElementById('gaze-dot');
     this.statusText = document.getElementById('status-text');
     this.startBtn = document.getElementById('start-btn');
@@ -29,7 +29,6 @@ class FaceModelingSystem {
 
   async init() {
     this.initThree();
-    this.testVideo.src = 'images/Test.mov'; // Use the relative path to images directory
     this.startBtn.addEventListener('click', () => this.start());
     this.stopBtn.addEventListener('click', () => this.stop());
     window.addEventListener('resize', () => this.onResize());
@@ -131,8 +130,7 @@ class FaceModelingSystem {
       this.video.srcObject = stream;
       this.video.onloadedmetadata = () => {
         this.video.play();
-        this.testVideo.style.display = 'block';
-        this.testVideo.play();
+        this.bgImage.style.display = 'block';
         this.gazeDot.style.display = 'block';
         this.isActive = true;
         this.startBtn.style.display = 'none';
@@ -153,8 +151,7 @@ class FaceModelingSystem {
       this.video.srcObject.getTracks().forEach(track => track.stop());
     }
     this.video.pause();
-    this.testVideo.pause();
-    this.testVideo.style.display = 'none';
+    this.bgImage.style.display = 'none';
     this.gazeDot.style.display = 'none';
     this.stopBtn.style.display = 'none';
     this.startBtn.style.display = 'inline-block';
@@ -192,27 +189,12 @@ class FaceModelingSystem {
   }
 
   updateGaze(landmarks) {
-    // MediaPipe Iris Landmarks: 
-    // Left eye iris center: 468
-    // Right eye iris center: 473
     const leftIris = landmarks[468];
     const rightIris = landmarks[473];
-    
-    // Average iris position
     const avgIrisX = (leftIris.x + rightIris.x) / 2;
     const avgIrisY = (leftIris.y + rightIris.y) / 2;
-    
-    // Map to screen coordinates
-    // We need to account for mirroring. MediaPipe X is 0 (left) to 1 (right) of the video frame.
-    // If the video is mirrored for display, we might need to adjust.
-    // However, the red dot is on the test video which is NOT mirrored.
-    // But the user is looking at the screen. 
-    // Usually, when you look left, the iris moves left in the frame.
-    
     const screenX = avgIrisX * window.innerWidth;
     const screenY = avgIrisY * window.innerHeight;
-    
-    // Apply smoothing or sensitivity if needed
     this.gazeDot.style.left = `${screenX}px`;
     this.gazeDot.style.top = `${screenY}px`;
   }
