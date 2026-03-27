@@ -11,6 +11,7 @@ class FaceModelingSystem {
     this.canvas = document.getElementById('face-canvas');
     this.video = document.getElementById('video-preview');
     this.bgImage = document.getElementById('bg-image');
+    this.heatmapCanvas = document.getElementById('heatmap-canvas');
     this.statusText = document.getElementById('status-text');
     this.startBtn = document.getElementById('start-btn');
     this.stopBtn = document.getElementById('stop-btn');
@@ -24,6 +25,8 @@ class FaceModelingSystem {
     this.faceLandmarker = null;
     this.isActive = false;
     this.lastVideoTime = -1;
+    
+    this.heatmapCtx = this.heatmapCanvas.getContext('2d');
 
     this.init();
   }
@@ -33,6 +36,7 @@ class FaceModelingSystem {
     this.startBtn.addEventListener('click', () => this.start());
     this.stopBtn.addEventListener('click', () => this.stop());
     window.addEventListener('resize', () => this.onResize());
+    this.onResize(); // Set initial heatmap canvas size
   }
 
   initThree() {
@@ -112,6 +116,10 @@ class FaceModelingSystem {
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(width, height);
+    
+    // Resize heatmap canvas
+    this.heatmapCanvas.width = width;
+    this.heatmapCanvas.height = height;
   }
 
   async start() {
@@ -142,6 +150,7 @@ class FaceModelingSystem {
       this.video.onloadedmetadata = () => {
         this.video.play();
         this.bgImage.style.display = 'block';
+        this.heatmapCanvas.style.display = 'block';
         this.leftPupil.visible = true;
         this.rightPupil.visible = true;
         this.isActive = true;
@@ -164,6 +173,7 @@ class FaceModelingSystem {
     }
     this.video.pause();
     this.bgImage.style.display = 'none';
+    this.heatmapCanvas.style.display = 'none';
     this.leftPupil.visible = false;
     this.rightPupil.visible = false;
     this.stopBtn.style.display = 'none';
@@ -171,6 +181,9 @@ class FaceModelingSystem {
     this.startBtn.disabled = false;
     this.statusText.innerText = "System Standby";
     this.statusText.style.color = "#00d2ff";
+    
+    // Clear heatmap
+    this.heatmapCtx.clearRect(0, 0, this.heatmapCanvas.width, this.heatmapCanvas.height);
   }
 
   animate() {
@@ -184,6 +197,7 @@ class FaceModelingSystem {
         const landmarks = results.faceLandmarks[0];
         this.updateMesh(landmarks);
         this.updatePupils(landmarks);
+        this.drawHeatmap(landmarks);
       }
     }
 
@@ -202,23 +216,36 @@ class FaceModelingSystem {
   }
 
   updatePupils(landmarks) {
-    // Left eye iris center: 468
-    // Right eye iris center: 473
+    const leftIris = landmarks[468];
+    const rightIris = landmarks[473];
+    this.leftPupil.position.set((0.5 - leftIris.x) * 2.5, (0.5 - leftIris.y) * 2.5, -leftIris.z * 2.5 + 0.01);
+    this.rightPupil.position.set((0.5 - rightIris.x) * 2.5, (0.5 - rightIris.y) * 2.5, -rightIris.z * 2.5 + 0.01);
+  }
+
+  drawHeatmap(landmarks) {
     const leftIris = landmarks[468];
     const rightIris = landmarks[473];
     
-    // Position red dots on the face model
-    this.leftPupil.position.set(
-      (0.5 - leftIris.x) * 2.5,
-      (0.5 - leftIris.y) * 2.5,
-      -leftIris.z * 2.5 + 0.01 // Offset slightly forward to be visible on surface
-    );
+    const avgX = (leftIris.x + rightIris.x) / 2;
+    const avgY = (leftIris.y + rightIris.y) / 2;
     
-    this.rightPupil.position.set(
-      (0.5 - rightIris.x) * 2.5,
-      (0.5 - rightIris.y) * 2.5,
-      -rightIris.z * 2.5 + 0.01 // Offset slightly forward to be visible on surface
-    );
+    // Map to canvas coordinates
+    const x = avgX * this.heatmapCanvas.width;
+    const y = avgY * this.heatmapCanvas.height;
+    
+    // Subtle fade effect for heatmap
+    this.heatmapCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    this.heatmapCtx.fillRect(0, 0, this.heatmapCanvas.width, this.heatmapCanvas.height);
+    
+    // Draw red heat point
+    const gradient = this.heatmapCtx.createRadialGradient(x, y, 0, x, y, 60);
+    gradient.addColorStop(0, 'rgba(255, 0, 0, 0.6)');
+    gradient.addColorStop(1, 'rgba(255, 0, 0, 0)');
+    
+    this.heatmapCtx.fillStyle = gradient;
+    this.heatmapCtx.beginPath();
+    this.heatmapCtx.arc(x, y, 60, 0, Math.PI * 2);
+    this.heatmapCtx.fill();
   }
 }
 

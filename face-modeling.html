@@ -121,7 +121,10 @@
     <video id="video-preview" autoplay playsinline muted></video>
     
     <!-- Background Image -->
-    <img id="bg-image" src="images/2.png" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; display: none;">
+    <img id="bg-image" src="images/2.png" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; display: none;">
+    
+    <!-- Heatmap Canvas -->
+    <canvas id="heatmap-canvas" style="position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; display: none;"></canvas>
     
     <a href="index.html" class="btn back-btn">Back to Hub</a>
   </div>
