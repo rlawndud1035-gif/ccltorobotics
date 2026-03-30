@@ -137,6 +137,9 @@ A modern web project for CCL Robotics, powered by the **Vite** build system for 
             - **Data-ized Visualization**: The final report overlays a semi-transparent grid on the image, using color-coded intensity (from blue to red) and numerical percentages to show exactly where the user's focus was distributed.
             - Added summary statistics including total gaze samples and peak focus concentration percentage.
             - Implemented a "Restart Measurement" flow that resets all neural data for new sessions.
+- **Typography Enhancement:**
+    - Integrated the **Michroma** Google Font for specialized technical sections.
+    - Updated the **DDS Core Elements** section in the Robotics page to use Michroma for both the central "DDS" circle and the orbiting labels (Text, Component, Icon, Color, Grid), enhancing the "systematic" and futuristic aesthetic.
 
 ## Deployment Log
 - **2026-03-23:** Manual push to trigger Cloudflare Pages deployment (Simplified Dashboard Section).
