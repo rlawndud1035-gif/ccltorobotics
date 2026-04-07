@@ -101,6 +101,40 @@
       right: 2rem;
       z-index: 20;
     }
+
+    /* Active Modeling State Styles */
+    .modeling-active .ui-overlay .title,
+    .modeling-active .ui-overlay .status {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    .modeling-active #video-preview {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    .modeling-active .vignette {
+      background: radial-gradient(circle at center, transparent 60%, rgba(0, 0, 0, 0.4) 100%);
+      transition: background 1s ease;
+    }
+
+    .modeling-active .controls {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 30;
+    }
+    
+    .modeling-active .back-btn {
+      opacity: 0.2;
+    }
+    .modeling-active .back-btn:hover {
+      opacity: 1;
+    }
   </style>
 </head>
 <body>

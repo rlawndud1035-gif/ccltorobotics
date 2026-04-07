@@ -8,6 +8,7 @@ const VIDEO_HEIGHT = 480;
 
 class FaceModelingSystem {
   constructor() {
+    this.container = document.querySelector('.modeling-container');
     this.canvas = document.getElementById('face-canvas');
     this.video = document.getElementById('video-preview');
     this.bgImage = document.getElementById('bg-image');
@@ -54,6 +55,7 @@ class FaceModelingSystem {
     this.gazeGrid = Array.from({ length: this.gridRows }, () => new Array(this.gridCols).fill(0));
     this.totalGazeCount = 0;
     this.isDataMode = false;
+    if (this.container) this.container.classList.remove('modeling-active');
   }
 
   initThree() {
@@ -182,6 +184,9 @@ class FaceModelingSystem {
         this.stopBtn.style.display = 'inline-block';
         this.statusText.innerText = "Neural Link Active";
         this.statusText.style.color = "#00ff88";
+        
+        // Activate Stealth Mode
+        if (this.container) this.container.classList.add('modeling-active');
       };
     } catch (err) {
       console.error(err);
@@ -193,6 +198,7 @@ class FaceModelingSystem {
   stop() {
     this.isActive = false;
     this.isDataMode = true;
+    if (this.container) this.container.classList.remove('modeling-active');
 
     if (this.video.srcObject) {
       this.video.srcObject.getTracks().forEach(track => track.stop());
